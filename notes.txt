@@ -1,8 +1,8 @@
 Lots to do here!
 
-- let's fix the lousy cursor, and add a click or mouseover to see the artist + title
-- let's add some way to paginate, or otherwise see everything
+- let's alldadd a click or mouseover to see the artist + title
 - let's add URL params to pick a tesselation, image size, number of displayed items, and offset
   - ooh, maybe pick a folder, too!?
+  - let's add some way to paginate, or otherwise see everything
 - let's also add another tessellation, maybe hexagons, or https://en.wikipedia.org/wiki/Rhombille_tiling
   - let's split each of these out to their own files!
