@@ -92,15 +92,12 @@ makeTriangle = function () {
         angle: record.angle,
         selectable: false,
       });
-      let imagePath = triangle.images[record.imageIndex];
+      let imagePath = "images/" + record.id + ".jpg"
       fabric.Image.fromURL(imagePath, function(img) {
         img.left = record.x - (img.width / 2) + (triangle.xSize / 2);
         img.top = record.y - (img.height / 2) + triangle.ySize / 2;
         img.selectable = false;
         img.clipPath = triangleClipPath;
-        img.on('mousedown', function(event) {
-          console.log(record.title);
-        });
         c.add(img);
       });
     }
@@ -108,8 +105,8 @@ makeTriangle = function () {
   return triangle;
 }
 
-// pick a tessellations, then ..
 tess = makeTriangle(); 
+// pick a tessellation, then ..
 fetch('vinyl.json')
   .then(response => response.json())
   .then(data => {
