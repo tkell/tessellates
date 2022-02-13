@@ -8,12 +8,10 @@ makeTriangle = function () {
     var x = 0;
     var y = 0;
     var angle = 0;
-    var imageIndex = 0;
     for (let record of data) {
       record.x = x;
       record.y = y;
       record.angle = angle;
-      record.imageIndex = imageIndex;
       if (angle === 0) {
         x = x + this.xSize / 2;
         angle = 180;
@@ -26,7 +24,6 @@ makeTriangle = function () {
         angle = 0;
         y = y + this.ySize;
       }
-      imageIndex = (imageIndex + 1) % 3;
     }
     return data;
   }
