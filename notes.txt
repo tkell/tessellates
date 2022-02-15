@@ -3,6 +3,7 @@ Lots to do here!
 - annoynig cursor appears to not be fixed?!
 - let's alldadd a click or mouseover to see the artist + title
 - let's add URL params to pick a tesselation, image size, number of displayed items, and offset
+  - vrooom, gotta clean that params code up!
   - ah, this also means parameterizing my functions, I should be a dash thoughtful about this
   - ooh, maybe pick a folder, too!?
   - pagination + offset, or otherwise see everything
