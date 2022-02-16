@@ -1,7 +1,7 @@
 makeSquare = function() {
   square = {};
-  square.xSize = 333;
-  square.ySize = 333;
+  square.xSize = 334;
+  square.ySize = 334;
   square.size = 1000;
   
   square.prepare = function(data) {
