@@ -1,12 +1,11 @@
 Lots to do here!
 
 - annoynig cursor appears to not be fixed?!
-- let's alldadd a click or mouseover to see the artist + title
+- let's add a click or mouseover to see the artist + title
+- let's add a click to paginate
+  - I'll need to know how many items to page by, probably part of the tessellation object
 - let's add URL params to pick a tesselation, image size, number of displayed items, and offset
-  - vrooom, gotta clean that params code up!
   - ah, this also means parameterizing my functions, I should be a dash thoughtful about this
   - ooh, maybe pick a folder, too!?
-  - pagination + offset, or otherwise see everything
-    - would be nice to not load 300 images we won't use :scream:
 - let's also add another tessellation, maybe hexagons, or https://en.wikipedia.org/wiki/Rhombille_tiling
   - let's split each of these out to their own files!
