@@ -30,6 +30,19 @@ makeTriangle = function () {
       record.x = x;
       record.y = y;
       record.angle = angle;
+
+      record.imageX = record.x + (triangle.xSize / 2);
+      record.imageY = record.y + (triangle.ySize / 2);
+      if (record.angle == 180) {
+          record.clipPath = triangleClipPathDown;
+          record.clickX = record.x + triangle.xSize;
+          record.clickY = record.y + triangle.ySize;
+      } else {
+          record.clipPath = triangleClipPathUp;
+          record.clickX = record.x;
+          record.clickY = record.y;
+      }
+
       if (angle === 0) {
         x = x + this.xSize / 2;
         angle = 180;
@@ -50,31 +63,17 @@ makeTriangle = function () {
     for (let record of data) {
       let imagePath = "images/" + record.id + ".jpg"
       fabric.Image.fromURL(imagePath, function(img) {
-        img.left = record.x - (img.width / 2) + (triangle.xSize / 2);
-        img.top = record.y - (img.height / 2) + triangle.ySize / 2;
+        img.left = record.imageX - (img.width / 2);
+        img.top = record.imageY - (img.height / 2);
         img.selectable = false;
-        if (record.angle == 0) {
-          img.clipPath = triangleClipPathUp;
-        }
-        if (record.angle == 180) {
-          img.clipPath = triangleClipPathDown;
-        }
+        img.clipPath = record.clipPath;
         c.add(img);
         c.sendToBack(img);
       });
-      // hack to fix angle hell  
-      // I will do this all in the prepare script, I think - same for the image centering tweak, if I can?
-      if (record.angle == 180) {
-          record['fixedY'] = record.y + triangle.ySize;
-          record['fixedX'] = record.x + triangle.xSize;
-      } else {
-          record['fixedY'] = record.y;
-          record['fixedX'] = record.x;
-      }
 
       let triangleToClick = new fabric.Triangle({
-        left: record.fixedX,
-        top: record.fixedY,
+        left: record.clickX,
+        top: record.clickY,
         perPixelTargetFind: true, // oho
         fill: 'white',
         opacity: 0.001,
