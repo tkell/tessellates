@@ -3,6 +3,24 @@ makeTriangle = function () {
   triangle.xSize = 200;
   triangle.ySize = 200;
   triangle.size = 1000;
+
+  let triangleClipPathUp = new fabric.Triangle({
+    originX: 'center',
+    originY: 'center',
+    width: triangle.xSize,
+    height: triangle.ySize,
+    angle: 0,
+    selectable: false
+  });
+
+  let triangleClipPathDown = new fabric.Triangle({
+    originX: 'center',
+    originY: 'center',
+    width: triangle.xSize,
+    height: triangle.ySize,
+    angle: 180,
+    selectable: false
+  });
   
   triangle.prepare = function(data) {
     var x = 0;
@@ -30,21 +48,17 @@ makeTriangle = function () {
   
   triangle.render = function(c, data) {
     for (let record of data) {
-      // this can be extracted to be one "up" clippath  and one "down" path!
-      let triangleClipPath = new fabric.Triangle({
-        originX: 'center',
-        originY: 'center',
-        width: this.xSize,
-        height: this.ySize,
-        angle: record.angle,
-        selectable: false
-      });
       let imagePath = "images/" + record.id + ".jpg"
       fabric.Image.fromURL(imagePath, function(img) {
         img.left = record.x - (img.width / 2) + (triangle.xSize / 2);
         img.top = record.y - (img.height / 2) + triangle.ySize / 2;
         img.selectable = false;
-        img.clipPath = triangleClipPath;
+        if (record.angle == 0) {
+          img.clipPath = triangleClipPathUp;
+        }
+        if (record.angle == 180) {
+          img.clipPath = triangleClipPathDown;
+        }
         c.add(img);
         c.sendToBack(img);
       });
@@ -70,7 +84,6 @@ makeTriangle = function () {
         selectable: false
       });
       triangleToClick.on('mousedown', function(options) {
-        // need to fix the CSS to make it not move the canvas around  !
         var t = document.getElementById('text');
         t.textContent = record.title;
       });
