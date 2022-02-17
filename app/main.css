@@ -1,3 +1,4 @@
+/* This div is part of Fabric, be careful!*/
 div.canvas-container {
     padding-left: 0;
     padding-right: 0;
@@ -6,7 +7,7 @@ div.canvas-container {
     display: block;
 }
 
-div#text {
+div.centre {
     text-align: center;
     padding-left: 0;
     padding-right: 0;
