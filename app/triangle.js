@@ -48,7 +48,6 @@ makeTriangle = function () {
         c.add(img);
         c.sendToBack(img);
       });
-      console.log(record.x, record.y, record.angle);
       // hack to fix angle hell  
       // I will do this all in the prepare script, I think - same for the image centering tweak, if I can?
       if (record.angle == 180) {
@@ -62,15 +61,16 @@ makeTriangle = function () {
       let triangleToClick = new fabric.Triangle({
         left: record.fixedX,
         top: record.fixedY,
-        fill: 'rgba(0,0,0,0)',
+        perPixelTargetFind: true, // oho
+        fill: 'white',
+        opacity: 0.001,
         width: this.xSize,
         height: this.ySize,
         angle: record.angle,
         selectable: false
       });
-      triangleToClick.on('mouseup', function(options) {
+      triangleToClick.on('mousedown', function(options) {
         // need to fix the CSS to make it not move the canvas around  !
-        console.log(record);
         var t = document.getElementById('text');
         t.textContent = record.title;
       });
