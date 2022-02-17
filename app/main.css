@@ -5,3 +5,17 @@ div.canvas-container {
     margin-right: auto;
     display: block;
 }
+
+div#text {
+    text-align: center;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    font-family: 'Inconsolata', "Courier New", Courier, monospace;
+    font-size: 22px;
+}
