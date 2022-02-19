@@ -74,7 +74,7 @@ makeTriangle = function () {
       let triangleToClick = new fabric.Triangle({
         left: record.clickX,
         top: record.clickY,
-        perPixelTargetFind: true, // oho
+        perPixelTargetFind: true,
         fill: 'white',
         opacity: 0.001,
         width: this.xSize,
@@ -82,10 +82,12 @@ makeTriangle = function () {
         angle: record.angle,
         selectable: false
       });
+
       triangleToClick.on('mousedown', function(options) {
         var t = document.getElementById('text');
         t.textContent = record.title;
       });
+
       c.add(triangleToClick);
       c.bringToFront(triangleToClick);
     }

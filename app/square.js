@@ -3,6 +3,13 @@ makeSquare = function() {
   square.xSize = 334;
   square.ySize = 334;
   square.size = 1000;
+  let squareClipPath = new fabric.Rect({
+    originX: 'center',
+    originY: 'center',
+    width: square.xSize,
+    height: square.ySize,
+    selectable: false,
+  });
   
   square.prepare = function(data) {
     var x = 0;
@@ -10,6 +17,7 @@ makeSquare = function() {
     for (let record of data) {
       record.x = x;
       record.y = y;
+      record.clipPath = squareClipPath;
       x = x + this.xSize;
       if (x > this.size) {
         x = 0;
@@ -21,19 +29,12 @@ makeSquare = function() {
   
   square.render = function(c, data) {
     for (let record of data) {
-      var squareClipPath = new fabric.Rect({
-        originX: 'center',
-        originY: 'center',
-        width: this.xSize,
-        height: this.ySize,
-        selectable: false,
-      });
       let imagePath = "images/" + record.id + ".jpg"
       fabric.Image.fromURL(imagePath, function(img) {
         img.left = record.x - (img.width / 2) + (square.xSize / 2);
         img.top = record.y - (img.height / 2) + square.ySize / 2;
         img.selectable = false;
-        img.clipPath = squareClipPath;
+        img.clipPath = record.clipPath;
         c.add(img);
       });
     }
