@@ -1,8 +1,11 @@
 let params = getSearchParameters();
 let parsedParams = parseTessellatesParams(params)
+
 // pick a tessellation, then ..
 if (parsedParams['t'] == 'square') {
   tess = makeSquare();
+} else if (parsedParams['t']== 'rhombus') {
+  tess = makeRhombus();
 } else {
   tess = makeTriangle();
 }
