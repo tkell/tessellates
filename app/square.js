@@ -36,7 +36,27 @@ makeSquare = function() {
         img.selectable = false;
         img.clipPath = record.clipPath;
         c.add(img);
+        c.sendToBack(img);
       });
+
+      let squareToClick = new fabric.Rect({
+        left: record.x,
+        top: record.y,
+        perPixelTargetFind: true,
+        fill: 'white',
+        opacity: 0.001,
+        width: square.xSize,
+        height: square.ySize,
+        selectable: false
+      });
+
+      squareToClick.on('mousedown', function(options) {
+        var t = document.getElementById('text');
+        t.textContent = record.title;
+      });
+
+      c.add(squareToClick);
+      c.bringToFront(squareToClick);
     }
   }
   return square;
