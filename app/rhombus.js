@@ -11,17 +11,17 @@ function rhombusPoints(x, y, size) {
 }
 
 makeRhombus = function() {
-  square = {};
+  rhombus = {};
 
-  square.rhombusSize = 195;
-  xShift = Math.floor(Math.cos(Math.PI / 6) * square.rhombusSize);
-  yShift = Math.floor(Math.sin(Math.PI / 6) * square.rhombusSize);
+  rhombus.rhombusSize = 195;
+  xShift = Math.floor(Math.cos(Math.PI / 6) * rhombus.rhombusSize);
+  yShift = Math.floor(Math.sin(Math.PI / 6) * rhombus.rhombusSize);
 
-  square.xSize = xShift * 2;
-  square.ySize = yShift * 4;
-  square.size = 1000;
+  rhombus.xSize = xShift * 2;
+  rhombus.ySize = yShift * 4;
+  rhombus.size = 1000;
 
-  let rpoints = rhombusPoints(0, 0, square.rhombusSize);
+  let rpoints = rhombusPoints(0, 0, rhombus.rhombusSize);
  
   let clipPathCenter = new fabric.Polygon(rpoints, {
     left: 0,
@@ -50,65 +50,76 @@ makeRhombus = function() {
     angle: -30,
   });
 
+
   function prepareSubset(data, divisor, remainer, xStart, yStart, clipPath) {
     var x = xStart;
     var y = yStart;
+    var isShortRow = false;
     for (var i = 0; i < data.length; i++) {
       if (i % divisor == remainer) {
         record = data[i];
-        if (x >= (square.size + xStart)) {
-          x = xStart;
-          y = yStart + square.ySize;
+        // I really don't love this – I feel like my older idea about "moving by centers" might be better?
+        if (x >= (rhombus.size + xStart) || (isShortRow && x >= (rhombus.size + xStart - rhombus.xSize )) ) {
+          if (Math.floor(i / 9) % 2 == 1 && isShortRow == false) {
+            isShortRow = true;
+            x = xStart + rhombus.xSize / 2;
+            y = yStart + rhombus.ySize - (rhombus.ySize * 0.25);
+          } else { 
+            isShortRow = false;
+            x = xStart;
+            y = yStart + rhombus.ySize + (rhombus.ySize * 0.5);
+          }
         }
         record.x = x;
         record.y = y
         record.clipPath = clipPath;
 
-        x = x + square.xSize;
-
+        x = x + rhombus.xSize;
       }
     }
     return data
   }
   
-  square.prepare = function(data) {
-    prepareSubset(data, 3, 0, square.xSize * (-0.25), square.ySize * 0.375 , clipPathLeft)
+  rhombus.prepare = function(data) {
+    prepareSubset(data, 3, 0, rhombus.xSize * (-0.25), rhombus.ySize * 0.375 , clipPathLeft)
     prepareSubset(data, 3, 1, 0, 0, clipPathCenter)
-    prepareSubset(data, 3, 2, xShift * 0.5, square.ySize * 0.375, clipPathRight)
+    prepareSubset(data, 3, 2, xShift * 0.5, rhombus.ySize * 0.375, clipPathRight)
     return data;
   }
   
-  square.render = function(c, data) {
+  rhombus.render = function(c, data) {
     for (let record of data) {
       let imagePath = "images/" + record.id + ".jpg"
       fabric.Image.fromURL(imagePath, function(img) {
-        img.left = record.x - (img.width / 2) + (square.xSize / 2);
-        img.top = record.y - (img.height / 2) + (square.ySize / 2);
+        img.left = record.x - (img.width / 2) + (rhombus.xSize / 2);
+        img.top = record.y - (img.height / 2) + (rhombus.ySize / 2);
         img.selectable = false;
         img.clipPath = record.clipPath;
         c.add(img);
         c.sendToBack(img);
       });
+      
 
-      let squareToClick = new fabric.Rect({
+      // not a rhombus at all!  Need to make this work too
+      let rhombusToClick = new fabric.Rect({
         left: record.x,
         top: record.y,
         perPixelTargetFind: true,
         fill: 'white',
         opacity: 0.001,
-        width: square.xSize,
-        height: square.ySize,
+        width: rhombus.xSize,
+        height: rhombus.ySize,
         selectable: false
       });
 
-      squareToClick.on('mousedown', function(options) {
+      rhombusToClick.on('mousedown', function(options) {
         var t = document.getElementById('text');
         t.textContent = record.title;
       });
 
-      c.add(squareToClick);
-      c.bringToFront(squareToClick);
+      c.add(rhombusToClick);
+      c.bringToFront(rhombusToClick);
     }
   }
-  return square;
+  return rhombus;
 }
