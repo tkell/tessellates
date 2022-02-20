@@ -12,34 +12,12 @@ function rhombusPoints(x, y, size) {
 
 makeRhombus = function() {
   rhombus = {};
-
-  rhombus.rhombusSize = 195;
-  xShift = Math.floor(Math.cos(Math.PI / 6) * rhombus.rhombusSize);
-  yShift = Math.floor(Math.sin(Math.PI / 6) * rhombus.rhombusSize);
-
-  rhombus.xSize = xShift * 2;
-  rhombus.ySize = yShift * 4;
+  rhombus.xSize = 334;
+  rhombus.sideLength = Math.floor((rhombus.xSize / 2) / Math.cos(Math.PI / 6));
+  rhombus.ySize = rhombus.sideLength * 2;
   rhombus.size = 1000;
 
-  let rpoints = rhombusPoints(0, 0, rhombus.rhombusSize);
- 
-  let clipPathCenter = new fabric.Polygon(rpoints, {
-    left: 0,
-    top: 0,
-    originX: 'center',
-    originY: 'center',
-    selectable: false,
-    angle: 90,
-  });
-
-  let clipPathRight = new fabric.Polygon(rpoints, {
-    left: 0,
-    top: 0,
-    originX: 'center',
-    originY: 'center',
-    selectable: false,
-    angle: 30,
-  });
+  let rpoints = rhombusPoints(0, 0, rhombus.sideLength);
 
   let clipPathLeft = new fabric.Polygon(rpoints, {
     left: 0,
@@ -49,42 +27,69 @@ makeRhombus = function() {
     selectable: false,
     angle: -30,
   });
+  let clipPathCenter = new fabric.Polygon(rpoints, {
+    left: 0,
+    top: 0,
+    originX: 'center',
+    originY: 'center',
+    selectable: false,
+    angle: 90,
+  });
+  let clipPathRight = new fabric.Polygon(rpoints, {
+    left: 0,
+    top: 0,
+    originX: 'center',
+    originY: 'center',
+    selectable: false,
+    angle: 30,
+  });
 
-
-  function prepareSubset(data, divisor, remainer, xStart, yStart, clipPath) {
-    var x = xStart;
-    var y = yStart;
+  rhombus.prepare = function(data) {
+    let clipPaths = [clipPathLeft, clipPathCenter, clipPathRight];
+    var x = 0;
+    var y = 0;
     var isShortRow = false;
-    for (var i = 0; i < data.length; i++) {
-      if (i % divisor == remainer) {
-        record = data[i];
-        // I really don't love this – I feel like my older idea about "moving by centers" might be better?
-        if (x >= (rhombus.size + xStart) || (isShortRow && x >= (rhombus.size + xStart - rhombus.xSize )) ) {
-          if (Math.floor(i / 9) % 2 == 1 && isShortRow == false) {
-            isShortRow = true;
-            x = xStart + rhombus.xSize / 2;
-            y = yStart + rhombus.ySize - (rhombus.ySize * 0.25);
-          } else { 
-            isShortRow = false;
-            x = xStart;
-            y = yStart + rhombus.ySize + (rhombus.ySize * 0.5);
-          }
+    for (var i = 0; i < data.length; i+= 3) { /* warning!  three at a time! */
+      if (x >= (rhombus.size) || (isShortRow && x >= (rhombus.size  - rhombus.xSize )) ) {
+        if (isShortRow == false) {
+          isShortRow = true;
+          x = rhombus.xSize / 2;
+          y = y + rhombus.ySize * 0.75;
+        } else {
+          isShortRow = false;
+          x = 0;
+          y = y + rhombus.ySize * 0.75;
         }
-        record.x = x;
-        record.y = y
-        record.clipPath = clipPath;
-
-        x = x + rhombus.xSize;
       }
+      for (var j = 0; i + j < data.length; j++) { /* warning!  checking the sum! */
+        record = data[i + j];
+        if (j == 0) {
+          record.x = x - rhombus.xSize * 0.25;
+          record.y = y + rhombus.ySize * 0.375;
+          record.clipPath = clipPaths[0];
+          record.clickX = record.x;
+          record.clickY = record.y;
+          record.angle = -30;
+        } else if (j == 1) {
+          record.x = x;
+          record.y = y;
+          record.clipPath = clipPaths[1];
+          record.clickX = record.x + rhombus.xSize;
+          record.clickY = record.y;
+          record.angle = 90;
+        } else if (j == 2 ) {
+          record.x = x + rhombus.xSize * 0.25;
+          record.y = y + rhombus.ySize * 0.375;
+          record.clipPath = clipPaths[2];
+          record.clickX = record.x + rhombus.xSize / 2;
+          record.clickY = record.y - rhombus.ySize / 4;
+          record.angle = 30;
+        }
+      }
+
+      x = x + rhombus.xSize;
     }
     return data
-  }
-  
-  rhombus.prepare = function(data) {
-    prepareSubset(data, 3, 0, rhombus.xSize * (-0.25), rhombus.ySize * 0.375 , clipPathLeft)
-    prepareSubset(data, 3, 1, 0, 0, clipPathCenter)
-    prepareSubset(data, 3, 2, xShift * 0.5, rhombus.ySize * 0.375, clipPathRight)
-    return data;
   }
   
   rhombus.render = function(c, data) {
@@ -92,18 +97,17 @@ makeRhombus = function() {
       let imagePath = "images/" + record.id + ".jpg"
       fabric.Image.fromURL(imagePath, function(img) {
         img.left = record.x - (img.width / 2) + (rhombus.xSize / 2);
-        img.top = record.y - (img.height / 2) + (rhombus.ySize / 2);
+        img.top = record.y - (img.height / 2) + (rhombus.ySize / 4);
         img.selectable = false;
         img.clipPath = record.clipPath;
         c.add(img);
         c.sendToBack(img);
       });
-      
 
-      // not a rhombus at all!  Need to make this work too
-      let rhombusToClick = new fabric.Rect({
-        left: record.x,
-        top: record.y,
+      let rhombusToClick = new fabric.Polygon(rpoints, {
+        left: record.clickX,
+        top: record.clickY,
+        angle: record.angle,
         perPixelTargetFind: true,
         fill: 'white',
         opacity: 0.001,
