@@ -66,17 +66,7 @@ makeTriangle = function () {
         tessellationHelper.createImage(c, img, record);
       });
 
-      let triangleToClick = new fabric.Triangle({
-        left: record.clickX,
-        top: record.clickY,
-        angle: record.angle,
-        perPixelTargetFind: true,
-        fill: 'white',
-        opacity: 0.001,
-        width: triangle.xSize,
-        height: triangle.ySize,
-        selectable: false
-      });
+      let triangleToClick = tessellationHelper.createClickableMask(fabric.Triangle, record, triangle.xSize, triangle.ySize)
       tessellationHelper.createDefaultClickState(c, triangleToClick, record);
     }
   }

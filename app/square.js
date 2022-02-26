@@ -39,17 +39,7 @@ makeSquare = function() {
         tessellationHelper.createImage(c, img, record);
       });
 
-      let squareToClick = new fabric.Rect({
-        left: record.clickX,
-        top: record.clickY,
-        angle: record.angle,
-        perPixelTargetFind: true,
-        fill: 'white',
-        opacity: 0.001,
-        width: square.xSize,
-        height: square.ySize,
-        selectable: false
-      });
+      let squareToClick = tessellationHelper.createClickableMask(fabric.Rect, record, square.xSize, square.ySize)
       tessellationHelper.createDefaultClickState(c, squareToClick, record);
     }
   }

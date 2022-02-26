@@ -103,17 +103,7 @@ makeRhombus = function() {
         tessellationHelper.createImage(c, img, record);
       });
 
-      let rhombusToClick = new fabric.Polygon(rpoints, {
-        left: record.clickX,
-        top: record.clickY,
-        angle: record.angle,
-        perPixelTargetFind: true,
-        fill: 'white',
-        opacity: 0.001,
-        width: rhombus.xSize,
-        height: rhombus.ySize,
-        selectable: false
-      });
+      let rhombusToClick = tessellationHelper.createClickableMask(fabric.Polygon, record, rhombus.xSize, rhombus.ySize, rpoints)
       tessellationHelper.createDefaultClickState(c, rhombusToClick, record);
     }
   }

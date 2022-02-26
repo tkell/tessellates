@@ -18,3 +18,23 @@ tessellationHelper.createDefaultClickState = function (canvas, objectToClick, re
   canvas.add(objectToClick);
   canvas.bringToFront(objectToClick);
 }
+
+tessellationHelper.createClickableMask = function (fabricKlass, record, width, height, polygonPoints) {
+  params = {
+      left: record.clickX,
+      top: record.clickY,
+      angle: record.angle,
+      perPixelTargetFind: true,
+      fill: 'white',
+      opacity: 0.001,
+      width: width,
+      height: height,
+      selectable: false
+  }
+
+  if (!polygonPoints) {
+    return new fabricKlass(params);
+  } else {
+    return new fabricKlass(polygonPoints, params);
+  }
+}
