@@ -69,12 +69,12 @@ makeTriangle = function () {
       let triangleToClick = new fabric.Triangle({
         left: record.clickX,
         top: record.clickY,
+        angle: record.angle,
         perPixelTargetFind: true,
         fill: 'white',
         opacity: 0.001,
-        width: this.xSize,
-        height: this.ySize,
-        angle: record.angle,
+        width: triangle.xSize,
+        height: triangle.ySize,
         selectable: false
       });
       tessellationHelper.createDefaultClickState(c, triangleToClick, record);

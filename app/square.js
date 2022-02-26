@@ -17,8 +17,11 @@ makeSquare = function() {
     for (let record of data) {
       record.x = x;
       record.y = y;
+      record.angle = 0;
       record.imageX = record.x + (square.xSize / 2);
       record.imageY = record.y + (square.ySize / 2);
+      record.clickX = x;
+      record.clickY = y;
       record.clipPath = squareClipPath;
       x = x + this.xSize;
       if (x > this.size) {
@@ -37,8 +40,9 @@ makeSquare = function() {
       });
 
       let squareToClick = new fabric.Rect({
-        left: record.x,
-        top: record.y,
+        left: record.clickX,
+        top: record.clickY,
+        angle: record.angle,
         perPixelTargetFind: true,
         fill: 'white',
         opacity: 0.001,
@@ -46,7 +50,7 @@ makeSquare = function() {
         height: square.ySize,
         selectable: false
       });
-      tessellationHelper.createDefaultClickState(c, triangleToClick, record);
+      tessellationHelper.createDefaultClickState(c, squareToClick, record);
     }
   }
   return square;
