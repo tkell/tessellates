@@ -16,6 +16,7 @@ makeRhombus = function() {
   rhombus.sideLength = Math.floor((rhombus.xSize / 2) / Math.cos(Math.PI / 6));
   rhombus.ySize = rhombus.sideLength * 2;
   rhombus.size = 1000;
+  rhombus.defaultItems = 24;
   rhombus.paging = {"small": 3, "medium": 9, "big": 24};
 
   let rpoints = rhombusPoints(0, 0, rhombus.sideLength);

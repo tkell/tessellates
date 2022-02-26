@@ -1,14 +1,16 @@
 let params = getSearchParameters();
-let parsedParams = parseTessellatesParams(params)
 
 // pick a tessellation, then ..
-if (parsedParams['t'] == 'square') {
+let tess = null;
+if (params['t'] == 'square') {
   tess = makeSquare();
-} else if (parsedParams['t']== 'rhombus') {
-  tess = makeRhombus();
-} else {
+} else if (params['t']== 'triangle') {
   tess = makeTriangle();
+} else {
+  tess = makeRhombus();
 }
+
+let parsedParams = parseTessellatesParams(params, tess)
 var vinylData = [];
 var canvas = null;
 

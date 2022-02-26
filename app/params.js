@@ -13,9 +13,9 @@ function transformToAssocArray(prmstr) {
     return params;
 }
 
-function parseTessellatesParams(params) {
+function parseTessellatesParams(params, tess) {
     if (!params['items']) {
-        params['items'] = 50;
+        params['items'] = tess.defaultItems;
     } else {
         params['items'] = parseInt(params['items'])
     }
@@ -23,9 +23,6 @@ function parseTessellatesParams(params) {
         params['offset'] = 0;
     } else {
         params['offset'] = parseInt(params['offset'])
-    }
-    if (!params['t']) {
-        params['t'] = 'triangle';
     }
     return params;
 }
