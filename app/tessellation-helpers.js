@@ -20,7 +20,7 @@ tessellationHelper.createDefaultClickState = function (canvas, objectToClick, re
 }
 
 tessellationHelper.createClickableMask = function (fabricKlass, record, width, height, polygonPoints) {
-  params = {
+  let params = {
       left: record.clickX,
       top: record.clickY,
       angle: record.angle,

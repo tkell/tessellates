@@ -20,6 +20,13 @@ function renderCanvas(canvas, tess, data, params) {
     tess.render(canvas, tess.prepare(slicedData))
 }
 
+function addPagingClick(elementId, offsetDelta) {
+    document.getElementById(elementId).addEventListener("click", function(e) {
+      params['offset'] = Math.max(0, params['offset'] +  offsetDelta);
+      renderCanvas(canvas, tess, vinylData, params);
+    });
+}
+
 fetch('vinyl.json')
   .then(response => response.json())
   .then(data => {
@@ -27,15 +34,12 @@ fetch('vinyl.json')
     canvas.hoverCursor = 'default';
     vinylData = data;
     renderCanvas(canvas, tess, vinylData, params)
-  });
 
-window.onload = function(event) {
-  document.getElementById('back').addEventListener("click", function(e) {
-    params['offset'] = Math.max(0, params['offset'] - 10)
-    renderCanvas(canvas, tess, vinylData, params);
-  })
-  document.getElementById('forward').addEventListener("click", function(e) {
-    params['offset'] = Math.min(vinylData.length, params['offset'] + 10)
-    renderCanvas(canvas, tess, vinylData, params);
-  })
-};
+    addPagingClick("back-small", tess.paging.small * -1);
+    addPagingClick("back-medium", tess.paging.medium * -1);
+    addPagingClick("back-big", tess.paging.big * -1);
+
+    addPagingClick("forward-small", tess.paging.small);
+    addPagingClick("forward-medium", tess.paging.medium);
+    addPagingClick("forward-big", tess.paging.big);
+  });

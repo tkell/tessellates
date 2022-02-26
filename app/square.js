@@ -3,6 +3,7 @@ makeSquare = function() {
   square.xSize = 334;
   square.ySize = 334;
   square.size = 1000;
+  square.paging = {"small": 1, "medium": 3, "big": 9};
   let squareClipPath = new fabric.Rect({
     originX: 'center',
     originY: 'center',

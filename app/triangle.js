@@ -3,6 +3,7 @@ makeTriangle = function () {
   triangle.xSize = 200;
   triangle.ySize = 200;
   triangle.size = 1000;
+  triangle.paging = {"small": 1, "medium": 9, "big": 45};
 
   let triangleClipPathUp = new fabric.Triangle({
     originX: 'center',
