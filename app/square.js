@@ -17,6 +17,8 @@ makeSquare = function() {
     for (let record of data) {
       record.x = x;
       record.y = y;
+      record.imageX = record.x + (square.xSize / 2);
+      record.imageY = record.y + (square.ySize / 2);
       record.clipPath = squareClipPath;
       x = x + this.xSize;
       if (x > this.size) {
@@ -31,9 +33,7 @@ makeSquare = function() {
     for (let record of data) {
       let imagePath = "images/" + record.id + ".jpg"
       fabric.Image.fromURL(imagePath, function(img) {
-        img.left = record.x - (img.width / 2) + (square.xSize / 2);
-        img.top = record.y - (img.height / 2) + square.ySize / 2;
-        tessellationHelper.createDefaultImageState(c, img, record.clipPath);
+        tessellationHelper.createImage(c, img, record);
       });
 
       let squareToClick = new fabric.Rect({

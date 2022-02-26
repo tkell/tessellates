@@ -63,6 +63,8 @@ makeRhombus = function() {
       }
       for (var j = 0; i + j < data.length; j++) { /* warning!  checking the sum! */
         record = data[i + j];
+
+
         if (j == 0) {
           record.x = x - rhombus.xSize * 0.25;
           record.y = y + rhombus.ySize * 0.375;
@@ -85,6 +87,8 @@ makeRhombus = function() {
           record.clickY = record.y - rhombus.ySize / 4;
           record.angle = 30;
         }
+        record.imageX = record.x + (rhombus.xSize / 2);
+        record.imageY = record.y + (rhombus.ySize / 4);
       }
 
       x = x + rhombus.xSize;
@@ -96,9 +100,7 @@ makeRhombus = function() {
     for (let record of data) {
       let imagePath = "images/" + record.id + ".jpg"
       fabric.Image.fromURL(imagePath, function(img) {
-        img.left = record.x - (img.width / 2) + (rhombus.xSize / 2);
-        img.top = record.y - (img.height / 2) + (rhombus.ySize / 4);
-        tessellationHelper.createDefaultImageState(c, img, record.clipPath);
+        tessellationHelper.createImage(c, img, record);
       });
 
       let rhombusToClick = new fabric.Polygon(rpoints, {

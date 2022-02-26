@@ -63,9 +63,7 @@ makeTriangle = function () {
     for (let record of data) {
       let imagePath = "images/" + record.id + ".jpg"
       fabric.Image.fromURL(imagePath, function(img) {
-        img.left = record.imageX - (img.width / 2);
-        img.top = record.imageY - (img.height / 2);
-        tessellationHelper.createDefaultImageState(c, img, record.clipPath);
+        tessellationHelper.createImage(c, img, record);
       });
 
       let triangleToClick = new fabric.Triangle({
