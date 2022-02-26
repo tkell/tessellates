@@ -10,9 +10,14 @@ tessellationHelper.createImage = function (canvas, img, record) {
 }
 
 tessellationHelper.createDefaultClickState = function (canvas, objectToClick, record) {
-  objectToClick.on('mousedown', function(options) {
+  objectToClick.on('mouseover', function(options) {
     var t = document.getElementById('text');
     t.textContent = record.title;
+  });
+
+  objectToClick.on('mousedown', function(options) {
+    var t = document.getElementById('text');
+    t.textContent = `${record.artist} - ${record.title} [${record.label}]`;
   });
 
   canvas.add(objectToClick);
