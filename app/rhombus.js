@@ -98,10 +98,7 @@ makeRhombus = function() {
       fabric.Image.fromURL(imagePath, function(img) {
         img.left = record.x - (img.width / 2) + (rhombus.xSize / 2);
         img.top = record.y - (img.height / 2) + (rhombus.ySize / 4);
-        img.selectable = false;
-        img.clipPath = record.clipPath;
-        c.add(img);
-        c.sendToBack(img);
+        tessellationHelper.createDefaultImageState(c, img, record.clipPath);
       });
 
       let rhombusToClick = new fabric.Polygon(rpoints, {

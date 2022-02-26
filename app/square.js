@@ -33,10 +33,7 @@ makeSquare = function() {
       fabric.Image.fromURL(imagePath, function(img) {
         img.left = record.x - (img.width / 2) + (square.xSize / 2);
         img.top = record.y - (img.height / 2) + square.ySize / 2;
-        img.selectable = false;
-        img.clipPath = record.clipPath;
-        c.add(img);
-        c.sendToBack(img);
+        tessellationHelper.createDefaultImageState(c, img, record.clipPath);
       });
 
       let squareToClick = new fabric.Rect({
