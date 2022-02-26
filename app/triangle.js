@@ -77,14 +77,7 @@ makeTriangle = function () {
         angle: record.angle,
         selectable: false
       });
-
-      triangleToClick.on('mousedown', function(options) {
-        var t = document.getElementById('text');
-        t.textContent = record.title;
-      });
-
-      c.add(triangleToClick);
-      c.bringToFront(triangleToClick);
+      tessellationHelper.createDefaultClickState(c, triangleToClick, record);
     }
   }
   return triangle;

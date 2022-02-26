@@ -114,14 +114,7 @@ makeRhombus = function() {
         height: rhombus.ySize,
         selectable: false
       });
-
-      rhombusToClick.on('mousedown', function(options) {
-        var t = document.getElementById('text');
-        t.textContent = record.title;
-      });
-
-      c.add(rhombusToClick);
-      c.bringToFront(rhombusToClick);
+      tessellationHelper.createDefaultClickState(c, rhombusToClick, record);
     }
   }
   return rhombus;

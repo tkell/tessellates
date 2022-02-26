@@ -46,14 +46,7 @@ makeSquare = function() {
         height: square.ySize,
         selectable: false
       });
-
-      squareToClick.on('mousedown', function(options) {
-        var t = document.getElementById('text');
-        t.textContent = record.title;
-      });
-
-      c.add(squareToClick);
-      c.bringToFront(squareToClick);
+      tessellationHelper.createDefaultClickState(c, triangleToClick, record);
     }
   }
   return square;
