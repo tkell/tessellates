@@ -7,9 +7,10 @@ tessellationHelper.createImage = function (canvas, img, record) {
   img.clipPath = record.clipPath;
   canvas.add(img);
   canvas.sendToBack(img);
+  return img;
 }
 
-tessellationHelper.createDefaultClickState = function (canvas, objectToClick, record) {
+tessellationHelper.createDefaultClickState = function (canvas, objectToClick, matchingImg, record) {
   objectToClick.on('mouseover', function(options) {
     var t = document.getElementById('text');
     t.textContent = record.title;
@@ -18,6 +19,12 @@ tessellationHelper.createDefaultClickState = function (canvas, objectToClick, re
   objectToClick.on('mousedown', function(options) {
     var t = document.getElementById('text');
     t.textContent = `${record.artist} - ${record.title} [${record.label}]`;
+    matchingImg.animate('angle', 360, {
+      onChange: canvas.renderAll.bind(canvas),
+      onComplete: function() {
+        matchingImg.angle = 0;
+      }
+    });
   });
 
   canvas.add(objectToClick);

@@ -65,11 +65,11 @@ makeTriangle = function () {
     for (let record of data) {
       let imagePath = "images/" + record.id + ".jpg"
       fabric.Image.fromURL(imagePath, function(img) {
-        tessellationHelper.createImage(c, img, record);
+        let renderedImg = tessellationHelper.createImage(c, img, record);
+        let triangleToClick = tessellationHelper.createClickableMask(fabric.Triangle, record, triangle.xSize, triangle.ySize)
+        tessellationHelper.createDefaultClickState(c, triangleToClick, renderedImg, record);
       });
 
-      let triangleToClick = tessellationHelper.createClickableMask(fabric.Triangle, record, triangle.xSize, triangle.ySize)
-      tessellationHelper.createDefaultClickState(c, triangleToClick, record);
     }
   }
   return triangle;

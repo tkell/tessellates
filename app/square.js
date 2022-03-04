@@ -38,11 +38,11 @@ makeSquare = function() {
     for (let record of data) {
       let imagePath = "images/" + record.id + ".jpg"
       fabric.Image.fromURL(imagePath, function(img) {
-        tessellationHelper.createImage(c, img, record);
+        let renderedImg = tessellationHelper.createImage(c, img, record);
+        let squareToClick = tessellationHelper.createClickableMask(fabric.Rect, record, square.xSize, square.ySize)
+        tessellationHelper.createDefaultClickState(c, squareToClick, renderedImg, record);
       });
 
-      let squareToClick = tessellationHelper.createClickableMask(fabric.Rect, record, square.xSize, square.ySize)
-      tessellationHelper.createDefaultClickState(c, squareToClick, record);
     }
   }
   return square;

@@ -102,11 +102,10 @@ makeRhombus = function() {
     for (let record of data) {
       let imagePath = "images/" + record.id + ".jpg"
       fabric.Image.fromURL(imagePath, function(img) {
-        tessellationHelper.createImage(c, img, record);
+        let renderedImg = tessellationHelper.createImage(c, img, record);
+        let rhombusToClick = tessellationHelper.createClickableMask(fabric.Polygon, record, rhombus.xSize, rhombus.ySize, rpoints)
+        tessellationHelper.createDefaultClickState(c, rhombusToClick, renderedImg, record);
       });
-
-      let rhombusToClick = tessellationHelper.createClickableMask(fabric.Polygon, record, rhombus.xSize, rhombus.ySize, rpoints)
-      tessellationHelper.createDefaultClickState(c, rhombusToClick, record);
     }
   }
   return rhombus;
