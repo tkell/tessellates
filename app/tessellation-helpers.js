@@ -23,6 +23,10 @@ tessellationHelper.createDefaultClickState = function (canvas, objectToClick, ma
       onChange: canvas.renderAll.bind(canvas),
       onComplete: function() {
         matchingImg.angle = 0;
+        matchingImg.filters.push(new fabric.Image.filters.Grayscale());
+        matchingImg.applyFilters();
+        matchingImg.clipPath = record.clipPath;
+        canvas.insertAt(matchingImg, 0);
       }
     });
   });
