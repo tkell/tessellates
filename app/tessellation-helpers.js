@@ -33,6 +33,12 @@ tessellationHelper.createDefaultClickState = function (canvas, record, data) {
   });
 
   objectToClick.on('mousedown', function(options) {
+      record.image.filters = [];
+      record.image.applyFilters();
+  });
+
+
+  objectToClick.on('mousedown', function(options) {
     matchingImg.animate('angle', 360, {
       onChange: canvas.renderAll.bind(canvas),
       onComplete: function() {
