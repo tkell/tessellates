@@ -60,14 +60,16 @@ function clearImageFilters(record) {
   }
 }
 
-// OHKAY SO
-// We take a list of animations, in the order we want them to happen:  [go left, then go right]
-// We make our "finisher", finishAnimation
-// We reverse the animations
-// Then, for each animation, we set it up to onComplete the "previous" animation –
-// which is actually the _next_ animation, because we reversed it!
-// Then, we return the "first" animation function, so we can run it!
-// Yeecch, but I think it will work
+/*
+ Some complexity here, as Fabric is not great at animation chains:
+ We take a list of animations, in the order we want them to happen:  [go left, then go right]
+ We make our "finisher", finishAnimation
+ We reverse the animations
+ Then, for each animation, we set it up to onComplete the "previous" animation –
+ which is actually the _next_ animation, because we reversed it!
+ We continue to connect the previous animation to the next via onComplete ...
+ After we've done everything, we return the "first" animation function, so we can run it!
+*/ 
 function setupAnimationChain(record, animations) {
   let finishAnimation = function () {
     record.image.clipPath = record.clipPath;
@@ -75,10 +77,10 @@ function setupAnimationChain(record, animations) {
   }
 
   let backwardsAnimations = animations.reverse();
-  let funcs = [finishAnimation];
+  let animationFunctions = [finishAnimation];
   for (let i=0; i < animations.length; i++) {
     let animation = animations[i];
-    let scopedOnComplete = funcs[funcs.length -1];
+    let scopedOnComplete = animationFunctions[animationFunctions.length -1];
     let a = function() {
       let options = {
         onChange: canvas.renderAll.bind(canvas),
@@ -88,11 +90,10 @@ function setupAnimationChain(record, animations) {
       record.image.animate(animation.target, animation.change, options)
     }
 
-    funcs.push(a);
+    animationFunctions.push(a);
   }
 
-  console.log(funcs);
-  return funcs[funcs.length - 1];
+  return animationFunctions[animationFunctions.length - 1];
 }
 
 tessellationHelper.createDefaultClickState = function (canvas, record, data) {
@@ -112,14 +113,14 @@ tessellationHelper.createDefaultClickState = function (canvas, record, data) {
     }
   });
 
-  let carefullySetupBounceFunction = setupAnimationChain(record, [
+  let bounce = setupAnimationChain(record, [
     {target: 'left', change: '+=10', duration: 100},
     {target: 'left', change: '-=15', duration: 125},
     {target: 'left', change: '+=5', duration: 50},
   ]);
 
   objectToClick.on('mouseover', function(options) {
-    carefullySetupBounceFunction();
+    bounce();
   });
 
   canvas.add(objectToClick);
