@@ -40,7 +40,6 @@ fetch('vinyl.json')
     addPagingClick("back-small", tess.paging.small * -1);
     addPagingClick("back-medium", tess.paging.medium * -1);
     addPagingClick("back-big", tess.paging.big * -1);
-
     addPagingClick("forward-small", tess.paging.small);
     addPagingClick("forward-medium", tess.paging.medium);
     addPagingClick("forward-big", tess.paging.big);

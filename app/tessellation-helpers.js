@@ -1,13 +1,22 @@
 let tessellationHelper = {};
 
-tessellationHelper.createImage = function (canvas, img, record) {
+tessellationHelper.createImage = function (img, record) {
   img.left = record.imageX - (img.width / 2);
   img.top = record.imageY - (img.height / 2);
   img.selectable = false;
   img.clipPath = record.clipPath;
-  canvas.add(img);
-  canvas.sendToBack(img);
   return img;
+}
+
+// switch SQUARE and TRIANGLE to use this one!
+tessellationHelper.createAndRenderImage = function (canvas, record) {
+  record.image.left = record.imageX - (record.image.width / 2);
+  record.image.top = record.imageY - (record.image.height / 2);
+  record.image.selectable = false;
+  record.image.clipPath = record.clipPath;
+  canvas.add(record.image);
+  canvas.sendToBack(record.image);
+  return record.image;
 }
 
 tessellationHelper.createDefaultClickState = function (canvas, objectToClick, matchingImg, record) {

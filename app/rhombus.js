@@ -65,7 +65,7 @@ makeRhombus = function() {
       }
       for (var j = 0; i + j < data.length; j++) { /* warning!  checking the sum! */
         record = data[i + j];
-
+        record.imagePath = "images/" + record.id + ".jpg";
 
         if (j == 0) {
           record.x = x - rhombus.xSize * 0.25;
@@ -97,16 +97,41 @@ makeRhombus = function() {
     }
     return data
   }
-  
-  rhombus.render = function(c, data) {
-    for (let record of data) {
-      let imagePath = "images/" + record.id + ".jpg"
+
+  // move this to helpers
+  let fabricImageLoad = async function(imagePath) {
+    return new Promise((resolve, reject) => {
       fabric.Image.fromURL(imagePath, function(img) {
-        let renderedImg = tessellationHelper.createImage(c, img, record);
-        let rhombusToClick = tessellationHelper.createClickableMask(fabric.Polygon, record, rhombus.xSize, rhombus.ySize, rpoints)
-        tessellationHelper.createDefaultClickState(c, rhombusToClick, renderedImg, record);
+        resolve(img);
       });
-    }
+    });
   }
+
+  rhombus.loadImages = function(data) {
+    promises = [];
+    for (let record of data) {
+      let promise = fabricImageLoad(record.imagePath).then(img => {
+        record.image = img;
+      });
+      promises.push(promise);
+    }
+    return Promise.all(promises);
+  }
+
+  rhombus.render = function(c, data) {
+    rhombus.loadImages(data)
+    .then( () => {
+      for (let record of data) {
+        record.image = tessellationHelper.createAndRenderImage(canvas, record);
+      }
+      for (let record of data) {
+        record.clickable = tessellationHelper.createClickableMask(fabric.Polygon, record, rhombus.xSize, rhombus.ySize, rpoints)
+      }
+      for (let record of data) {
+        tessellationHelper.createDefaultClickState(c, record.clickable, record.image, record);
+      }
+    });
+  }
+
   return rhombus;
 }
