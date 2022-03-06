@@ -19,7 +19,9 @@ tessellationHelper.createAndRenderImage = function (canvas, record) {
   return record.image;
 }
 
-tessellationHelper.createDefaultClickState = function (canvas, objectToClick, matchingImg, record) {
+tessellationHelper.createDefaultClickState = function (canvas, record, data) {
+  let objectToClick = record.clickable;
+  let matchingImg = record.image;
   objectToClick.on('mouseover', function(options) {
     var t = document.getElementById('text');
     t.textContent = record.title;
@@ -28,14 +30,23 @@ tessellationHelper.createDefaultClickState = function (canvas, objectToClick, ma
   objectToClick.on('mousedown', function(options) {
     var t = document.getElementById('text');
     t.textContent = `${record.artist} - ${record.title} [${record.label}]`;
+  });
+
+  objectToClick.on('mousedown', function(options) {
     matchingImg.animate('angle', 360, {
       onChange: canvas.renderAll.bind(canvas),
       onComplete: function() {
         matchingImg.angle = 0;
-        matchingImg.filters.push(new fabric.Image.filters.Grayscale());
-        matchingImg.applyFilters();
         matchingImg.clipPath = record.clipPath;
         canvas.insertAt(matchingImg, 0);
+
+        for (let otherRecord of data) {
+          if (record.id === otherRecord.id) {
+            continue;
+          }
+          otherRecord.image.filters.push(new fabric.Image.filters.Grayscale());
+          otherRecord.image.applyFilters();
+        }
       }
     });
   });

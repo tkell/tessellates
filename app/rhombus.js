@@ -120,7 +120,7 @@ makeRhombus = function() {
 
   rhombus.render = function(c, data) {
     rhombus.loadImages(data)
-    .then( () => {
+    .then(() => {
       for (let record of data) {
         record.image = tessellationHelper.createAndRenderImage(canvas, record);
       }
@@ -128,7 +128,7 @@ makeRhombus = function() {
         record.clickable = tessellationHelper.createClickableMask(fabric.Polygon, record, rhombus.xSize, rhombus.ySize, rpoints)
       }
       for (let record of data) {
-        tessellationHelper.createDefaultClickState(c, record.clickable, record.image, record);
+        tessellationHelper.createDefaultClickState(c, record, data);
       }
     });
   }
