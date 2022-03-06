@@ -60,32 +60,39 @@ function clearImageFilters(record) {
   }
 }
 
-function startBounceAnimation(record) {
-  // so this is in kinda-shitty reverse order, but it works
-  // what if onComplete does a Promise.resolve?
-  // I might also need to wrap each animate call in a Promise, hmm hmm
+// OHKAY SO
+// We take a list of animations, in the order we want them to happen:  [go left, then go right]
+// We make our "finisher", finishAnimation
+// We reverse the animations
+// Then, for each animation, we set it up to onComplete the "previous" animation –
+// which is actually the _next_ animation, because we reversed it!
+// Then, we return the "first" animation function, so we can run it!
+// Yeecch, but I think it will work
+function setupAnimationChain(record, animations) {
   let finishAnimation = function () {
     record.image.clipPath = record.clipPath;
     canvas.insertAt(record.image);
   }
 
-  let thenFinishAnimation = {
-    onChange: canvas.renderAll.bind(canvas),
-    duration: 100,
-    onComplete: finishAnimation
-  };
+  let backwardsAnimations = animations.reverse();
+  let funcs = [finishAnimation];
+  for (let i=0; i < animations.length; i++) {
+    let animation = animations[i];
+    let scopedOnComplete = funcs[funcs.length -1];
+    let a = function() {
+      let options = {
+        onChange: canvas.renderAll.bind(canvas),
+        duration: animation.duration,
+        onComplete: scopedOnComplete
+      }
+      record.image.animate(animation.target, animation.change, options)
+    }
 
-  let animateLeft = function() {
-    record.image.animate('left', '-=10', thenFinishAnimation);
+    funcs.push(a);
   }
 
-  let thenAnimateLeft = {
-      onChange: canvas.renderAll.bind(canvas),
-      duration: 115,
-      onComplete: animateLeft
-  };
-
-  record.image.animate('left', '+=10', thenAnimateLeft);
+  console.log(funcs);
+  return funcs[funcs.length - 1];
 }
 
 tessellationHelper.createDefaultClickState = function (canvas, record, data) {
@@ -105,9 +112,14 @@ tessellationHelper.createDefaultClickState = function (canvas, record, data) {
     }
   });
 
+  let carefullySetupBounceFunction = setupAnimationChain(record, [
+    {target: 'left', change: '+=10', duration: 100},
+    {target: 'left', change: '-=15', duration: 125},
+    {target: 'left', change: '+=5', duration: 50},
+  ]);
 
   objectToClick.on('mouseover', function(options) {
-    startBounceAnimation(record);
+    carefullySetupBounceFunction();
   });
 
   canvas.add(objectToClick);
