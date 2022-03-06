@@ -19,23 +19,53 @@ tessellationHelper.createAndRenderImage = function (canvas, record) {
   return record.image;
 }
 
+tessellationHelper.createClickableMask = function (fabricKlass, record, width, height, polygonPoints) {
+  let params = {
+      left: record.clickX,
+      top: record.clickY,
+      angle: record.angle,
+      perPixelTargetFind: true,
+      fill: 'white',
+      opacity: 0.001,
+      width: width,
+      height: height,
+      selectable: false
+  }
+
+  if (!polygonPoints) {
+    return new fabricKlass(params);
+  } else {
+    return new fabricKlass(polygonPoints, params);
+  }
+}
+
+function mouseOverTextUpdate(record) {
+  return function() {
+    var t = document.getElementById('text');
+    t.textContent = record.title;
+  }
+}
+
+function mouseDownTextUpdate(record) {
+  return function() {
+    var t = document.getElementById('text');
+    t.textContent = `${record.artist} - ${record.title} [${record.label}]`;
+  }
+}
+
+function clearImageFilters(record) {
+  return function() {
+    record.image.filters = [];
+    record.image.applyFilters();
+  }
+}
+
 tessellationHelper.createDefaultClickState = function (canvas, record, data) {
   let objectToClick = record.clickable;
   let matchingImg = record.image;
-  objectToClick.on('mouseover', function(options) {
-    var t = document.getElementById('text');
-    t.textContent = record.title;
-  });
-
-  objectToClick.on('mousedown', function(options) {
-    var t = document.getElementById('text');
-    t.textContent = `${record.artist} - ${record.title} [${record.label}]`;
-  });
-
-  objectToClick.on('mousedown', function(options) {
-      record.image.filters = [];
-      record.image.applyFilters();
-  });
+  objectToClick.on('mouseover', mouseOverTextUpdate(record));
+  objectToClick.on('mousedown', mouseDownTextUpdate(record));
+  objectToClick.on('mousedown', clearImageFilters(record));
 
 
   objectToClick.on('mousedown', function(options) {
@@ -61,22 +91,3 @@ tessellationHelper.createDefaultClickState = function (canvas, record, data) {
   canvas.bringToFront(objectToClick);
 }
 
-tessellationHelper.createClickableMask = function (fabricKlass, record, width, height, polygonPoints) {
-  let params = {
-      left: record.clickX,
-      top: record.clickY,
-      angle: record.angle,
-      perPixelTargetFind: true,
-      fill: 'white',
-      opacity: 0.001,
-      width: width,
-      height: height,
-      selectable: false
-  }
-
-  if (!polygonPoints) {
-    return new fabricKlass(params);
-  } else {
-    return new fabricKlass(polygonPoints, params);
-  }
-}
