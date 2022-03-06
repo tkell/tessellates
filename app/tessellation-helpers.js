@@ -60,6 +60,26 @@ function clearImageFilters(record) {
   }
 }
 
+function startBounceAnimation(record) {
+
+  let animateLeft = function() {
+    record.image.animate('left', '-=25', {
+        onChange: canvas.renderAll.bind(canvas),
+        duration: 250,
+        onComplete: function() {
+          record.image.clipPath = record.clipPath;
+          canvas.insertAt(record.image);
+        }
+    });
+  }
+
+  record.image.animate('left', '+=25', {
+      onChange: canvas.renderAll.bind(canvas),
+      duration: 180,
+      onComplete: animateLeft
+  });
+}
+
 tessellationHelper.createDefaultClickState = function (canvas, record, data) {
   let objectToClick = record.clickable;
   let matchingImg = record.image;
@@ -67,24 +87,19 @@ tessellationHelper.createDefaultClickState = function (canvas, record, data) {
   objectToClick.on('mousedown', mouseDownTextUpdate(record));
   objectToClick.on('mousedown', clearImageFilters(record));
 
+  objectToClick.on('mousedown', function(options) {
+    for (let otherRecord of data) {
+      if (record.id === otherRecord.id) {
+        continue;
+      }
+      otherRecord.image.filters.push(new fabric.Image.filters.Grayscale());
+      otherRecord.image.applyFilters();
+    }
+  });
+
 
   objectToClick.on('mousedown', function(options) {
-    matchingImg.animate('angle', 360, {
-      onChange: canvas.renderAll.bind(canvas),
-      onComplete: function() {
-        matchingImg.angle = 0;
-        matchingImg.clipPath = record.clipPath;
-        canvas.insertAt(matchingImg, 0);
-
-        for (let otherRecord of data) {
-          if (record.id === otherRecord.id) {
-            continue;
-          }
-          otherRecord.image.filters.push(new fabric.Image.filters.Grayscale());
-          otherRecord.image.applyFilters();
-        }
-      }
-    });
+    startBounceAnimation(record);
   });
 
   canvas.add(objectToClick);
