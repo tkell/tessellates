@@ -61,23 +61,31 @@ function clearImageFilters(record) {
 }
 
 function startBounceAnimation(record) {
-
-  let animateLeft = function() {
-    record.image.animate('left', '-=25', {
-        onChange: canvas.renderAll.bind(canvas),
-        duration: 250,
-        onComplete: function() {
-          record.image.clipPath = record.clipPath;
-          canvas.insertAt(record.image);
-        }
-    });
+  // so this is in kinda-shitty reverse order, but it works
+  // what if onComplete does a Promise.resolve?
+  // I might also need to wrap each animate call in a Promise, hmm hmm
+  let finishAnimation = function () {
+    record.image.clipPath = record.clipPath;
+    canvas.insertAt(record.image);
   }
 
-  record.image.animate('left', '+=25', {
+  let thenFinishAnimation = {
+    onChange: canvas.renderAll.bind(canvas),
+    duration: 100,
+    onComplete: finishAnimation
+  };
+
+  let animateLeft = function() {
+    record.image.animate('left', '-=10', thenFinishAnimation);
+  }
+
+  let thenAnimateLeft = {
       onChange: canvas.renderAll.bind(canvas),
-      duration: 180,
+      duration: 115,
       onComplete: animateLeft
-  });
+  };
+
+  record.image.animate('left', '+=10', thenAnimateLeft);
 }
 
 tessellationHelper.createDefaultClickState = function (canvas, record, data) {
@@ -98,7 +106,7 @@ tessellationHelper.createDefaultClickState = function (canvas, record, data) {
   });
 
 
-  objectToClick.on('mousedown', function(options) {
+  objectToClick.on('mouseover', function(options) {
     startBounceAnimation(record);
   });
 
