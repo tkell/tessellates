@@ -74,6 +74,7 @@ function setupAnimationChain(record, animations) {
   let finishAnimation = function () {
     record.image.clipPath = record.clipPath;
     canvas.insertAt(record.image);
+    record.isAnimating = false;
   }
 
   let backwardsAnimations = animations.reverse();
@@ -87,6 +88,7 @@ function setupAnimationChain(record, animations) {
         duration: animation.duration,
         onComplete: scopedOnComplete
       }
+      record.isAnimating = true;
       record.image.animate(animation.target, animation.change, options)
     }
 
@@ -119,8 +121,11 @@ tessellationHelper.createDefaultClickState = function (canvas, record, data) {
     {target: 'left', change: '+=5', duration: 50},
   ]);
 
+  record.isAnimating = false;
   objectToClick.on('mouseover', function(options) {
-    bounce();
+    if (record.isAnimating === false) {
+      bounce();
+    }
   });
 
   canvas.add(objectToClick);
