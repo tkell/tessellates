@@ -65,6 +65,7 @@ makeRhombus = function() {
       }
       for (var j = 0; i + j < data.length; j++) { /* warning!  checking the sum! */
         record = data[i + j];
+        record.isAnimating = false;
         record.imagePath = "images/" + record.id + ".jpg";
 
         if (j == 0) {

@@ -121,7 +121,6 @@ tessellationHelper.createDefaultClickState = function (canvas, record, data) {
     {target: 'left', change: '+=5', duration: 50},
   ]);
 
-  record.isAnimating = false;
   objectToClick.on('mouseover', function(options) {
     if (record.isAnimating === false) {
       bounce();
