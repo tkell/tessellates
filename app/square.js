@@ -25,6 +25,8 @@ makeSquare = function() {
       record.clickX = x;
       record.clickY = y;
       record.clipPath = squareClipPath;
+      record.isAnimating = false;
+      record.imagePath = "images/" + record.id + ".jpg";
       x = x + this.xSize;
       if (x > this.size) {
         x = 0;
@@ -35,15 +37,19 @@ makeSquare = function() {
   }
   
   square.render = function(c, data) {
-    for (let record of data) {
-      let imagePath = "images/" + record.id + ".jpg"
-      fabric.Image.fromURL(imagePath, function(img) {
-        let renderedImg = tessellationHelper.createImage(c, img, record);
-        let squareToClick = tessellationHelper.createClickableMask(fabric.Rect, record, square.xSize, square.ySize)
-        tessellationHelper.createDefaultClickState(c, squareToClick, renderedImg, record);
-      });
-
-    }
+    imageHelper.loadImages(data)
+    .then(() => {
+      for (let record of data) {
+        record.image = tessellationHelper.createAndRenderImage(canvas, record);
+      }
+      for (let record of data) {
+        record.clickable = tessellationHelper.createClickableMask(fabric.Rect, record, square.xSize, square.ySize)
+      }
+      for (let record of data) {
+        tessellationHelper.createDefaultClickState(c, record, data);
+      }
+    });
   }
+
   return square;
 }

@@ -98,29 +98,8 @@ makeRhombus = function() {
     }
     return data
   }
-
-  // move this to helpers
-  let fabricImageLoad = async function(imagePath) {
-    return new Promise((resolve, reject) => {
-      fabric.Image.fromURL(imagePath, function(img) {
-        resolve(img);
-      });
-    });
-  }
-
-  rhombus.loadImages = function(data) {
-    promises = [];
-    for (let record of data) {
-      let promise = fabricImageLoad(record.imagePath).then(img => {
-        record.image = img;
-      });
-      promises.push(promise);
-    }
-    return Promise.all(promises);
-  }
-
   rhombus.render = function(c, data) {
-    rhombus.loadImages(data)
+    imageHelper.loadImages(data)
     .then(() => {
       for (let record of data) {
         record.image = tessellationHelper.createAndRenderImage(canvas, record);

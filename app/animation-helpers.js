@@ -1,6 +1,5 @@
 let animationHelper = {};
 
-
 /*
  Some complexity here, as Fabric is not great at animation chains:
  We take a list of animations, in the order we want them to happen:  [go left, then go right]
