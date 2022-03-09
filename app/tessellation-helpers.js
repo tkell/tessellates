@@ -78,12 +78,7 @@ tessellationHelper.createDefaultClickState = function (canvas, record, data) {
     }
   });
 
-  let bounce = animationHelper.setupAnimationChain(record, [
-    {target: 'left', change: '+=10', duration: 100},
-    {target: 'left', change: '-=15', duration: 125},
-    {target: 'left', change: '+=5', duration: 50},
-  ]);
-
+  let bounce = animationHelper.makeBounce(record);
   objectToClick.on('mouseover', function(options) {
     if (record.isAnimating === false) {
       bounce();

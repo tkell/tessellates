@@ -1,5 +1,6 @@
 let animationHelper = {};
 
+
 /*
  Some complexity here, as Fabric is not great at animation chains:
  We take a list of animations, in the order we want them to happen:  [go left, then go right]
@@ -36,4 +37,32 @@ animationHelper.setupAnimationChain = function(record, animations) {
   }
 
   return animationFunctions[animationFunctions.length - 1];
+}
+
+animationHelper.makeBounce = function(record) {
+  let durations = [getRandomInt(75, 150), getRandomInt(75, 150), getRandomInt(35, 75)]
+  let possibleChanges = [
+    ['+=10', '-=15', '+=5'],
+    ['+=11', '-=16', '+=5'],
+    ['+=8', '-=14', '+=6'],
+    ['-=12', '+=15', '-=3'],
+    ['-=9', '+=15', '-=6'],
+    ['-=10', '+=17', '-=7'],
+  ];
+  let possibleTargets = ['left', 'top'];
+  let change = possibleChanges[Math.floor(Math.random() * possibleChanges.length)];
+  let changeTarget = possibleTargets[Math.floor(Math.random() * possibleTargets.length)];
+
+  bounces = [
+    {target: changeTarget, change: change[0], duration: durations[0]},
+    {target: changeTarget, change: change[1], duration: durations[1]},
+    {target: changeTarget, change: change[2], duration: durations[2]}
+  ]
+  return animationHelper.setupAnimationChain(record, bounces);
+}
+
+function getRandomInt(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 }
