@@ -32,6 +32,8 @@ makeTriangle = function () {
       record.x = x;
       record.y = y;
       record.angle = angle;
+      record.isAnimating = false;
+      record.imagePath = "images/" + record.id + ".jpg";
 
       record.imageX = record.x + (triangle.xSize / 2);
       record.imageY = record.y + (triangle.ySize / 2);
@@ -62,15 +64,19 @@ makeTriangle = function () {
   }
   
   triangle.render = function(c, data) {
-    for (let record of data) {
-      let imagePath = "images/" + record.id + ".jpg"
-      fabric.Image.fromURL(imagePath, function(img) {
-        let renderedImg = tessellationHelper.createImage(c, img, record);
-        let triangleToClick = tessellationHelper.createClickableMask(fabric.Triangle, record, triangle.xSize, triangle.ySize)
-        tessellationHelper.createDefaultClickState(c, triangleToClick, renderedImg, record);
-      });
-
-    }
+    imageHelper.loadImages(data)
+    .then(() => {
+      for (let record of data) {
+        record.image = tessellationHelper.createAndRenderImage(canvas, record);
+      }
+      for (let record of data) {
+        record.clickable = tessellationHelper.createClickableMask(fabric.Triangle, record, triangle.xSize, triangle.ySize)
+      }
+      for (let record of data) {
+        tessellationHelper.createDefaultClickState(c, record, data);
+      }
+    });
   }
+
   return triangle;
 }
