@@ -8,7 +8,6 @@ tessellationHelper.createImage = function (img, record) {
   return img;
 }
 
-// switch SQUARE and TRIANGLE to use this one!
 tessellationHelper.createAndRenderImage = function (canvas, record) {
   record.image.left = record.imageX - (record.image.width / 2);
   record.image.top = record.imageY - (record.image.height / 2);
@@ -60,11 +59,21 @@ function clearImageFilters(record) {
   }
 }
 
+function makeBounce(record) {
+  return function() {
+    if (record.isAnimating === false) {
+      let bounce = animationHelper.makeBounce(record);
+      bounce();
+    }
+  }
+}
+
 
 tessellationHelper.createDefaultClickState = function (canvas, record, data) {
   let objectToClick = record.clickable;
   let matchingImg = record.image;
   objectToClick.on('mouseover', mouseOverTextUpdate(record));
+  objectToClick.on('mouseover', makeBounce(record));
   objectToClick.on('mousedown', mouseDownTextUpdate(record));
   objectToClick.on('mousedown', clearImageFilters(record));
 
@@ -78,14 +87,6 @@ tessellationHelper.createDefaultClickState = function (canvas, record, data) {
     }
   });
 
-  let bounce = animationHelper.makeBounce(record);
-  objectToClick.on('mouseover', function(options) {
-    if (record.isAnimating === false) {
-      bounce();
-    }
-  });
-
   canvas.add(objectToClick);
   canvas.bringToFront(objectToClick);
 }
-
