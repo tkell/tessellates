@@ -5,6 +5,7 @@ imageHelper.loadImages = function(data) {
     for (let record of data) {
       let promise = fabricImageLoad(record.imagePath).then(img => {
         record.image = img;
+        record.bigImage = fabric.util.object.clone(record.image);
       });
       promises.push(promise);
     }

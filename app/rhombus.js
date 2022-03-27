@@ -46,6 +46,16 @@ makeRhombus = function() {
     angle: 30,
   });
 
+  let bigRPoints = rhombusPoints(0, 0, rhombus.sideLength * 4);
+  let clipPathBig = new fabric.Polygon(bigRPoints, {
+    left: 0,
+    top: 0,
+    originX: 'center',
+    originY: 'center',
+    selectable: false,
+    angle: 90,
+  });
+
   rhombus.prepare = function(data) {
     let clipPaths = [clipPathLeft, clipPathCenter, clipPathRight];
     var x = 0;
@@ -92,6 +102,10 @@ makeRhombus = function() {
         }
         record.imageX = record.x + (rhombus.xSize / 2);
         record.imageY = record.y + (rhombus.ySize / 4);
+
+        record.bigImageX = rhombus.xSize * (1.5);
+        record.bigImageY = rhombus.ySize;
+        record.bigClipPath = clipPathBig;
       }
 
       x = x + rhombus.xSize;
