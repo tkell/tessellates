@@ -12,6 +12,14 @@ makeSquare = function() {
     height: square.ySize,
     selectable: false,
   });
+
+  let clipPathBig = new fabric.Rect({
+    originX: 'center',
+    originY: 'center',
+    width: square.xSize * 2.5,
+    height: square.ySize * 2.5,
+    selectable: false,
+  });
   
   square.prepare = function(data) {
     var x = 0;
@@ -25,6 +33,11 @@ makeSquare = function() {
       record.clickX = x;
       record.clickY = y;
       record.clipPath = squareClipPath;
+
+      record.bigClipPath = clipPathBig;
+      record.bigImageX = square.xSize * 1.5;
+      record.bigImageY = square.ySize * 1.5;
+
       record.isAnimating = false;
       record.imagePath = "images/" + record.id + ".jpg";
       x = x + this.xSize;
