@@ -23,6 +23,14 @@ makeTriangle = function () {
     angle: 180,
     selectable: false
   });
+
+  let clipPathBig = new fabric.Triangle({
+    originX: 'center',
+    originY: 'center',
+    width: triangle.xSize * 3.5,
+    height: triangle.ySize * 3.5,
+    selectable: false,
+  });
   
   triangle.prepare = function(data) {
     var x = 0;
@@ -46,6 +54,10 @@ makeTriangle = function () {
           record.clickX = record.x;
           record.clickY = record.y;
       }
+
+      record.bigClipPath = clipPathBig;
+      record.bigImageX = triangle.xSize * 2.5;
+      record.bigImageY = triangle.ySize * 2.5;
 
       if (angle === 0) {
         x = x + this.xSize / 2;
