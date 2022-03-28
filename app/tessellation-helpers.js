@@ -30,10 +30,12 @@ tessellationHelper.createClickableMask = function (fabricKlass, record, width, h
   }
 }
 
-function mouseOverTextUpdate(record) {
+function mouseOverTextUpdate(record, data) {
   return function() {
-    var t = document.getElementById('text');
-    t.textContent = record.title;
+    if (data.currentBigImage === undefined) {
+      var t = document.getElementById('text');
+      t.textContent = record.title;
+    }
   }
 }
 
@@ -87,6 +89,7 @@ function displayBigImage(record, data, canvas) {
 function removeBigImage(data, canvas) {
   return function() {
       canvas.remove(data.currentBigImage);
+      data.currentBigImage = undefined;
       for (let record of data) {
         record.image.filters = [];
         record.image.applyFilters();
@@ -98,7 +101,7 @@ function removeBigImage(data, canvas) {
 tessellationHelper.createDefaultClickState = function (canvas, record, data) {
   let objectToClick = record.clickable;
   let matchingImg = record.image;
-  objectToClick.on('mouseover', mouseOverTextUpdate(record));
+  objectToClick.on('mouseover', mouseOverTextUpdate(record, data));
   objectToClick.on('mouseover', makeBounce(record));
 
   objectToClick.on('mousedown', mouseDownTextUpdate(record));
