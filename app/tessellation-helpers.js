@@ -30,19 +30,11 @@ tessellationHelper.createClickableMask = function (fabricKlass, record, width, h
   }
 }
 
-
-
-
 tessellationHelper.createDefaultClickState = function (canvas, record, data) {
   let objectToClick = record.clickable;
   let matchingImg = record.image;
   objectToClick.on('mouseover', record.onMouseOver);
-
-  objectToClick.on('mousedown', uiHelper.mouseDownTextUpdate(record));
-  objectToClick.on('mousedown', uiHelper.clearImageFilters(record));
-  objectToClick.on('mousedown', uiHelper.displayBigImage(record, data, canvas));
-  objectToClick.on('mousedown', uiHelper.setGreyscaleImageFilters(data));
-
+  objectToClick.on('mousedown', record.onMouseDown);
   canvas.add(objectToClick);
   canvas.bringToFront(objectToClick);
 }

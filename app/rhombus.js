@@ -75,10 +75,18 @@ makeRhombus = function() {
       }
       for (var j = 0; i + j < data.length; j++) { /* warning!  checking the sum! */
         let record = data[i + j];
+
         record.onMouseOver = function() {
           uiHelper.bounceRecord(record);
           uiHelper.updateTextWithTitle(record, data);
         }
+        record.onMouseDown = function() {
+          uiHelper.updateTextWithArtistAndTitle(record);
+          uiHelper.clearImageFilters(record);
+          uiHelper.displayBigImage(record, data, canvas);
+          uiHelper.setGreyscaleImageFilters(data);
+        }
+
         record.isAnimating = false;
         record.imagePath = "images/" + record.id + ".jpg";
 
