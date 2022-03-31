@@ -74,8 +74,21 @@ makeRhombus = function() {
         }
       }
       for (var j = 0; i + j < data.length; j++) { /* warning!  checking the sum! */
-        record = data[i + j];
+        let record = data[i + j];
         record.isAnimating = false;
+
+        record.bounceOnMouseOver = function() {
+          if (record.isAnimating === false) {
+            animationHelper.makeBounce(record)();
+          }
+        }
+        record.updateTextOnMouseOver = function() {
+          if (data.currentBigImage === undefined) {
+            var t = document.getElementById('text');
+            t.textContent = record.title;
+          }
+        }
+
         record.imagePath = "images/" + record.id + ".jpg";
 
         if (j == 0) {
