@@ -37,12 +37,22 @@ makeTriangle = function () {
     var y = 0;
     var angle = 0;
     for (let record of data) {
-      record.x = x;
-      record.y = y;
-      record.angle = angle;
+      record.onMouseOver = function() {
+        uiHelper.bounceRecord(record);
+        uiHelper.updateTextWithTitle(record, data);
+      }
+      record.onMouseDown = function() {
+        uiHelper.updateTextWithArtistAndTitle(record);
+        uiHelper.clearImageFilters(record);
+        uiHelper.displayBigImage(record, data, canvas);
+        uiHelper.setGreyscaleImageFilters(data);
+      }
       record.isAnimating = false;
       record.imagePath = "images/" + record.id + ".jpg";
 
+      record.x = x;
+      record.y = y;
+      record.angle = angle;
       record.imageX = record.x + (triangle.xSize / 2);
       record.imageY = record.y + (triangle.ySize / 2);
       if (record.angle == 180) {

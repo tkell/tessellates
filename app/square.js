@@ -25,6 +25,18 @@ makeSquare = function() {
     var x = 0;
     var y = 0;
     for (let record of data) {
+      record.onMouseOver = function() {
+        uiHelper.bounceRecord(record);
+        uiHelper.updateTextWithTitle(record, data);
+      }
+      record.onMouseDown = function() {
+        uiHelper.updateTextWithArtistAndTitle(record);
+        uiHelper.clearImageFilters(record);
+        uiHelper.displayBigImage(record, data, canvas);
+        uiHelper.setGreyscaleImageFilters(data);
+      }
+      record.isAnimating = false;
+      record.imagePath = "images/" + record.id + ".jpg";
       record.x = x;
       record.y = y;
       record.angle = 0;
@@ -36,8 +48,6 @@ makeSquare = function() {
       record.bigClipPath = clipPathBig;
       record.bigImageX = square.xSize * 1.5;
       record.bigImageY = square.ySize * 1.5;
-      record.isAnimating = false;
-      record.imagePath = "images/" + record.id + ".jpg";
       x = x + this.xSize;
       if (x > this.size) {
         x = 0;
