@@ -1,5 +1,19 @@
 let uiHelper = {}
 
+uiHelper.bounceRecord = function(record) {
+  if (record.isAnimating === false) {
+    animationHelper.makeBounce(record)();
+  }
+}
+
+uiHelper.updateTextWithTitle = function(record, data) {
+  if (data.currentBigImage === undefined) {
+    var t = document.getElementById('text');
+    t.textContent = record.title;
+  }
+}
+
+
 uiHelper.mouseDownTextUpdate = function(record) {
   return function() {
     var t = document.getElementById('text');

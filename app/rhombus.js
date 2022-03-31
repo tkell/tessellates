@@ -75,20 +75,11 @@ makeRhombus = function() {
       }
       for (var j = 0; i + j < data.length; j++) { /* warning!  checking the sum! */
         let record = data[i + j];
+        record.onMouseOver = function() {
+          uiHelper.bounceRecord(record);
+          uiHelper.updateTextWithTitle(record, data);
+        }
         record.isAnimating = false;
-
-        record.bounceOnMouseOver = function() {
-          if (record.isAnimating === false) {
-            animationHelper.makeBounce(record)();
-          }
-        }
-        record.updateTextOnMouseOver = function() {
-          if (data.currentBigImage === undefined) {
-            var t = document.getElementById('text');
-            t.textContent = record.title;
-          }
-        }
-
         record.imagePath = "images/" + record.id + ".jpg";
 
         if (j == 0) {
