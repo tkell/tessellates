@@ -6,6 +6,26 @@ uiHelper.bounceRecord = function(record) {
   }
 }
 
+uiHelper.animateOtherRecordsAway = function(record, data) {
+  indexesToAnimate = [2, 3, 4, 5, 6, 9, 10, 11, 12, 13, 14, 19];
+  for (var i = 0; i < data.length; i++) {
+    if (indexesToAnimate.includes(i)) {
+      let otherRecord = data[i];
+      animationHelper.bounceAway(otherRecord)();
+    }
+  }
+}
+
+uiHelper.animateOtherRecordsBack = function(record, data) {
+  indexesToAnimate = [2, 3, 4, 5, 6, 9, 10, 11, 12, 13, 14, 19];
+  for (var i = 0; i < data.length; i++) {
+    if (indexesToAnimate.includes(i)) {
+      let otherRecord = data[i];
+      animationHelper.bounceBack(otherRecord)();
+    }
+  }
+}
+
 uiHelper.updateTextWithTitle = function(record, data) {
   if (data.currentBigImage === undefined) {
     var t = document.getElementById('text');
@@ -18,16 +38,22 @@ uiHelper.updateTextWithArtistAndTitle = function(record) {
   t.textContent = `${record.artist} - ${record.title} [${record.label}]`;
 }
 
-uiHelper.clearImageFilters = function(record) {
-  record.image.filters = [];
-  record.image.applyFilters();
-}
-
 uiHelper.setGreyscaleImageFilters = function (data) {
   for (let record of data) {
     record.image.filters.push(new fabric.Image.filters.Grayscale());
     record.image.applyFilters();
   }
+}
+
+uiHelper.clearAllImageFilters = function (data) {
+  for (let record of data) {
+    uiHelper.clearImageFilters(record);
+  }
+}
+
+uiHelper.clearImageFilters = function(record) {
+  record.image.filters = [];
+  record.image.applyFilters();
 }
 
 uiHelper.displayBigImage = function(record, data, canvas) {
@@ -39,18 +65,10 @@ uiHelper.displayBigImage = function(record, data, canvas) {
   canvas.add(record.bigImage);
   canvas.bringToFront(record.bigImage);
   data.currentBigImage = record.bigImage;
-
-  record.bigImage.on('mousedown', uiHelper.removeBigImage(data, canvas));
+  return record.bigImage;
 }
 
-// maybe we want to move this around later ...
 uiHelper.removeBigImage = function (data, canvas) {
-  return function() {
-      canvas.remove(data.currentBigImage);
-      data.currentBigImage = undefined;
-      for (let record of data) {
-        record.image.filters = [];
-        record.image.applyFilters();
-      }
-  }
+  canvas.remove(data.currentBigImage);
+  data.currentBigImage = undefined;
 }

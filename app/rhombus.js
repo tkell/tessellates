@@ -79,11 +79,25 @@ makeRhombus = function() {
           uiHelper.bounceRecord(record);
           uiHelper.updateTextWithTitle(record, data);
         }
+
         record.onMouseDown = function() {
           uiHelper.updateTextWithArtistAndTitle(record);
           uiHelper.clearImageFilters(record);
           uiHelper.displayBigImage(record, data, canvas);
           uiHelper.setGreyscaleImageFilters(data);
+          // this will need to track the indexes to move, maybe on the rhombus object?
+          // this will also need to be able to deal with other shapes, hmm?
+          // maybe uiHelper.rhombus.animateOtherRecordsAway(record, data);
+          uiHelper.animateOtherRecordsAway(record, data);
+
+          // Need to add this bit, but let's figure out open / close first
+          // uiHelper.replaceOtherRecordsWithCurrent(record, data)
+        }
+
+        record.onBigImageClose = function() {
+          uiHelper.removeBigImage(data, canvas);
+          uiHelper.clearAllImageFilters(data);
+          uiHelper.animateOtherRecordsBack(record, data);
         }
         record.isAnimating = false;
         record.imagePath = "images/" + record.id + ".jpg";

@@ -60,6 +60,29 @@ animationHelper.makeBounce = function(record) {
   return animationHelper.setupAnimationChain(record, bounces);
 }
 
+animationHelper.bounceAway = function(record) {
+  let durations = [100, 150, 140]
+  let change = ['+=100', '-=139', '+=3900'],
+  bounces = [
+    {target: 'left', change: change[0], duration: durations[0]},
+    {target: 'left', change: change[1], duration: durations[1]},
+    {target: 'left', change: change[2], duration: durations[2]}
+  ]
+  return animationHelper.setupAnimationChain(record, bounces);
+}
+
+animationHelper.bounceBack = function(record) {
+  let durations = [140, 150, 140]
+  let change = ['-=3900', '+=139', '-=100'],
+  bounces = [
+    {target: 'left', change: change[0], duration: durations[0]},
+    {target: 'left', change: change[1], duration: durations[1]},
+    {target: 'left', change: change[2], duration: durations[2]}
+  ]
+  return animationHelper.setupAnimationChain(record, bounces);
+}
+
+
 function getRandomInt(min, max) {
   min = Math.ceil(min);
   max = Math.floor(max);

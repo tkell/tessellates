@@ -35,6 +35,9 @@ tessellationHelper.createDefaultClickState = function (canvas, record, data) {
   let matchingImg = record.image;
   objectToClick.on('mouseover', record.onMouseOver);
   objectToClick.on('mousedown', record.onMouseDown);
+
+  // need to add an objectToClick to bigImage here, I think
+  record.bigImage.on('mousedown', record.onBigImageClose)
   canvas.add(objectToClick);
   canvas.bringToFront(objectToClick);
 }
