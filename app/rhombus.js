@@ -58,6 +58,7 @@ makeRhombus = function() {
 
   rhombus.prepare = function(data) {
     let clipPaths = [clipPathLeft, clipPathCenter, clipPathRight];
+    rhombus.clipPaths = [clipPathLeft, clipPathCenter, clipPathRight];
     var x = 0;
     var y = 0;
     var isShortRow = false;
@@ -85,13 +86,12 @@ makeRhombus = function() {
           uiHelper.clearImageFilters(record);
           uiHelper.displayBigImage(record, data, canvas);
           uiHelper.setGreyscaleImageFilters(data);
+
           // this will need to track the indexes to move, maybe on the rhombus object?
           // this will also need to be able to deal with other shapes, hmm?
           // maybe uiHelper.rhombus.animateOtherRecordsAway(record, data);
           uiHelper.animateOtherRecordsAway(record, data);
-
-          // Need to add this bit, but let's figure out open / close first
-          // uiHelper.replaceOtherRecordsWithCurrent(record, data)
+          uiHelper.replaceOtherRecords(record, data);
         }
 
         record.onBigImageClose = function() {
@@ -136,6 +136,7 @@ makeRhombus = function() {
     }
     return data
   }
+
   rhombus.render = function(c, data) {
     imageHelper.loadImages(data)
     .then(() => {

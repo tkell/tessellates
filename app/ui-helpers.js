@@ -7,12 +7,28 @@ uiHelper.bounceRecord = function(record) {
 }
 
 uiHelper.animateOtherRecordsAway = function(record, data) {
-  indexesToAnimate = [2, 3, 4, 5, 6, 9, 10, 11, 12, 13, 14, 19];
+  // indexesToAnimate = [2, 3, 4, 5, 6, 9, 10, 11, 12, 13, 14, 19];
   for (var i = 0; i < data.length; i++) {
-    if (indexesToAnimate.includes(i)) {
-      let otherRecord = data[i];
-      animationHelper.bounceAway(otherRecord)();
-    }
+    let otherRecord = data[i];
+    animationHelper.bounceAway(otherRecord)();
+  }
+}
+
+uiHelper.replaceOtherRecords = function(record, data) {
+  for (var i = 0; i <= data.length; i++) {
+    let otherRecord = data[i];
+    let promise = fabricImageLoad(record.imagePath).then(img => {
+      record.image = img;
+      record.image.clipPath = otherRecord.clipPath;
+      record.image.left = otherRecord.imageX - (record.image.width / 2);
+      record.image.top = otherRecord.imageY - (record.image.height / 2);
+      record.image.selectable = false;
+      canvas.add(record.image);
+      canvas.sendToBack(record.image);
+      record.image.filters.push(new fabric.Image.filters.Brightness({brightness: -0.2}));
+      record.image.filters.push(new fabric.Image.filters.Blur({blur: 0.05}));
+      record.image.applyFilters();
+    });
   }
 }
 
