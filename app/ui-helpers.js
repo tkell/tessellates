@@ -7,40 +7,44 @@ uiHelper.bounceRecord = function(record) {
 }
 
 uiHelper.animateOtherRecordsAway = function(record, data) {
-  // indexesToAnimate = [2, 3, 4, 5, 6, 9, 10, 11, 12, 13, 14, 19];
   for (var i = 0; i < data.length; i++) {
     let otherRecord = data[i];
     animationHelper.bounceAway(otherRecord)();
   }
 }
 
-uiHelper.replaceOtherRecords = function(record, data) {
-  for (var i = 0; i <= data.length; i++) {
+uiHelper.animateOtherRecordsBack = function(record, data) {
+  for (var i = 0; i < data.length; i++) {
     let otherRecord = data[i];
-    let promise = fabricImageLoad(record.imagePath).then(img => {
-      record.image = img;
-      record.image.clipPath = otherRecord.clipPath;
-      record.image.left = otherRecord.imageX - (record.image.width / 2);
-      record.image.top = otherRecord.imageY - (record.image.height / 2);
-      record.image.selectable = false;
-      canvas.add(record.image);
-      canvas.sendToBack(record.image);
-      record.image.filters.push(new fabric.Image.filters.Brightness({brightness: -0.2}));
-      record.image.filters.push(new fabric.Image.filters.Blur({blur: 0.05}));
-      record.image.applyFilters();
+    animationHelper.bounceBack(otherRecord)();
+  }
+}
+
+uiHelper.restoreOtherRecords = function() {
+  for (let tempImage of uiState.tempImages) {
+    canvas.remove(tempImage);
+  }
+}
+
+uiHelper.replaceOtherRecords = function(record, data) {
+  uiState.tempImages = [];
+  for (var i = 0; i < data.length; i++) {
+    let otherRecord = data[i];
+    let promise = fabricImageLoad(record.imagePath).then(tempImage => {
+      tempImage.clipPath = otherRecord.clipPath;
+      tempImage.left = otherRecord.imageX - (record.image.width / 2);
+      tempImage.top = otherRecord.imageY - (record.image.height / 2);
+      tempImage.selectable = false;
+      canvas.add(tempImage);
+      canvas.sendToBack(tempImage);
+      tempImage.filters.push(new fabric.Image.filters.Brightness({brightness: -0.2}));
+      tempImage.filters.push(new fabric.Image.filters.Blur({blur: 0.05}));
+      tempImage.applyFilters();
+      uiState.tempImages.push(tempImage);
     });
   }
 }
 
-uiHelper.animateOtherRecordsBack = function(record, data) {
-  indexesToAnimate = [2, 3, 4, 5, 6, 9, 10, 11, 12, 13, 14, 19];
-  for (var i = 0; i < data.length; i++) {
-    if (indexesToAnimate.includes(i)) {
-      let otherRecord = data[i];
-      animationHelper.bounceBack(otherRecord)();
-    }
-  }
-}
 
 uiHelper.updateTextWithTitle = function(record, data) {
   if (data.currentBigImage === undefined) {

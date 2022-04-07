@@ -53,6 +53,7 @@ makeTriangle = function () {
         uiHelper.removeBigImage(data, canvas);
         uiHelper.clearAllImageFilters(data);
         uiHelper.animateOtherRecordsBack(record, data);
+        uiHelper.restoreOtherRecords();
       }
       record.isAnimating = false;
       record.imagePath = "images/" + record.id + ".jpg";
