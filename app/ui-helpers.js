@@ -80,11 +80,11 @@ uiHelper.displayBigImage = function(record, data, canvas) {
   record.bigImage.clipPath = record.bigClipPath;
   canvas.add(record.bigImage);
   canvas.bringToFront(record.bigImage);
-  data.currentBigImage = record.bigImage;
+  uiState.currentBigImage = record.bigImage;
   return record.bigImage;
 }
 
 uiHelper.removeBigImage = function (data, canvas) {
-  canvas.remove(data.currentBigImage);
-  data.currentBigImage = undefined;
+  canvas.remove(uiState.currentBigImage);
+  uiState.currentBigImage = undefined;
 }

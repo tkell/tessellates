@@ -12,6 +12,7 @@ if (params['t'] == 'square') {
 
 let parsedParams = parseTessellatesParams(params, tess)
 var vinylData = [];
+var uiState = {};
 var canvas = null;
 
 function renderCanvas(canvas, tess, data, params) {
