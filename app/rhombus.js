@@ -58,7 +58,6 @@ makeRhombus = function() {
 
   rhombus.prepare = function(data) {
     let clipPaths = [clipPathLeft, clipPathCenter, clipPathRight];
-    rhombus.clipPaths = [clipPathLeft, clipPathCenter, clipPathRight];
     var x = 0;
     var y = 0;
     var isShortRow = false;

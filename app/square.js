@@ -34,6 +34,13 @@ makeSquare = function() {
         uiHelper.clearImageFilters(record);
         uiHelper.displayBigImage(record, data, canvas);
         uiHelper.setGreyscaleImageFilters(data);
+        uiHelper.animateOtherRecordsAway(record, data);
+        uiHelper.replaceOtherRecords(record, data);
+      }
+      record.onBigImageClose = function() {
+        uiHelper.removeBigImage(data, canvas);
+        uiHelper.clearAllImageFilters(data);
+        uiHelper.animateOtherRecordsBack(record, data);
       }
       record.isAnimating = false;
       record.imagePath = "images/" + record.id + ".jpg";
