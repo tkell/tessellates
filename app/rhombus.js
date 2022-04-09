@@ -89,8 +89,8 @@ makeRhombus = function() {
           // this will need to track the indexes to move, maybe on the rhombus object?
           // this will also need to be able to deal with other shapes, hmm?
           // maybe uiHelper.rhombus.animateOtherRecordsAway(record, data);
-          uiHelper.animateOtherRecordsAway(record, data);
           uiHelper.replaceOtherRecords(record, data);
+          uiHelper.animateOtherRecordsAway(record, data);
         }
 
         record.onBigImageClose = function() {

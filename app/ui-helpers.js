@@ -30,18 +30,21 @@ uiHelper.replaceOtherRecords = function(record, data) {
   uiState.tempImages = [];
   for (var i = 0; i < data.length; i++) {
     let otherRecord = data[i];
-    let promise = fabricImageLoad(record.imagePath).then(tempImage => {
-      tempImage.clipPath = otherRecord.clipPath;
-      tempImage.left = otherRecord.imageX - (record.image.width / 2);
-      tempImage.top = otherRecord.imageY - (record.image.height / 2);
-      tempImage.selectable = false;
-      canvas.add(tempImage);
-      canvas.sendToBack(tempImage);
-      tempImage.filters.push(new fabric.Image.filters.Brightness({brightness: -0.2}));
-      tempImage.filters.push(new fabric.Image.filters.Blur({blur: 0.05}));
-      tempImage.applyFilters();
-      uiState.tempImages.push(tempImage);
-    });
+    let loadImage = function() {
+      let promise = fabricImageLoad(record.imagePath).then(tempImage => {
+        tempImage.clipPath = otherRecord.clipPath;
+        tempImage.left = otherRecord.imageX - (record.image.width / 2);
+        tempImage.top = otherRecord.imageY - (record.image.height / 2);
+        tempImage.selectable = false;
+        canvas.add(tempImage);
+        canvas.sendToBack(tempImage);
+        tempImage.applyFilters();
+        uiState.tempImages.push(tempImage);
+      });
+    }
+
+    let timeoutMs = Math.floor(Math.random() * (750 - 125) ) + 125;
+    setTimeout(loadImage, timeoutMs);
   }
 }
 
