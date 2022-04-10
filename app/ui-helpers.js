@@ -37,13 +37,13 @@ uiHelper.restoreOtherRecords = function() {
 
 
 uiHelper.loadReplacementImage = function(record, otherRecord) {
-  fabricImageLoad(record.imagePath).then(tempImage => {
+  return fabricImageLoad(record.imagePath).then(tempImage => {
     tempImage.clipPath = otherRecord.clipPath;
     tempImage.left = otherRecord.imageX - (record.image.width / 2);
     tempImage.top = otherRecord.imageY - (record.image.height / 2);
     tempImage.selectable = false;
     canvas.add(tempImage);
-    canvas.sendToBack(record.image);
+    canvas.bringToFront(tempImage);
     tempImage.applyFilters();
     uiState.tempImages.push(tempImage);
   });
@@ -57,8 +57,9 @@ uiHelper.replaceOtherRecords = function(record, data) {
     let timeoutMs = Math.floor(Math.random() * (750 - 125) ) + 125;
     let p = new Promise(function (resolve, reject) {
       setTimeout(() => {
-        uiHelper.loadReplacementImage(record, otherRecord);
-        resolve();
+        uiHelper.loadReplacementImage(record, otherRecord).then(() => {
+          resolve();
+        })
       }, timeoutMs);
     });
     promises.push(p);
@@ -104,8 +105,8 @@ uiHelper.displayBigImage = function(record, data, canvas) {
   record.bigImage.selectable = false;
   record.bigImage.clipPath = record.bigClipPath;
   canvas.add(record.bigImage);
-  canvas.bringToFront(record.bigImage);
   uiState.currentBigImage = record.bigImage;
+  canvas.bringToFront(record.bigImage);
   return record.bigImage;
 }
 
