@@ -6,20 +6,6 @@ uiHelper.bounceRecord = function(record) {
   }
 }
 
-uiHelper.animateOtherRecordsAway = function(record, data) {
-  for (var i = 0; i < data.length; i++) {
-    let otherRecord = data[i];
-    animationHelper.bounceAway(otherRecord)();
-  }
-}
-
-uiHelper.animateOtherRecordsBack = function(record, data) {
-  for (var i = 0; i < data.length; i++) {
-    let otherRecord = data[i];
-    animationHelper.bounceBack(otherRecord)();
-  }
-}
-
 uiHelper.restoreOtherRecords = function() {
   let promises = [];
   for (let tempImage of uiState.tempImages) {
@@ -34,7 +20,6 @@ uiHelper.restoreOtherRecords = function() {
   }
   return Promise.all(promises);
 }
-
 
 uiHelper.loadReplacementImage = function(record, otherRecord) {
   return fabricImageLoad(record.imagePath).then(tempImage => {
@@ -78,24 +63,6 @@ uiHelper.updateTextWithTitle = function(record, data) {
 uiHelper.updateTextWithArtistAndTitle = function(record) {
   var t = document.getElementById('text');
   t.textContent = `${record.artist} - ${record.title} [${record.label}]`;
-}
-
-uiHelper.setGreyscaleImageFilters = function (data) {
-  for (let record of data) {
-    record.image.filters.push(new fabric.Image.filters.Grayscale());
-    record.image.applyFilters();
-  }
-}
-
-uiHelper.clearAllImageFilters = function (data) {
-  for (let record of data) {
-    uiHelper.clearImageFilters(record);
-  }
-}
-
-uiHelper.clearImageFilters = function(record) {
-  record.image.filters = [];
-  record.image.applyFilters();
 }
 
 uiHelper.displayBigImage = function(record, data, canvas) {
