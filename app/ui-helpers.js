@@ -31,11 +31,12 @@ uiHelper.restoreOtherRecords = function() {
 }
 
 uiHelper.replaceOtherRecords = function(record, data) {
+  let promises = [];
   uiState.tempImages = [];
   for (var i = 0; i < data.length; i++) {
     let otherRecord = data[i];
     let loadImage = function() {
-      let promise = fabricImageLoad(record.imagePath).then(tempImage => {
+      fabricImageLoad(record.imagePath).then(tempImage => {
         tempImage.clipPath = otherRecord.clipPath;
         tempImage.left = otherRecord.imageX - (record.image.width / 2);
         tempImage.top = otherRecord.imageY - (record.image.height / 2);
@@ -49,8 +50,17 @@ uiHelper.replaceOtherRecords = function(record, data) {
     }
 
     let timeoutMs = Math.floor(Math.random() * (750 - 125) ) + 125;
-    setTimeout(loadImage, timeoutMs);
+    // gotta be able to be more clever about closure-ish stuff here ...
+    let p = new Promise(function (resolve, reject) {
+      setTimeout(() => {
+        loadImage();
+        resolve();
+      }, timeoutMs);
+    });
+    promises.push(p);
   }
+  // this resolves instantly because there's nothing in it!
+  return Promise.all(promises);
 }
 
 

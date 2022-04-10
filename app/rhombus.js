@@ -83,8 +83,9 @@ makeRhombus = function() {
 
         record.onMouseDown = function() {
           uiHelper.updateTextWithArtistAndTitle(record);
-          uiHelper.replaceOtherRecords(record, data);
-          uiHelper.displayBigImage(record, data, canvas);
+          uiHelper.replaceOtherRecords(record, data).then(() =>  {
+            uiHelper.displayBigImage(record, data, canvas)
+          });
         }
 
         record.onBigImageClose = function() {
