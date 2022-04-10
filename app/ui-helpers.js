@@ -22,7 +22,11 @@ uiHelper.animateOtherRecordsBack = function(record, data) {
 
 uiHelper.restoreOtherRecords = function() {
   for (let tempImage of uiState.tempImages) {
-    canvas.remove(tempImage);
+    let removeImage = function() {
+      canvas.remove(tempImage);
+    }
+    let timeoutMs = Math.floor(Math.random() * (500 - 75) ) + 75;
+    setTimeout(removeImage, timeoutMs);
   }
 }
 
@@ -37,9 +41,10 @@ uiHelper.replaceOtherRecords = function(record, data) {
         tempImage.top = otherRecord.imageY - (record.image.height / 2);
         tempImage.selectable = false;
         canvas.add(tempImage);
-        canvas.sendToBack(tempImage);
+        canvas.sendToBack(record.image);
         tempImage.applyFilters();
         uiState.tempImages.push(tempImage);
+        canvas.bringToFront(uiState.currentBigImage); // a hack!
       });
     }
 
