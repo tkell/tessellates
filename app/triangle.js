@@ -43,21 +43,18 @@ makeTriangle = function () {
       }
       record.onMouseDown = function() {
         uiHelper.updateTextWithArtistAndTitle(record);
-        uiHelper.clearImageFilters(record);
-        uiHelper.displayBigImage(record, data, canvas);
-        uiHelper.setGreyscaleImageFilters(data);
-        uiHelper.animateOtherRecordsAway(record, data);
-        uiHelper.replaceOtherRecords(record, data);
+        uiHelper.replaceOtherRecords(record, data).then(() => {
+          uiHelper.displayBigImage(record, data, canvas)
+        });
       }
       record.onBigImageClose = function() {
-        uiHelper.removeBigImage(data, canvas);
-        uiHelper.clearAllImageFilters(data);
-        uiHelper.animateOtherRecordsBack(record, data);
-        uiHelper.restoreOtherRecords();
+        uiHelper.restoreOtherRecords().then(() => {
+          uiHelper.removeBigImage(data, canvas);
+        })
       }
+
       record.isAnimating = false;
       record.imagePath = "images/" + record.id + ".jpg";
-
       record.x = x;
       record.y = y;
       record.angle = angle;
