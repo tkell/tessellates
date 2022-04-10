@@ -30,36 +30,34 @@ uiHelper.restoreOtherRecords = function() {
   }
 }
 
+
+uiHelper.loadReplacementImage = function(record, otherRecord) {
+  fabricImageLoad(record.imagePath).then(tempImage => {
+    tempImage.clipPath = otherRecord.clipPath;
+    tempImage.left = otherRecord.imageX - (record.image.width / 2);
+    tempImage.top = otherRecord.imageY - (record.image.height / 2);
+    tempImage.selectable = false;
+    canvas.add(tempImage);
+    canvas.sendToBack(record.image);
+    tempImage.applyFilters();
+    uiState.tempImages.push(tempImage);
+  });
+}
+
 uiHelper.replaceOtherRecords = function(record, data) {
   let promises = [];
   uiState.tempImages = [];
   for (var i = 0; i < data.length; i++) {
     let otherRecord = data[i];
-    let loadImage = function() {
-      fabricImageLoad(record.imagePath).then(tempImage => {
-        tempImage.clipPath = otherRecord.clipPath;
-        tempImage.left = otherRecord.imageX - (record.image.width / 2);
-        tempImage.top = otherRecord.imageY - (record.image.height / 2);
-        tempImage.selectable = false;
-        canvas.add(tempImage);
-        canvas.sendToBack(record.image);
-        tempImage.applyFilters();
-        uiState.tempImages.push(tempImage);
-        canvas.bringToFront(uiState.currentBigImage); // a hack!
-      });
-    }
-
     let timeoutMs = Math.floor(Math.random() * (750 - 125) ) + 125;
-    // gotta be able to be more clever about closure-ish stuff here ...
     let p = new Promise(function (resolve, reject) {
       setTimeout(() => {
-        loadImage();
+        uiHelper.loadReplacementImage(record, otherRecord);
         resolve();
       }, timeoutMs);
     });
     promises.push(p);
   }
-  // this resolves instantly because there's nothing in it!
   return Promise.all(promises);
 }
 
