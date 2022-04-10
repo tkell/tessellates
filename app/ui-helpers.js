@@ -21,13 +21,18 @@ uiHelper.animateOtherRecordsBack = function(record, data) {
 }
 
 uiHelper.restoreOtherRecords = function() {
+  let promises = [];
   for (let tempImage of uiState.tempImages) {
-    let removeImage = function() {
-      canvas.remove(tempImage);
-    }
     let timeoutMs = Math.floor(Math.random() * (500 - 75) ) + 75;
-    setTimeout(removeImage, timeoutMs);
+    let p = new Promise(function (resolve, reject) {
+      setTimeout(() => {
+        canvas.remove(tempImage);
+        resolve();
+      }, timeoutMs);
+    });
+    promises.push(p);
   }
+  return Promise.all(promises);
 }
 
 
