@@ -1,7 +1,7 @@
 let imageHelper = {}
 
 imageHelper.loadImages = function(data) {
-    promises = [];
+    let promises = [];
     for (let record of data) {
       let promise = fabricImageLoad(record.imagePath).then(img => {
         record.image = img;
