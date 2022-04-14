@@ -9,7 +9,7 @@ uiHelper.bounceRecord = function(record) {
 uiHelper.restoreOtherRecords = function() {
   let promises = [];
   for (let tempImage of uiState.tempImages) {
-    let timeoutMs = Math.floor(Math.random() * (500 - 75) ) + 75;
+    let timeoutMs = Math.floor(Math.random() * (300 - 100) ) + 100;
     let p = new Promise(function (resolve, reject) {
       setTimeout(() => {
         canvas.remove(tempImage);
