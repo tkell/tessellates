@@ -29,11 +29,11 @@ uiHelper.bounceRecord = function(record) {
 
 // Image Loopers + promises
 uiHelper.replaceClippedImage = function(record, data, minTimeMs, maxTimeMs) {
-  let toUse = [2, 3, 4, 5, 6, 9, 10, 11, 12, 13, 14, 15, 19];
   let promises = [];
   for (var i = 0; i < data.length; i++) {
-    if (!toUse.includes(i)) continue;
     let otherRecord = data[i];
+    if (!otherRecord.isCloseUp) continue;
+
     let timeoutMs = getRandomTimeout(minTimeMs, maxTimeMs);
     let p = promiseToLoadClippedImage(record, otherRecord, timeoutMs);
     promises.push(p);

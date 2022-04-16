@@ -17,6 +17,7 @@ makeRhombus = function() {
   rhombus.ySize = rhombus.sideLength * 2;
   rhombus.size = 1000;
   rhombus.defaultItems = 24;
+  rhombus.closeUpIndexes = [2, 3, 4, 5, 6, 9, 10, 11, 12, 13, 14, 15, 19];
   rhombus.paging = {"small": 3, "medium": 9, "big": 24};
 
   let rpoints = rhombusPoints(0, 0, rhombus.sideLength);
@@ -75,6 +76,11 @@ makeRhombus = function() {
       }
       for (var j = 0; i + j < data.length; j++) { /* warning!  checking the sum! */
         let record = data[i + j];
+        if (rhombus.closeUpIndexes.includes(i + j))
+          record.isCloseUp = true;
+        else
+          record.isCloseUp = false;
+        end
 
         record.onMouseOver = function() {
           uiHelper.bounceRecord(record);
