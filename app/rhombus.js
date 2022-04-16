@@ -85,14 +85,14 @@ makeRhombus = function() {
           uiHelper.updateTextWithArtistAndTitle(record);
           uiHelper.replaceOtherRecords(record, data)
             .then(() => uiHelper.replaceClippedImage(record, data))
-            .then(() => uiHelper.replaceClippedImage(record, data))
             .then(() => uiHelper.waitFor(1000))
-            .then(() => uiHelper.displayBigImage(record, data, canvas))
+            .then(() => uiHelper.displayBigImage(record, data, canvas));
         }
 
         record.onBigImageClose = function() {
-          uiHelper.restoreOtherRecords()
-            .then(() => uiHelper.removeBigImage(data, canvas));
+          uiHelper.replaceClippedImage(record, data)
+            .then(() => uiHelper.removeBigImage(data, canvas))
+            .then(() => uiHelper.restoreOtherRecords());
         }
 
         record.isAnimating = false;

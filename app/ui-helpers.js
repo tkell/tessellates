@@ -24,6 +24,7 @@ uiHelper.restoreOtherRecords = function() {
     });
     promises.push(p);
   }
+  uiState.tempImages = [];
   return Promise.all(promises);
 }
 
@@ -49,7 +50,6 @@ uiHelper.loadClippedReplacementImage = function(record, otherRecord) {
 uiHelper.replaceClippedImage = function(record, data) {
   let toUse = [2, 3, 4, 5, 6, 9, 10, 11, 12, 13, 14, 15, 19];
   let promises = [];
-  uiState.tempImages = [];
   for (var i = 0; i < data.length; i++) {
     if (!toUse.includes(i)) continue;
 
@@ -57,9 +57,10 @@ uiHelper.replaceClippedImage = function(record, data) {
     let timeoutMs = Math.floor(Math.random() * (750 - 125) ) + 125;
     let p = new Promise(function (resolve, reject) {
       setTimeout(() => {
-        uiHelper.loadClippedReplacementImage(record, otherRecord).then(() => {
-          resolve();
-        })
+        uiHelper.loadClippedReplacementImage(record, otherRecord)
+          .then(() => {
+            resolve();
+          })
       }, timeoutMs);
     });
     promises.push(p);
@@ -81,7 +82,6 @@ uiHelper.loadReplacementImage = function(record, otherRecord) {
 
 uiHelper.replaceOtherRecords = function(record, data) {
   let promises = [];
-  uiState.tempImages = [];
   for (var i = 0; i < data.length; i++) {
     let otherRecord = data[i];
     let timeoutMs = Math.floor(Math.random() * (750 - 125) ) + 125;

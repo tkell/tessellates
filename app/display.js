@@ -1,3 +1,9 @@
+var vinylData = [];
+var uiState = {
+  tempImages: [],
+  currentBigImage: null
+};
+
 let params = getSearchParameters();
 
 // pick a tessellation, then ..
@@ -11,8 +17,6 @@ if (params['t'] == 'square') {
 }
 
 let parsedParams = parseTessellatesParams(params, tess)
-var vinylData = [];
-var uiState = {};
 var canvas = null;
 
 function renderCanvas(canvas, tess, data, params) {
