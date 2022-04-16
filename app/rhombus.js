@@ -85,6 +85,8 @@ makeRhombus = function() {
           uiHelper.updateTextWithArtistAndTitle(record);
           uiHelper.replaceOtherRecords(record, data)
             .then(() => uiHelper.replaceClippedImage(record, data))
+            .then(() => uiHelper.replaceClippedImage(record, data))
+            .then(() => uiHelper.waitFor(1000))
             .then(() => uiHelper.displayBigImage(record, data, canvas))
         }
 

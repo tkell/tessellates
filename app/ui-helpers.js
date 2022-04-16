@@ -6,6 +6,12 @@ uiHelper.bounceRecord = function(record) {
   }
 }
 
+uiHelper.waitFor = function(milliseconds) {
+  return new Promise(function(resolve) {
+    setTimeout(resolve, milliseconds)
+  });
+}
+
 uiHelper.restoreOtherRecords = function() {
   let promises = [];
   for (let tempImage of uiState.tempImages) {
