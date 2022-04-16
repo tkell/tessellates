@@ -83,16 +83,16 @@ makeRhombus = function() {
 
         record.onMouseDown = function() {
           uiHelper.updateTextWithArtistAndTitle(record);
-          uiHelper.replaceOtherRecords(record, data)
-            .then(() => uiHelper.replaceClippedImage(record, data))
+          uiHelper.replaceOtherRecords(record, data, 250, 750)
+            .then(() => uiHelper.replaceClippedImage(record, data, 125, 625))
             .then(() => uiHelper.waitFor(1000))
             .then(() => uiHelper.displayBigImage(record, data, canvas));
         }
 
         record.onBigImageClose = function() {
-          uiHelper.replaceClippedImage(record, data)
+          uiHelper.replaceClippedImage(record, data, 50, 250)
             .then(() => uiHelper.removeBigImage(data, canvas))
-            .then(() => uiHelper.restoreOtherRecords());
+            .then(() => uiHelper.restoreOtherRecords(100, 300));
         }
 
         record.isAnimating = false;
