@@ -70,12 +70,12 @@ uiHelper.replaceClippedImage = function(record, data) {
 
 uiHelper.loadReplacementImage = function(record, otherRecord) {
   return fabricImageLoad(record.imagePath).then(tempImage => {
-    tempImage.clipPath = otherRecord.clipPath;
-    tempImage.left = otherRecord.imageX - (record.image.width / 2);
-    tempImage.top = otherRecord.imageY - (record.image.height / 2);
-    tempImage.selectable = false;
-    canvas.add(tempImage);
-    canvas.bringToFront(tempImage);
+    addAndClipImage(
+      tempImage,
+      otherRecord.clipPath,
+      otherRecord.imageX - (record.image.width / 2),
+      otherRecord.imageY - (record.image.height / 2),
+    );
     uiState.tempImages.push(tempImage);
   });
 }
@@ -110,19 +110,29 @@ uiHelper.updateTextWithArtistAndTitle = function(record) {
   t.textContent = `${record.artist} - ${record.title} [${record.label}]`;
 }
 
+
 uiHelper.displayBigImage = function(record, data, canvas) {
   canvas.remove(data.currentBigImage);
-  record.bigImage.left = record.bigImageX - (record.bigImage.width / 2)
-  record.bigImage.top = record.bigImageY - (record.bigImage.height / 2)
-  record.bigImage.selectable = false;
-  record.bigImage.clipPath = record.bigClipPath;
-  canvas.add(record.bigImage);
+    addAndClipImage(
+      record.bigImage,
+      record.bigClipPath,
+      record.bigImageX - (record.bigImage.width / 2),
+      record.bigImageY - (record.bigImage.height / 2),
+    );
   uiState.currentBigImage = record.bigImage;
-  canvas.bringToFront(record.bigImage);
   return record.bigImage;
 }
 
 uiHelper.removeBigImage = function (data, canvas) {
   canvas.remove(uiState.currentBigImage);
   uiState.currentBigImage = undefined;
+}
+
+function addAndClipImage(image, clipPath, left, top) {
+  image.clipPath = clipPath;
+  image.left = left;
+  image.top = top
+  image.selectable = false;
+  canvas.add(image);
+  canvas.bringToFront(image);
 }
