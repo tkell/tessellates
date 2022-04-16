@@ -28,28 +28,28 @@ uiHelper.bounceRecord = function(record) {
 }
 
 // Image Loopers + promises
-uiHelper.replaceClippedImage = function(record, data, minTimeMs, maxTimeMs) {
+uiHelper.replaceCloseUpImage = function(record, data, minTimeMs, maxTimeMs) {
   let promises = [];
   for (var i = 0; i < data.length; i++) {
     let otherRecord = data[i];
     if (!otherRecord.isCloseUp) continue;
 
     let timeoutMs = getRandomTimeout(minTimeMs, maxTimeMs);
-    let p = promiseToLoadClippedImage(record, otherRecord, timeoutMs);
+    let p = promiseToLoadCloseUpImage(record, otherRecord, timeoutMs);
     promises.push(p);
   }
   return Promise.all(promises);
 }
 
-function promiseToLoadClippedImage(record, otherRecord, timeoutMs) {
+function promiseToLoadCloseUpImage(record, otherRecord, timeoutMs) {
   return new Promise(function (resolve, reject) {
     setTimeout(() => {
-      uiHelper.loadClippedReplacementImage(record, otherRecord).then(() => { resolve(); })
+      uiHelper.loadCloseUpReplacementImage(record, otherRecord).then(() => { resolve(); })
     }, timeoutMs);
   });
 }
 
-uiHelper.loadClippedReplacementImage = function(record, otherRecord) {
+uiHelper.loadCloseUpReplacementImage = function(record, otherRecord) {
   return fabricImageLoad(record.imagePath).then(tempImage => {
     tempImage.clipPath = otherRecord.clipPath;
     tempImage.clipPath = fabric.util.object.clone(otherRecord.clipPath);
