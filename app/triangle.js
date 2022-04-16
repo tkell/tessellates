@@ -4,6 +4,11 @@ makeTriangle = function () {
   triangle.ySize = 200;
   triangle.size = 1000;
   triangle.defaultItems = 45;
+  triangle.closeUpIndexes = [
+    10, 11, 12, 13, 14, 15, 16,
+    19, 20, 21, 22, 23, 24, 25,
+    28, 29, 30, 31, 32, 33, 34,
+  ];
   triangle.paging = {"small": 1, "medium": 9, "big": 45};
 
   let triangleClipPathUp = new fabric.Triangle({
@@ -24,7 +29,7 @@ makeTriangle = function () {
     selectable: false
   });
 
-  let clipPathBig = new fabric.Triangle({
+  let clipPathBig = new fabric.Rect({
     originX: 'center',
     originY: 'center',
     width: triangle.xSize * 3.5,
@@ -36,21 +41,28 @@ makeTriangle = function () {
     var x = 0;
     var y = 0;
     var angle = 0;
-    for (let record of data) {
+    for (let i = 0; i < data.length; i++) {
+      let record = data[i];
       record.onMouseOver = function() {
         uiHelper.bounceRecord(record);
         uiHelper.updateTextWithTitle(record, data);
       }
       record.onMouseDown = function() {
         uiHelper.updateTextWithArtistAndTitle(record);
-        uiHelper.replaceOtherRecords(record, data).then(() => {
-          uiHelper.displayBigImage(record, data, canvas)
-        });
+        uiHelper.replaceOtherRecords(record, data, 250, 625)
+          .then(() => {
+            uiHelper.hideExistingImages(data);
+            uiHelper.replaceCloseUpImage(record, data, 125, 625);
+          })
+          .then(() => uiHelper.waitFor(1250))
+          .then(() => uiHelper.displayBigImage(record, data, canvas));
       }
+
       record.onBigImageClose = function() {
-        uiHelper.restoreOtherRecords().then(() => {
-          uiHelper.removeBigImage(data, canvas);
-        })
+        uiHelper.showExistingImages(data);
+        uiHelper.replaceCloseUpImage(record, data, 50, 250)
+          .then(() => uiHelper.removeBigImage(data, canvas))
+          .then(() => uiHelper.restoreOtherRecords(100, 300));
       }
 
       record.isAnimating = false;
@@ -86,6 +98,15 @@ makeTriangle = function () {
         angle = 0;
         y = y + this.ySize;
       }
+
+      if (triangle.closeUpIndexes.includes(i)) {
+        record.isCloseUp = true;
+        record.tempClipPathX = record.x - (triangle.xSize * 2);
+        record.tempClipPathY = record.y - (triangle.ySize * 2);
+      } else {
+        record.isCloseUp = false;
+      }
+
     }
     return data;
   }

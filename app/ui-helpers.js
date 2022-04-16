@@ -47,7 +47,6 @@ uiHelper.replaceCloseUpImage = function(record, data, minTimeMs, maxTimeMs) {
   for (var i = 0; i < data.length; i++) {
     let otherRecord = data[i];
     if (!otherRecord.isCloseUp) continue;
-
     let timeoutMs = getRandomTimeout(minTimeMs, maxTimeMs);
     let p = promiseToLoadCloseUpImage(record, otherRecord, timeoutMs);
     promises.push(p);

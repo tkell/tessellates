@@ -76,12 +76,10 @@ makeRhombus = function() {
       }
       for (var j = 0; i + j < data.length; j++) { /* warning!  checking the sum! */
         let record = data[i + j];
-
         record.onMouseOver = function() {
           uiHelper.bounceRecord(record);
           uiHelper.updateTextWithTitle(record, data);
         }
-
         record.onMouseDown = function() {
           uiHelper.updateTextWithArtistAndTitle(record);
           uiHelper.replaceOtherRecords(record, data, 250, 750)
@@ -92,7 +90,6 @@ makeRhombus = function() {
             .then(() => uiHelper.waitFor(750))
             .then(() => uiHelper.displayBigImage(record, data, canvas));
         }
-
         record.onBigImageClose = function() {
           uiHelper.showExistingImages(data);
           uiHelper.replaceCloseUpImage(record, data, 50, 250)
@@ -140,7 +137,6 @@ makeRhombus = function() {
           record.isCloseUp = false;
         }
       }
-
 
       x = x + rhombus.xSize;
     }
