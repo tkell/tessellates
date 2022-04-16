@@ -28,6 +28,20 @@ uiHelper.bounceRecord = function(record) {
 }
 
 // Image Loopers + promises
+uiHelper.hideExistingImages = function(data) {
+  for (var i = 0; i < data.length; i++) {
+    let r = data[i];
+    r.image.visible = false;
+  }
+}
+
+uiHelper.showExistingImages = function(data) {
+  for (var i = 0; i < data.length; i++) {
+    let r = data[i];
+    r.image.visible = true;
+  }
+}
+
 uiHelper.replaceCloseUpImage = function(record, data, minTimeMs, maxTimeMs) {
   let promises = [];
   for (var i = 0; i < data.length; i++) {
