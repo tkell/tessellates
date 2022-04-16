@@ -30,7 +30,7 @@ uiHelper.replaceClippedImage = function(record, data, minTimeMs, maxTimeMs) {
   for (var i = 0; i < data.length; i++) {
     if (!toUse.includes(i)) continue;
     let otherRecord = data[i];
-    let timeoutMs = Math.floor(Math.random() * (maxTimeMs - minTimeMs) ) + minTimeMs;
+    let timeoutMs = getRandomTimeout(minTimeMs, maxTimeMs);
     let p = promiseToLoadClippedImage(record, otherRecord, timeoutMs);
     promises.push(p);
   }
@@ -50,7 +50,7 @@ uiHelper.replaceOtherRecords = function(record, data, minTimeMs, maxTimeMs) {
   let promises = [];
   for (var i = 0; i < data.length; i++) {
     let otherRecord = data[i];
-    let timeoutMs = Math.floor(Math.random() * (maxTimeMs - minTimeMs) ) + minTimeMs;
+    let timeoutMs = getRandomTimeout(minTimeMs, maxTimeMs);
     let p = promiseToLoadRegularImage(record, otherRecord, timeoutMs);
     promises.push(p);
   }
@@ -114,18 +114,25 @@ uiHelper.removeBigImage = function (data, canvas) {
 uiHelper.restoreOtherRecords = function(minTimeMs, maxTimeMs) {
   let promises = [];
   for (let tempImage of uiState.tempImages) {
-    let timeoutMs = Math.floor(Math.random() * (maxTimeMs - minTimeMs)) + minTimeMs;
-    console.log(timeoutMs);
-    let p = new Promise(function (resolve, reject) {
-      setTimeout(() => {
-        canvas.remove(tempImage);
-        resolve();
-      }, timeoutMs);
-    });
+    let timeoutMs = getRandomTimeout(minTimeMs, maxTimeMs);
+    let p = promiseToRemoveImage(tempImage, timeoutMs);
     promises.push(p);
   }
   uiState.tempImages = [];
   return Promise.all(promises);
+}
+
+function promiseToRemoveImage(image, timeoutMs) {
+  return new Promise(function (resolve, reject) {
+    setTimeout(() => {
+      canvas.remove(image);
+      resolve();
+    }, timeoutMs);
+  });
+}
+
+function getRandomTimeout(maxTimeMs, minTimeMs) {
+  return Math.floor(Math.random() * (maxTimeMs - minTimeMs)) + minTimeMs;
 }
 
 function addAndClipImage(image, clipPath, left, top) {
