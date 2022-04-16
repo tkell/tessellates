@@ -6,6 +6,7 @@ uiHelper.waitFor = function(milliseconds) {
   });
 }
 
+// Text updates
 uiHelper.updateTextWithArtistAndTitle = function(record) {
   var t = document.getElementById('text');
   t.textContent = `${record.artist} - ${record.title} [${record.label}]`;
@@ -18,12 +19,15 @@ uiHelper.updateTextWithTitle = function(record, data) {
   }
 }
 
+
+// Bounces
 uiHelper.bounceRecord = function(record) {
   if (record.isAnimating === false) {
     animationHelper.makeBounce(record)();
   }
 }
 
+// Image Loopers + promises
 uiHelper.replaceClippedImage = function(record, data, minTimeMs, maxTimeMs) {
   let toUse = [2, 3, 4, 5, 6, 9, 10, 11, 12, 13, 14, 15, 19];
   let promises = [];
@@ -42,6 +46,23 @@ function promiseToLoadClippedImage(record, otherRecord, timeoutMs) {
     setTimeout(() => {
       uiHelper.loadClippedReplacementImage(record, otherRecord).then(() => { resolve(); })
     }, timeoutMs);
+  });
+}
+
+uiHelper.loadClippedReplacementImage = function(record, otherRecord) {
+  return fabricImageLoad(record.imagePath).then(tempImage => {
+    tempImage.clipPath = otherRecord.clipPath;
+    tempImage.clipPath = fabric.util.object.clone(otherRecord.clipPath);
+    tempImage.clipPath.left = otherRecord.x - (334); // - rhombus.xSize
+    tempImage.clipPath.top = otherRecord.imageY - (334 * 1.15); // ??
+
+    addAndClipImage(
+      tempImage,
+      tempImage.clipPath,
+      record.bigImageX - (record.bigImage.width / 2),
+      record.bigImageY - (record.bigImage.height / 2),
+    );
+    uiState.tempImages.push(tempImage);
   });
 }
 
@@ -65,23 +86,6 @@ function promiseToLoadRegularImage(record, otherRecord, timeoutMs) {
   });
 }
 
-uiHelper.loadClippedReplacementImage = function(record, otherRecord) {
-  return fabricImageLoad(record.imagePath).then(tempImage => {
-    tempImage.clipPath = otherRecord.clipPath;
-    tempImage.clipPath = fabric.util.object.clone(otherRecord.clipPath);
-    tempImage.clipPath.left = otherRecord.x - (334); // - rhombus.xSize
-    tempImage.clipPath.top = otherRecord.imageY - (334 * 1.15); // ??
-
-    addAndClipImage(
-      tempImage,
-      tempImage.clipPath,
-      record.bigImageX - (record.bigImage.width / 2),
-      record.bigImageY - (record.bigImage.height / 2),
-    );
-    uiState.tempImages.push(tempImage);
-  });
-}
-
 uiHelper.loadReplacementImage = function(record, otherRecord) {
   return fabricImageLoad(record.imagePath).then(tempImage => {
     addAndClipImage(
@@ -92,23 +96,6 @@ uiHelper.loadReplacementImage = function(record, otherRecord) {
     );
     uiState.tempImages.push(tempImage);
   });
-}
-
-uiHelper.displayBigImage = function(record, data, canvas) {
-  canvas.remove(data.currentBigImage);
-    addAndClipImage(
-      record.bigImage,
-      record.bigClipPath,
-      record.bigImageX - (record.bigImage.width / 2),
-      record.bigImageY - (record.bigImage.height / 2),
-    );
-  uiState.currentBigImage = record.bigImage;
-  return record.bigImage;
-}
-
-uiHelper.removeBigImage = function (data, canvas) {
-  canvas.remove(uiState.currentBigImage);
-  uiState.currentBigImage = undefined;
 }
 
 uiHelper.restoreOtherRecords = function(minTimeMs, maxTimeMs) {
@@ -131,6 +118,26 @@ function promiseToRemoveImage(image, timeoutMs) {
   });
 }
 
+// Big Image
+uiHelper.displayBigImage = function(record, data, canvas) {
+  canvas.remove(data.currentBigImage);
+    addAndClipImage(
+      record.bigImage,
+      record.bigClipPath,
+      record.bigImageX - (record.bigImage.width / 2),
+      record.bigImageY - (record.bigImage.height / 2),
+    );
+  uiState.currentBigImage = record.bigImage;
+  return record.bigImage;
+}
+
+uiHelper.removeBigImage = function (data, canvas) {
+  canvas.remove(uiState.currentBigImage);
+  uiState.currentBigImage = undefined;
+}
+
+
+// Private helpers
 function getRandomTimeout(maxTimeMs, minTimeMs) {
   return Math.floor(Math.random() * (maxTimeMs - minTimeMs)) + minTimeMs;
 }
