@@ -76,11 +76,6 @@ makeRhombus = function() {
       }
       for (var j = 0; i + j < data.length; j++) { /* warning!  checking the sum! */
         let record = data[i + j];
-        if (rhombus.closeUpIndexes.includes(i + j))
-          record.isCloseUp = true;
-        else
-          record.isCloseUp = false;
-        end
 
         record.onMouseOver = function() {
           uiHelper.bounceRecord(record);
@@ -132,7 +127,16 @@ makeRhombus = function() {
         record.bigImageX = rhombus.xSize * (1.5);
         record.bigImageY = rhombus.ySize;
         record.bigClipPath = clipPathBig;
+
+        if (rhombus.closeUpIndexes.includes(i + j)) {
+          record.isCloseUp = true;
+          record.tempClipPathX = record.x - rhombus.xSize;
+          record.tempClipPathY = record.y - (rhombus.ySize * 0.75)
+        } else {
+          record.isCloseUp = false;
+        }
       }
+
 
       x = x + rhombus.xSize;
     }
