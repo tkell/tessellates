@@ -4,6 +4,7 @@ makeSquare = function() {
   square.ySize = 334;
   square.size = 1000;
   square.defaultItems = 9;
+  square.closeUpIndexes = [0, 1, 2, 3, 4, 5, 6, 7, 8];
   square.paging = {"small": 1, "medium": 3, "big": 9};
   let squareClipPath = new fabric.Rect({
     originX: 'center',
@@ -29,16 +30,23 @@ makeSquare = function() {
         uiHelper.bounceRecord(record);
         uiHelper.updateTextWithTitle(record, data);
       }
+
       record.onMouseDown = function() {
         uiHelper.updateTextWithArtistAndTitle(record);
-        uiHelper.replaceOtherRecords(record, data).then(() => {
-          uiHelper.displayBigImage(record, data, canvas)
-        });
+        uiHelper.replaceOtherRecords(record, data, 325, 825)
+          .then(() => {
+            uiHelper.hideExistingImages(data);
+            uiHelper.replaceCloseUpImage(record, data, 125, 625);
+          })
+          .then(() => uiHelper.waitFor(1500))
+          .then(() => uiHelper.displayBigImage(record, data, canvas));
       }
+
       record.onBigImageClose = function() {
-        uiHelper.restoreOtherRecords().then(() => {
-          uiHelper.removeBigImage(data, canvas);
-        })
+        uiHelper.showExistingImages(data);
+        uiHelper.replaceCloseUpImage(record, data, 50, 250)
+          .then(() => uiHelper.removeBigImage(data, canvas))
+          .then(() => uiHelper.restoreOtherRecords(100, 300));
       }
 
       record.isAnimating = false;
@@ -59,6 +67,9 @@ makeSquare = function() {
         x = 0;
         y = y + this.ySize;
       }
+      record.isCloseUp = true;
+      record.tempClipPathX = record.x - square.xSize;
+      record.tempClipPathY = record.y - (square.ySize * 0.75)
     }
     return data;
   }
