@@ -24,43 +24,45 @@ uiHelper.bounceRecord = function(record) {
   }
 }
 
-// WORKING, NEEDS A TON OF A TON OF REEEEFACTORING!
 uiHelper.replaceClippedImage = function(record, data) {
   let toUse = [2, 3, 4, 5, 6, 9, 10, 11, 12, 13, 14, 15, 19];
   let promises = [];
   for (var i = 0; i < data.length; i++) {
     if (!toUse.includes(i)) continue;
-
     let otherRecord = data[i];
     let timeoutMs = Math.floor(Math.random() * (750 - 125) ) + 125;
-    let p = new Promise(function (resolve, reject) {
-      setTimeout(() => {
-        uiHelper.loadClippedReplacementImage(record, otherRecord)
-          .then(() => {
-            resolve();
-          })
-      }, timeoutMs);
-    });
+    let p = promiseToLoadClippedImage(record, otherRecord, timeoutMs);
     promises.push(p);
   }
   return Promise.all(promises);
 }
+
+function promiseToLoadClippedImage(record, otherRecord, timeoutMs) {
+  return new Promise(function (resolve, reject) {
+    setTimeout(() => {
+      uiHelper.loadClippedReplacementImage(record, otherRecord).then(() => { resolve(); })
+    }, timeoutMs);
+  });
+}
+
 
 uiHelper.replaceOtherRecords = function(record, data) {
   let promises = [];
   for (var i = 0; i < data.length; i++) {
     let otherRecord = data[i];
     let timeoutMs = Math.floor(Math.random() * (750 - 125) ) + 125;
-    let p = new Promise(function (resolve, reject) {
-      setTimeout(() => {
-        uiHelper.loadReplacementImage(record, otherRecord).then(() => {
-          resolve();
-        })
-      }, timeoutMs);
-    });
+    let p = promiseToLoadRegularImage(record, otherRecord, timeoutMs);
     promises.push(p);
   }
   return Promise.all(promises);
+}
+
+function promiseToLoadRegularImage(record, otherRecord, timeoutMs) {
+  return new Promise(function (resolve, reject) {
+    setTimeout(() => {
+      uiHelper.loadReplacementImage(record, otherRecord).then(() => { resolve(); })
+    }, timeoutMs);
+  });
 }
 
 uiHelper.loadClippedReplacementImage = function(record, otherRecord) {
