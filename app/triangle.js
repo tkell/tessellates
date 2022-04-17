@@ -43,6 +43,52 @@ makeTriangle = function () {
     var angle = 0;
     for (let i = 0; i < data.length; i++) {
       let record = data[i];
+      record.x = x;
+      record.y = y;
+      record.angle = angle;
+      record.imageX = record.x + (triangle.xSize / 2);
+      record.imageY = record.y + (triangle.ySize / 2);
+      record.bigClipPath = clipPathBig;
+      record.bigImageX = triangle.xSize * 2.5;
+      record.bigImageY = triangle.ySize * 2.5;
+
+      if (record.angle == 180) {
+          record.clipPath = triangleClipPathDown;
+          record.clickX = record.x + triangle.xSize;
+          record.clickY = record.y + triangle.ySize;
+      } else {
+          record.clipPath = triangleClipPathUp;
+          record.clickX = record.x;
+          record.clickY = record.y;
+      }
+      if (angle === 0) {
+        x = x + this.xSize / 2;
+        angle = 180;
+      } else if (angle === 180) {
+        x = x + this.xSize / 2;
+        angle = 0
+      }
+
+      if (triangle.closeUpIndexes.includes(i)) {
+        record.isCloseUp = true;
+        record.tempClipPathX = record.x - (triangle.xSize * 2);
+        record.tempClipPathY = record.y - (triangle.ySize * 2);
+      } else {
+        record.isCloseUp = false;
+      }
+
+      if (x + (this.xSize) > this.size) {
+        x = 0;
+        angle = 0;
+        y = y + this.ySize;
+      }
+    }
+
+    for (let i = 0; i < data.length; i++) {
+      record.isAnimating = false;
+      record.imagePath = "images/" + record.id + ".jpg";
+
+      let record = data[i];
       record.onMouseOver = function() {
         uiHelper.bounceRecord(record);
         uiHelper.updateTextWithTitle(record, data);
@@ -64,49 +110,6 @@ makeTriangle = function () {
           .then(() => uiHelper.removeBigImage(data, canvas))
           .then(() => uiHelper.restoreOtherRecords(100, 300));
       }
-
-      record.isAnimating = false;
-      record.imagePath = "images/" + record.id + ".jpg";
-      record.x = x;
-      record.y = y;
-      record.angle = angle;
-      record.imageX = record.x + (triangle.xSize / 2);
-      record.imageY = record.y + (triangle.ySize / 2);
-      if (record.angle == 180) {
-          record.clipPath = triangleClipPathDown;
-          record.clickX = record.x + triangle.xSize;
-          record.clickY = record.y + triangle.ySize;
-      } else {
-          record.clipPath = triangleClipPathUp;
-          record.clickX = record.x;
-          record.clickY = record.y;
-      }
-
-      record.bigClipPath = clipPathBig;
-      record.bigImageX = triangle.xSize * 2.5;
-      record.bigImageY = triangle.ySize * 2.5;
-
-      if (angle === 0) {
-        x = x + this.xSize / 2;
-        angle = 180;
-      } else if (angle === 180) {
-        x = x + this.xSize / 2;
-        angle = 0
-      }
-      if (x + (this.xSize) > this.size) {
-        x = 0;
-        angle = 0;
-        y = y + this.ySize;
-      }
-
-      if (triangle.closeUpIndexes.includes(i)) {
-        record.isCloseUp = true;
-        record.tempClipPathX = record.x - (triangle.xSize * 2);
-        record.tempClipPathY = record.y - (triangle.ySize * 2);
-      } else {
-        record.isCloseUp = false;
-      }
-
     }
     return data;
   }

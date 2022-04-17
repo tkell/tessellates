@@ -76,30 +76,6 @@ makeRhombus = function() {
       }
       for (var j = 0; i + j < data.length; j++) { /* warning!  checking the sum! */
         let record = data[i + j];
-        record.onMouseOver = function() {
-          uiHelper.bounceRecord(record);
-          uiHelper.updateTextWithTitle(record, data);
-        }
-        record.onMouseDown = function() {
-          uiHelper.updateTextWithArtistAndTitle(record);
-          uiHelper.replaceOtherRecords(record, data, 250, 750)
-            .then(() => {
-              uiHelper.hideExistingImages(data);
-              uiHelper.replaceCloseUpImage(record, data, 125, 625);
-            })
-            .then(() => uiHelper.waitFor(750))
-            .then(() => uiHelper.displayBigImage(record, data, canvas));
-        }
-        record.onBigImageClose = function() {
-          uiHelper.showExistingImages(data);
-          uiHelper.replaceCloseUpImage(record, data, 50, 250)
-            .then(() => uiHelper.removeBigImage(data, canvas))
-            .then(() => uiHelper.restoreOtherRecords(100, 300));
-        }
-
-        record.isAnimating = false;
-        record.imagePath = "images/" + record.id + ".jpg";
-
         if (j == 0) {
           record.x = x - rhombus.xSize * 0.25;
           record.y = y + rhombus.ySize * 0.375;
@@ -139,6 +115,33 @@ makeRhombus = function() {
       }
 
       x = x + rhombus.xSize;
+    }
+
+    for (var i = 0; i < data.length; i+= 1) {
+      let record = data[i];
+      record.isAnimating = false;
+      record.imagePath = "images/" + record.id + ".jpg";
+
+      record.onMouseOver = function() {
+        uiHelper.bounceRecord(record);
+        uiHelper.updateTextWithTitle(record, data);
+      }
+      record.onMouseDown = function() {
+        uiHelper.updateTextWithArtistAndTitle(record);
+        uiHelper.replaceOtherRecords(record, data, 250, 750)
+          .then(() => {
+            uiHelper.hideExistingImages(data);
+            uiHelper.replaceCloseUpImage(record, data, 125, 625);
+          })
+          .then(() => uiHelper.waitFor(750))
+          .then(() => uiHelper.displayBigImage(record, data, canvas));
+      }
+      record.onBigImageClose = function() {
+        uiHelper.showExistingImages(data);
+        uiHelper.replaceCloseUpImage(record, data, 50, 250)
+          .then(() => uiHelper.removeBigImage(data, canvas))
+          .then(() => uiHelper.restoreOtherRecords(100, 300));
+      }
     }
     return data
   }

@@ -26,11 +26,36 @@ makeSquare = function() {
     var x = 0;
     var y = 0;
     for (let record of data) {
+      record.x = x;
+      record.y = y;
+      record.angle = 0;
+      record.imageX = record.x + (square.xSize / 2);
+      record.imageY = record.y + (square.ySize / 2);
+      record.clickX = x;
+      record.clickY = y;
+      record.clipPath = squareClipPath;
+      record.bigClipPath = clipPathBig;
+      record.bigImageX = square.xSize * 1.5;
+      record.bigImageY = square.ySize * 1.5;
+      record.tempClipPathX = record.x - square.xSize;
+      record.tempClipPathY = record.y - (square.ySize * 0.75)
+
+      x = x + this.xSize;
+      if (x > this.size) {
+        x = 0;
+        y = y + this.ySize;
+      }
+    }
+
+    for (let record of data) {
+      record.isAnimating = false;
+      record.imagePath = "images/" + record.id + ".jpg";
+      record.isCloseUp = true;
+
       record.onMouseOver = function() {
         uiHelper.bounceRecord(record);
         uiHelper.updateTextWithTitle(record, data);
       }
-
       record.onMouseDown = function() {
         uiHelper.updateTextWithArtistAndTitle(record);
         uiHelper.replaceOtherRecords(record, data, 325, 825)
@@ -48,29 +73,8 @@ makeSquare = function() {
           .then(() => uiHelper.removeBigImage(data, canvas))
           .then(() => uiHelper.restoreOtherRecords(100, 300));
       }
-
-      record.isAnimating = false;
-      record.imagePath = "images/" + record.id + ".jpg";
-      record.x = x;
-      record.y = y;
-      record.angle = 0;
-      record.imageX = record.x + (square.xSize / 2);
-      record.imageY = record.y + (square.ySize / 2);
-      record.clickX = x;
-      record.clickY = y;
-      record.clipPath = squareClipPath;
-      record.bigClipPath = clipPathBig;
-      record.bigImageX = square.xSize * 1.5;
-      record.bigImageY = square.ySize * 1.5;
-      x = x + this.xSize;
-      if (x > this.size) {
-        x = 0;
-        y = y + this.ySize;
-      }
-      record.isCloseUp = true;
-      record.tempClipPathX = record.x - square.xSize;
-      record.tempClipPathY = record.y - (square.ySize * 0.75)
     }
+
     return data;
   }
   
