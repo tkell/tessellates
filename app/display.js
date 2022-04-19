@@ -30,8 +30,10 @@ function renderCanvas(canvas, tess, data, params) {
 
 function addPagingClick(elementId, offsetDelta) {
     document.getElementById(elementId).addEventListener("click", function(e) {
-      params['offset'] = Math.max(0, params['offset'] +  offsetDelta);
-      renderCanvas(canvas, tess, vinylData, params);
+      if (!uiState.bigImageShowing) {
+        params['offset'] = Math.max(0, params['offset'] +  offsetDelta);
+        renderCanvas(canvas, tess, vinylData, params);
+      }
     });
 }
 
