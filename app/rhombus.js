@@ -122,6 +122,8 @@ makeRhombus = function() {
       record.isAnimating = false;
       record.imagePath = "images/" + record.id + ".jpg";
 
+      record.timeoutFunction = timeoutFunctions[parseInt(record.id) % 5]
+
       record.onMouseOver = function() {
         uiHelper.bounceRecord(record);
         uiHelper.updateTextWithTitle(record, data);

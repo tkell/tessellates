@@ -44,9 +44,6 @@ uiHelper.showExistingImages = function(data) {
 uiHelper.replaceCloseUpImage = function(record, data, minTimeMs, maxTimeMs) {
   let promises = [];
   var indexes = [...Array(data.length).keys()];
-  if (Math.random() > 0.5) {
-    indexes = indexes.reverse();
-  }
   for (var i = 0; i < indexes.length; i++) {
     let index = indexes[i]
     let otherRecord = data[index];
@@ -86,13 +83,11 @@ uiHelper.loadCloseUpReplacementImage = function(record, otherRecord) {
 uiHelper.replaceOtherRecords = function(record, data, minTimeMs, maxTimeMs) {
   let promises = [];
   var indexes = [...Array(data.length).keys()];
-  if (Math.random() > 0.5) {
-    indexes = indexes.reverse();
-  }
+
   for (var i = 0; i < indexes.length; i++) {
     let index = indexes[i]
     let otherRecord = data[index];
-    let timeoutMs = getLinearTimeout(i, data.length, maxTimeMs)
+    let timeoutMs = record.timeoutFunction(i, data.length, maxTimeMs)
     let p = promiseToLoadRegularImage(record, otherRecord, timeoutMs);
     promises.push(p);
   }
@@ -159,14 +154,6 @@ uiHelper.removeBigImage = function (data, canvas) {
 
 
 // Private helpers
-function getRandomTimeout(maxTimeMs, minTimeMs) {
-  return Math.floor(Math.random() * (maxTimeMs - minTimeMs)) + minTimeMs;
-}
-
-function getLinearTimeout(index, maxIndex, maxTimeMs) {
-  let step = Math.floor(maxTimeMs / maxIndex);
-  return step * index;
-}
 
 function addAndClipImage(image, clipPath, left, top) {
   image.clipPath = clipPath;
