@@ -151,7 +151,8 @@ makeRhombus = function() {
         uiHelper.showExistingImages(data);
         uiHelper.replaceCloseUpImage(record, data, 50, 250)
           .then(() => uiHelper.removeBigImage(data, canvas))
-          .then(() => uiHelper.restoreOtherRecords(100, 300))
+          .then(() => uiHelper.removeTempImages(100, 250))
+          .then(() => uiHelper.restoreOtherRecords(record, data, 250, 750))
           .then(() => uiState.bigImageShowing = false)
       }
     }

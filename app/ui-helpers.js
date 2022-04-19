@@ -110,11 +110,25 @@ uiHelper.loadReplacementImage = function(record, otherRecord) {
       otherRecord.imageX - (record.image.width / 2),
       otherRecord.imageY - (record.image.height / 2),
     );
-    uiState.tempImages.push(tempImage);
+    otherRecord.tempImageOverlay = tempImage;
   });
 }
 
-uiHelper.restoreOtherRecords = function(minTimeMs, maxTimeMs) {
+uiHelper.restoreOtherRecords = function(record, data, minTimeMs, maxTimeMs) {
+  let promises = [];
+  var indexes = [...Array(data.length).keys()];
+
+  for (var i = 0; i < indexes.length; i++) {
+    let index = indexes[i]
+    let otherRecord = data[index];
+    let timeoutMs = record.reverseTimeoutFunction(i, data.length, maxTimeMs)
+    let p = promiseToRemoveImage(otherRecord.tempImageOverlay, timeoutMs);
+    promises.push(p);
+  }
+  return Promise.all(promises);
+}
+
+uiHelper.removeTempImages = function(minTimeMs, maxTimeMs) {
   let promises = [];
   for (let tempImage of uiState.tempImages) {
     let timeoutMs = getRandomTimeout(minTimeMs, maxTimeMs);
