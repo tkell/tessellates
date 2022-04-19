@@ -1,6 +1,7 @@
 var vinylData = [];
 var uiState = {
   tempImages: [],
+  bigImageShowing: false,
   currentBigImage: null
 };
 

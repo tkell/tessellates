@@ -127,6 +127,7 @@ makeRhombus = function() {
         uiHelper.updateTextWithTitle(record, data);
       }
       record.onMouseDown = function() {
+        uiState.bigImageShowing = true;
         uiHelper.updateTextWithArtistAndTitle(record);
         uiHelper.replaceOtherRecords(record, data, 250, 750)
           .then(() => {
@@ -140,7 +141,8 @@ makeRhombus = function() {
         uiHelper.showExistingImages(data);
         uiHelper.replaceCloseUpImage(record, data, 50, 250)
           .then(() => uiHelper.removeBigImage(data, canvas))
-          .then(() => uiHelper.restoreOtherRecords(100, 300));
+          .then(() => uiHelper.restoreOtherRecords(100, 300))
+          .then(() => uiState.bigImageShowing = false)
       }
     }
     return data

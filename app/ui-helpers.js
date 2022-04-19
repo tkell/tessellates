@@ -13,7 +13,7 @@ uiHelper.updateTextWithArtistAndTitle = function(record) {
 }
 
 uiHelper.updateTextWithTitle = function(record, data) {
-  if (data.currentBigImage === undefined) {
+  if (uiState.bigImageShowing === false) {
     var t = document.getElementById('text');
     t.textContent = record.title;
   }
@@ -141,7 +141,7 @@ function promiseToRemoveImage(image, timeoutMs) {
 
 // Big Image
 uiHelper.displayBigImage = function(record, data, canvas) {
-  canvas.remove(data.currentBigImage);
+  canvas.remove(uiState.currentBigImage);
     addAndClipImage(
       record.bigImage,
       record.bigClipPath,
