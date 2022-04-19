@@ -33,13 +33,10 @@ function getModReversedTimeout(index, maxIndex, maxTimeMs) {
 }
 
 timeoutFunctions = [
-  getLinearTimeout,
-  getLinearReversedTimeout,
-  getGroupedTimeout,
-  getGroupedReversedTimeout,
-  getModTimeout,
-  getModReversedTimeout,
-]
+  [getLinearTimeout, getLinearReversedTimeout],
+  [getGroupedTimeout, getGroupedReversedTimeout],
+  [getModTimeout, getModReversedTimeout],
+];
 
 function getRandomTimeout(maxTimeMs, minTimeMs) {
   return Math.floor(Math.random() * (maxTimeMs - minTimeMs)) + minTimeMs;

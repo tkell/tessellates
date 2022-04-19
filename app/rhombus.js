@@ -122,7 +122,15 @@ makeRhombus = function() {
       record.isAnimating = false;
       record.imagePath = "images/" + record.id + ".jpg";
 
-      record.timeoutFunction = timeoutFunctions[parseInt(record.id) % 5]
+      let recordId = parseInt(record.id);
+      if (recordId % 2 === 0) {
+        record.timeoutFunction = timeoutFunctions[recordId % 3][0];
+        record.reverseTimeoutFunction = timeoutFunctions[recordId % 3][1];
+      } else {
+        record.timeoutFunction = timeoutFunctions[recordId % 3][1];
+        record.reverseTimeoutFunction = timeoutFunctions[recordId % 3][0];
+      }
+      
 
       record.onMouseOver = function() {
         uiHelper.bounceRecord(record);
