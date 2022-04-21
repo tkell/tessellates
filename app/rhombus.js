@@ -124,13 +124,12 @@ makeRhombus = function() {
 
       let recordId = parseInt(record.id);
       if (recordId % 2 === 0) {
-        record.timeoutFunction = timeoutFunctions[recordId % 3][0];
-        record.reverseTimeoutFunction = timeoutFunctions[recordId % 3][1];
+        record.timeoutFunction = timeoutFunctions[recordId % 4][0];
+        record.reverseTimeoutFunction = timeoutFunctions[recordId % 4][1];
       } else {
-        record.timeoutFunction = timeoutFunctions[recordId % 3][1];
-        record.reverseTimeoutFunction = timeoutFunctions[recordId % 3][0];
+        record.timeoutFunction = timeoutFunctions[recordId % 4][1];
+        record.reverseTimeoutFunction = timeoutFunctions[recordId % 4][0];
       }
-      
 
       record.onMouseOver = function() {
         uiHelper.bounceRecord(record);
