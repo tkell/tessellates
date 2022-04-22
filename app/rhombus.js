@@ -117,8 +117,9 @@ makeRhombus = function() {
       x = x + rhombus.xSize;
     }
 
-    for (var i = 0; i < data.length; i+= 1) {
+    for (var i = 0; i < data.length; i++) {
       let record = data[i];
+      record.index = i;
       record.isAnimating = false;
       record.imagePath = "images/" + record.id + ".jpg";
 
@@ -150,7 +151,7 @@ makeRhombus = function() {
         uiHelper.showExistingImages(data);
         uiHelper.replaceCloseUpImage(record, data, 50, 250)
           .then(() => uiHelper.removeBigImage(data, canvas))
-          .then(() => uiHelper.removeTempImages(100, 250))
+          .then(() => uiHelper.removeCloseUpImages(record, data, 150, 500))
           .then(() => uiHelper.restoreOtherRecords(record, data, 250, 750))
           .then(() => uiState.bigImageShowing = false)
       }
