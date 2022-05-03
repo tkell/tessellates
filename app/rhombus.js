@@ -122,14 +122,14 @@ makeRhombus = function() {
       record.index = i;
       record.isAnimating = false;
       record.imagePath = "images/" + record.id + ".jpg";
-
       let recordId = parseInt(record.id);
+
       if (recordId % 2 === 0) {
-        record.timeoutFunction = timeoutFunctions[recordId % 5][0];
-        record.reverseTimeoutFunction = timeoutFunctions[recordId % 5][1];
+        record.timeoutFunction = timeoutFunctions[recordId % 7][0];
+        record.reverseTimeoutFunction = timeoutFunctions[recordId % 7][1];
       } else {
-        record.timeoutFunction = timeoutFunctions[recordId % 5][1];
-        record.reverseTimeoutFunction = timeoutFunctions[recordId % 5][0];
+        record.timeoutFunction = timeoutFunctions[recordId % 7][1];
+        record.reverseTimeoutFunction = timeoutFunctions[recordId % 7][0];
       }
 
       record.onMouseOver = function() {
