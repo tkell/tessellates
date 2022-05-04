@@ -208,6 +208,50 @@ function getOtherDiagonalGroupedSquareReversedTimeout(index, maxIndex, maxTimeMs
   return step * indexToSteps[index];
 }
 
+function getClockwiseSquareTimeout(index, maxIndex, maxTimeMs) {
+  let numSteps = 9;
+  let step = Math.floor(maxTimeMs / numSteps);
+  let indexToSteps = [
+    0, 1, 2,
+    7, 8, 3,
+    6, 5, 4,
+  ];
+  return step * indexToSteps[index];
+}
+
+function getClockwiseSquareReversedTimeout(index, maxIndex, maxTimeMs) {
+  let numSteps = 9;
+  let step = Math.floor(maxTimeMs / numSteps);
+  let indexToSteps = [
+    8, 7, 6,
+    1, 0, 5,
+    2, 3, 4,
+  ];
+  return step * indexToSteps[index];
+}
+
+function getCounterClockwiseSquareTimeout(index, maxIndex, maxTimeMs) {
+  let numSteps = 9;
+  let step = Math.floor(maxTimeMs / numSteps);
+  let indexToSteps = [
+    2, 1, 0,
+    3, 8, 7,
+    4, 5, 6,
+  ];
+  return step * indexToSteps[index];
+}
+
+function getCounterClockwiseSquareReversedTimeout(index, maxIndex, maxTimeMs) {
+  let numSteps = 9;
+  let step = Math.floor(maxTimeMs / numSteps);
+  let indexToSteps = [
+    6, 7, 8,
+    5, 0, 1,
+    4, 3, 2,
+  ];
+  return step * indexToSteps[index];
+}
+
 let timeoutFunctions = [
   [getLinearTimeout, getLinearReversedTimeout]
 ];
@@ -217,6 +261,8 @@ let squareTimeoutFunctions = [
   [getLeftToRightSquareTimeout, getLeftToRightSquareReversedTimeout],
   [getDiagonalGroupedSquareTimeout, getDiagonalGroupedSquareReversedTimeout],
   [getOtherDiagonalGroupedSquareTimeout, getOtherDiagonalGroupedSquareReversedTimeout],
+  [getClockwiseSquareTimeout, getClockwiseSquareReversedTimeout],
+  [getCounterClockwiseSquareTimeout, getCounterClockwiseSquareReversedTimeout],
 ];
 
 let rhombusTimeoutFunctions = [
