@@ -53,7 +53,6 @@ makeSquare = function() {
       record.isAnimating = false;
       record.imagePath = "images/" + record.id + ".jpg";
       record.isCloseUp = true;
-
       let recordId = parseInt(record.id);
       let timeoutIndex = recordId % square.timeoutFunctions.length;
 
@@ -87,7 +86,6 @@ makeSquare = function() {
           .then(() => uiHelper.restoreOtherRecords(record, data, 250, 750))
           .then(() => uiState.bigImageShowing = false)
       }
-
     }
 
     return data;

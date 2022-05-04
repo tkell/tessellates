@@ -10,6 +10,7 @@ makeTriangle = function () {
     28, 29, 30, 31, 32, 33, 34,
   ];
   triangle.paging = {"small": 1, "medium": 9, "big": 45};
+  triangle.timeoutFunctions = timeoutFunctions;
 
   let triangleClipPathUp = new fabric.Triangle({
     originX: 'center',
@@ -85,10 +86,20 @@ makeTriangle = function () {
     }
 
     for (let i = 0; i < data.length; i++) {
+      let record = data[i];
       record.isAnimating = false;
       record.imagePath = "images/" + record.id + ".jpg";
+      let recordId = parseInt(record.id);
+      let timeoutIndex = recordId % triangle.timeoutFunctions.length;
 
-      let record = data[i];
+      if (recordId % 2 === 0) {
+        record.timeoutFunction = triangle.timeoutFunctions[timeoutIndex][0];
+        record.reverseTimeoutFunction = triangle.timeoutFunctions[timeoutIndex][1];
+      } else {
+        record.timeoutFunction = triangle.timeoutFunctions[timeoutIndex][1];
+        record.reverseTimeoutFunction = triangle.timeoutFunctions[timeoutIndex][0];
+      }
+
       record.onMouseOver = function() {
         uiHelper.bounceRecord(record);
         uiHelper.updateTextWithTitle(record, data);
@@ -103,12 +114,13 @@ makeTriangle = function () {
           .then(() => uiHelper.waitFor(1250))
           .then(() => uiHelper.displayBigImage(record, data, canvas));
       }
-
       record.onBigImageClose = function() {
         uiHelper.showExistingImages(data);
         uiHelper.replaceCloseUpImage(record, data, 50, 250)
           .then(() => uiHelper.removeBigImage(data, canvas))
-          .then(() => uiHelper.restoreOtherRecords(100, 300));
+          .then(() => uiHelper.removeCloseUpImages(record, data, 150, 500))
+          .then(() => uiHelper.restoreOtherRecords(record, data, 250, 750))
+          .then(() => uiState.bigImageShowing = false)
       }
     }
     return data;
