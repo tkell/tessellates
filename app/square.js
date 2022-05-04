@@ -6,7 +6,7 @@ makeSquare = function() {
   square.defaultItems = 9;
   square.closeUpIndexes = [0, 1, 2, 3, 4, 5, 6, 7, 8];
   square.paging = {"small": 1, "medium": 3, "big": 9};
-  square.timeoutFunctions = timeoutFunctions;
+  square.timeoutFunctions = timeoutFunctions.concat(squareTimeoutFunctions);
 
   let squareClipPath = new fabric.Rect({
     originX: 'center',
@@ -55,6 +55,7 @@ makeSquare = function() {
       record.isCloseUp = true;
       let recordId = parseInt(record.id);
       let timeoutIndex = recordId % square.timeoutFunctions.length;
+      console.log(timeoutIndex);
 
       if (recordId % 2 === 0) {
         record.timeoutFunction = square.timeoutFunctions[timeoutIndex][0];

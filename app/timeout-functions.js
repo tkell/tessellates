@@ -142,8 +142,81 @@ function getOtherDiagonalGroupedReversedTimeout(index, maxIndex, maxTimeMs) {
   return step * indexToSteps[index];
 }
 
+function getLeftToRightSquareTimeout(index, maxIndex, maxTimeMs) {
+  let numSteps = 3;
+  let step = Math.floor(maxTimeMs / numSteps);
+  let indexToSteps = [
+    0, 1, 2,
+    0, 1, 2,
+    0, 1, 2,
+  ];
+  return step * indexToSteps[index];
+}
+
+function getLeftToRightSquareReversedTimeout(index, maxIndex, maxTimeMs) {
+  let numSteps = 3;
+  let step = Math.floor(maxTimeMs / numSteps);
+  let indexToSteps = [
+    2, 1, 0,
+    2, 1, 0,
+    2, 1, 0,
+  ];
+  return step * indexToSteps[index];
+}
+
+function getDiagonalGroupedSquareTimeout(index, maxIndex, maxTimeMs) {
+  let numSteps = 5;
+  let step = Math.floor(maxTimeMs / numSteps);
+  let indexToSteps = [
+    2, 3, 4,
+    1, 2, 3,
+    0, 1, 2,
+  ];
+  return step * indexToSteps[index];
+}
+
+function getDiagonalGroupedSquareReversedTimeout(index, maxIndex, maxTimeMs) {
+  let numSteps = 5;
+  let step = Math.floor(maxTimeMs / numSteps);
+  let indexToSteps = [
+    2, 1, 0,
+    3, 2, 1,
+    4, 3, 2,
+  ];
+  return step * indexToSteps[index];
+}
+
+function getOtherDiagonalGroupedSquareTimeout(index, maxIndex, maxTimeMs) {
+  let numSteps = 5;
+  let step = Math.floor(maxTimeMs / numSteps);
+  let indexToSteps = [
+    0, 1, 2,
+    1, 2, 3,
+    2, 3, 4,
+  ];
+  return step * indexToSteps[index];
+}
+
+function getOtherDiagonalGroupedSquareReversedTimeout(index, maxIndex, maxTimeMs) {
+  let numSteps = 5;
+  let step = Math.floor(maxTimeMs / numSteps);
+  let indexToSteps = [
+    4, 3, 2,
+    3, 2, 1,
+    2, 1, 0,
+  ];
+  return step * indexToSteps[index];
+}
+
 let timeoutFunctions = [
   [getLinearTimeout, getLinearReversedTimeout]
+];
+
+let squareTimeoutFunctions = [
+  [getGroupedTimeout, getGroupedReversedTimeout],
+  [getLeftToRightSquareTimeout, getLeftToRightSquareReversedTimeout],
+  [getDiagonalGroupedSquareTimeout, getDiagonalGroupedSquareReversedTimeout],
+  [getOtherDiagonalGroupedSquareTimeout, getOtherDiagonalGroupedSquareReversedTimeout],
 ];
 
 let rhombusTimeoutFunctions = [
