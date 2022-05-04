@@ -116,9 +116,9 @@ makeTriangle = function () {
       }
       record.onBigImageClose = function() {
         uiHelper.showExistingImages(data);
-        uiHelper.replaceCloseUpImage(record, data, 50, 250)
+        uiHelper.replaceCloseUpImage(record, data, 100, 500)
           .then(() => uiHelper.removeBigImage(data, canvas))
-          .then(() => uiHelper.removeCloseUpImages(record, data, 150, 500))
+          .then(() => uiHelper.removeCloseUpImages(record, data, 200, 625))
           .then(() => uiHelper.restoreOtherRecords(record, data, 250, 750))
           .then(() => uiState.bigImageShowing = false)
       }
