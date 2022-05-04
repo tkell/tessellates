@@ -143,7 +143,10 @@ function getOtherDiagonalGroupedReversedTimeout(index, maxIndex, maxTimeMs) {
 }
 
 let timeoutFunctions = [
-  [getLinearTimeout, getLinearReversedTimeout],
+  [getLinearTimeout, getLinearReversedTimeout]
+];
+
+let rhombusTimeoutFunctions = [
   [getGroupedTimeout, getGroupedReversedTimeout],
   [getModTimeout, getModReversedTimeout],
   [getTopTimeout, getTopReversedTimeout],
@@ -152,6 +155,7 @@ let timeoutFunctions = [
   [getDiagonalGroupedTimeout, getDiagonalGroupedReversedTimeout],
   [getOtherDiagonalGroupedTimeout, getOtherDiagonalGroupedReversedTimeout]
 ];
+
 
 function getRandomTimeout(maxTimeMs, minTimeMs) {
   return Math.floor(Math.random() * (maxTimeMs - minTimeMs)) + minTimeMs;

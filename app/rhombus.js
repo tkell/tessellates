@@ -19,6 +19,7 @@ makeRhombus = function() {
   rhombus.defaultItems = 24;
   rhombus.closeUpIndexes = [2, 3, 4, 5, 6, 9, 10, 11, 12, 13, 14, 15, 19];
   rhombus.paging = {"small": 3, "medium": 9, "big": 24};
+  rhombus.timeoutFunctions = timeoutFunctions.concat(rhombusTimeoutFunctions);
 
   let rpoints = rhombusPoints(0, 0, rhombus.sideLength);
 
@@ -123,13 +124,14 @@ makeRhombus = function() {
       record.isAnimating = false;
       record.imagePath = "images/" + record.id + ".jpg";
       let recordId = parseInt(record.id);
+      let timeoutIndex = recordId % rhombus.timeoutFunctions.length;
 
       if (recordId % 2 === 0) {
-        record.timeoutFunction = timeoutFunctions[recordId % 7][0];
-        record.reverseTimeoutFunction = timeoutFunctions[recordId % 7][1];
+        record.timeoutFunction = rhombus.timeoutFunctions[timeoutIndex][0];
+        record.reverseTimeoutFunction = rhombus.timeoutFunctions[timeoutIndex][1];
       } else {
-        record.timeoutFunction = timeoutFunctions[recordId % 7][1];
-        record.reverseTimeoutFunction = timeoutFunctions[recordId % 7][0];
+        record.timeoutFunction = rhombus.timeoutFunctions[timeoutIndex][1];
+        record.reverseTimeoutFunction = rhombus.timeoutFunctions[timeoutIndex][0];
       }
 
       record.onMouseOver = function() {

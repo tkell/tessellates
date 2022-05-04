@@ -131,9 +131,7 @@ uiHelper.restoreOtherRecords = function(record, data, minTimeMs, maxTimeMs) {
 uiHelper.removeCloseUpImages = function(record, data, minTimeMs, maxTimeMs) {
   let promises = [];
   for (let tempImage of uiState.closeUpImages) {
-    console.log(tempImage.index);
     let timeoutMs = record.reverseTimeoutFunction(tempImage.index, data.length, maxTimeMs);
-    console.log(tempImage, timeoutMs);
     let p = promiseToRemoveImage(tempImage.img, timeoutMs);
     promises.push(p);
   }

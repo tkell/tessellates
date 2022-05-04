@@ -6,6 +6,8 @@ makeSquare = function() {
   square.defaultItems = 9;
   square.closeUpIndexes = [0, 1, 2, 3, 4, 5, 6, 7, 8];
   square.paging = {"small": 1, "medium": 3, "big": 9};
+  square.timeoutFunctions = timeoutFunctions;
+
   let squareClipPath = new fabric.Rect({
     originX: 'center',
     originY: 'center',
@@ -52,6 +54,17 @@ makeSquare = function() {
       record.imagePath = "images/" + record.id + ".jpg";
       record.isCloseUp = true;
 
+      let recordId = parseInt(record.id);
+      let timeoutIndex = recordId % square.timeoutFunctions.length;
+
+      if (recordId % 2 === 0) {
+        record.timeoutFunction = square.timeoutFunctions[timeoutIndex][0];
+        record.reverseTimeoutFunction = square.timeoutFunctions[timeoutIndex][1];
+      } else {
+        record.timeoutFunction = square.timeoutFunctions[timeoutIndex][1];
+        record.reverseTimeoutFunction = square.timeoutFunctions[timeoutIndex][0];
+      }
+
       record.onMouseOver = function() {
         uiHelper.bounceRecord(record);
         uiHelper.updateTextWithTitle(record, data);
@@ -66,13 +79,15 @@ makeSquare = function() {
           .then(() => uiHelper.waitFor(1500))
           .then(() => uiHelper.displayBigImage(record, data, canvas));
       }
-
       record.onBigImageClose = function() {
         uiHelper.showExistingImages(data);
         uiHelper.replaceCloseUpImage(record, data, 50, 250)
           .then(() => uiHelper.removeBigImage(data, canvas))
-          .then(() => uiHelper.restoreOtherRecords(100, 300));
+          .then(() => uiHelper.removeCloseUpImages(record, data, 150, 500))
+          .then(() => uiHelper.restoreOtherRecords(record, data, 250, 750))
+          .then(() => uiState.bigImageShowing = false)
       }
+
     }
 
     return data;
