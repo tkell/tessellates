@@ -252,6 +252,79 @@ function getCounterClockwiseSquareReversedTimeout(index, maxIndex, maxTimeMs) {
   return step * indexToSteps[index];
 }
 
+function getModTriangleTimeout(index, maxIndex, maxTimeMs) {
+  let numSteps = maxIndex / 9;
+  let step = Math.floor(maxTimeMs / numSteps);
+  return step * Math.floor(index % 5);
+}
+
+function getModTriangleReversedTimeout(index, maxIndex, maxTimeMs) {
+  let numSteps = maxIndex / 9;
+  let step = Math.floor(maxTimeMs / numSteps);
+  return maxTimeMs - (step * Math.floor(index % 5));
+}
+
+function getLeftToRightTriangleTimeout(index, maxIndex, maxTimeMs) {
+  let numSteps = maxIndex / 5;
+  let step = Math.floor(maxTimeMs / numSteps);
+  return step * Math.floor(index % 9);
+}
+
+function getLeftToRightTriangleReversedTimeout(index, maxIndex, maxTimeMs) {
+  let numSteps = maxIndex / 5;
+  let step = Math.floor(maxTimeMs / numSteps);
+  return maxTimeMs - (step * Math.floor(index % 9));
+}
+
+function getTopToBottomTriangleTimeout(index, maxIndex, maxTimeMs) {
+  let numSteps = maxIndex / 9;
+  let step = Math.floor(maxTimeMs / numSteps);
+  return step * Math.floor(index / 9);
+}
+
+function getTopToBottomTriangleReversedTimeout(index, maxIndex, maxTimeMs) {
+  let numSteps = maxIndex / 9;
+  let step = Math.floor(maxTimeMs / numSteps);
+  return maxTimeMs - (step * Math.floor(index / 9));
+}
+
+function getOutFromMiddleTriangleTimeout(index, maxIndex, maxTimeMs) {
+  let numSteps = maxIndex / 3;
+  let step = Math.floor(maxTimeMs / numSteps);
+  let indexToSteps = [
+    2,
+    1,
+    0,
+    1,
+    2,
+  ];
+  return step * indexToSteps[Math.floor(index / 9)];
+}
+
+function getOutFromMiddleTriangleReversedTimeout(index, maxIndex, maxTimeMs) {
+  let numSteps = maxIndex / 3;
+  let step = Math.floor(maxTimeMs / numSteps);
+  let indexToSteps = [
+    2,
+    1,
+    0,
+    1,
+    2,
+  ];
+  return maxTimeMs - (step * indexToSteps[Math.floor(index / 9)]);
+}
+
+function getOutFromCenterTriangleTimeout(index, maxIndex, maxTimeMs) {
+  let numSteps = maxIndex / 5;
+  let step = Math.floor(maxTimeMs / numSteps);
+  let indexToSteps = [4, 3, 2, 1, 0, 1, 2, 3, 4];
+  return step * indexToSteps[Math.floor(index % 9)];
+}
+
+function getOutFromCenterTriangleReversedTimeout(index, maxIndex, maxTimeMs) {
+  return maxTimeMs - getOutFromCenterTriangleTimeout(index, maxIndex, maxTimeMs);
+}
+
 let timeoutFunctions = [
   [getLinearTimeout, getLinearReversedTimeout]
 ];
@@ -263,6 +336,14 @@ let squareTimeoutFunctions = [
   [getOtherDiagonalGroupedSquareTimeout, getOtherDiagonalGroupedSquareReversedTimeout],
   [getClockwiseSquareTimeout, getClockwiseSquareReversedTimeout],
   [getCounterClockwiseSquareTimeout, getCounterClockwiseSquareReversedTimeout],
+];
+
+let triangleTimeoutFunctions = [
+  [getModTriangleTimeout, getModTriangleReversedTimeout],
+  [getLeftToRightTriangleTimeout, getLeftToRightTriangleReversedTimeout],
+  [getTopToBottomTriangleTimeout, getTopToBottomTriangleReversedTimeout],
+  [getOutFromMiddleTriangleTimeout, getOutFromMiddleTriangleReversedTimeout],
+  [getOutFromCenterTriangleTimeout, getOutFromCenterTriangleReversedTimeout],
 ];
 
 let rhombusTimeoutFunctions = [

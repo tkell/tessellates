@@ -53,11 +53,10 @@ makeSquare = function() {
       record.isAnimating = false;
       record.imagePath = "images/" + record.id + ".jpg";
       record.isCloseUp = true;
-      let recordId = parseInt(record.id);
-      let timeoutIndex = recordId % square.timeoutFunctions.length;
-      console.log(timeoutIndex);
+      let directionId = Math.floor(record.id / 100) % 2;
+      let timeoutIndex = record.id % square.timeoutFunctions.length;
 
-      if (recordId % 2 === 0) {
+      if (directionId === 0) {
         record.timeoutFunction = square.timeoutFunctions[timeoutIndex][0];
         record.reverseTimeoutFunction = square.timeoutFunctions[timeoutIndex][1];
       } else {

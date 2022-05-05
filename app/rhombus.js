@@ -123,10 +123,10 @@ makeRhombus = function() {
       record.index = i;
       record.isAnimating = false;
       record.imagePath = "images/" + record.id + ".jpg";
-      let recordId = parseInt(record.id);
-      let timeoutIndex = recordId % rhombus.timeoutFunctions.length;
+      let directionId = Math.floor(record.id / 100) % 2;
+      let timeoutIndex = record.id % rhombus.timeoutFunctions.length;
 
-      if (recordId % 2 === 0) {
+      if (directionId === 0) {
         record.timeoutFunction = rhombus.timeoutFunctions[timeoutIndex][0];
         record.reverseTimeoutFunction = rhombus.timeoutFunctions[timeoutIndex][1];
       } else {

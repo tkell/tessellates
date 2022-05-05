@@ -10,7 +10,7 @@ makeTriangle = function () {
     28, 29, 30, 31, 32, 33, 34,
   ];
   triangle.paging = {"small": 1, "medium": 9, "big": 45};
-  triangle.timeoutFunctions = timeoutFunctions;
+  triangle.timeoutFunctions = timeoutFunctions.concat(triangleTimeoutFunctions);
 
   let triangleClipPathUp = new fabric.Triangle({
     originX: 'center',
@@ -89,10 +89,11 @@ makeTriangle = function () {
       let record = data[i];
       record.isAnimating = false;
       record.imagePath = "images/" + record.id + ".jpg";
-      let recordId = parseInt(record.id);
-      let timeoutIndex = recordId % triangle.timeoutFunctions.length;
+      let directionId = Math.floor(record.id / 100) % 2;
+      let timeoutIndex = record.id % triangle.timeoutFunctions.length;
+      console.log(timeoutIndex, directionId);
 
-      if (recordId % 2 === 0) {
+      if (directionId === 0) {
         record.timeoutFunction = triangle.timeoutFunctions[timeoutIndex][0];
         record.reverseTimeoutFunction = triangle.timeoutFunctions[timeoutIndex][1];
       } else {
