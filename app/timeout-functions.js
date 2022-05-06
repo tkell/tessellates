@@ -202,23 +202,6 @@ function getTopToBottomTriangleReversedTimeout(index, maxIndex, maxTimeMs) {
   return maxTimeMs - getTopToBottomTriangleTimeout(index, maxIndex, maxTimeMs);
 }
 
-function getOutFromMiddleTriangleTimeout(index, maxIndex, maxTimeMs) {
-  let numSteps = maxIndex / 3;
-  let step = Math.floor(maxTimeMs / numSteps);
-  let indexToSteps = [
-    2,
-    1,
-    0,
-    1,
-    2,
-  ];
-  return step * indexToSteps[Math.floor(index / 9)];
-}
-
-function getOutFromMiddleTriangleReversedTimeout(index, maxIndex, maxTimeMs) {
-  return maxTimeMs - getOutFromMiddleTriangleTimeout(index, maxIndex, maxTimeMs);
-}
-
 function getOutFromCenterTriangleTimeout(index, maxIndex, maxTimeMs) {
   let numSteps = maxIndex / 5;
   let step = Math.floor(maxTimeMs / numSteps);
@@ -247,7 +230,6 @@ let triangleTimeoutFunctions = [
   [getModTriangleTimeout, getModTriangleReversedTimeout],
   [getLeftToRightTriangleTimeout, getLeftToRightTriangleReversedTimeout],
   [getTopToBottomTriangleTimeout, getTopToBottomTriangleReversedTimeout],
-  [getOutFromMiddleTriangleTimeout, getOutFromMiddleTriangleReversedTimeout],
   [getOutFromCenterTriangleTimeout, getOutFromCenterTriangleReversedTimeout],
 ];
 
