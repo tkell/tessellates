@@ -87,6 +87,7 @@ makeTriangle = function () {
 
     for (let i = 0; i < data.length; i++) {
       let record = data[i];
+      record.index = i;
       record.isAnimating = false;
       record.imagePath = "images/" + record.id + ".jpg";
       let directionId = Math.floor(record.id / 100) % 2;
@@ -112,14 +113,14 @@ makeTriangle = function () {
             uiHelper.hideExistingImages(data);
             uiHelper.replaceCloseUpImage(record, data, 625);
           })
-          .then(() => uiHelper.waitFor(1250))
+          .then(() => uiHelper.waitFor(750))
           .then(() => uiHelper.displayBigImage(record, data, canvas));
       }
       record.onBigImageClose = function() {
         uiHelper.showExistingImages(data);
-        uiHelper.replaceCloseUpImage(record, data, 500)
+        uiHelper.waitFor(1)
           .then(() => uiHelper.removeBigImage(data, canvas))
-          .then(() => uiHelper.removeCloseUpImages(record, data, 625))
+          .then(() => uiHelper.removeCloseUpImages(record, data, 500))
           .then(() => uiHelper.restoreOtherRecords(record, data, 750))
           .then(() => uiState.bigImageShowing = false)
       }

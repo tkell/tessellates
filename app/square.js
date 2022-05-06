@@ -49,10 +49,12 @@ makeSquare = function() {
       }
     }
 
-    for (let record of data) {
+    for (var i = 0; i < data.length; i++) {
+      let record = data[i];
       record.isAnimating = false;
       record.imagePath = "images/" + record.id + ".jpg";
       record.isCloseUp = true;
+      record.index = i;
       let directionId = Math.floor(record.id / 100) % 2;
       let timeoutIndex = record.id % square.timeoutFunctions.length;
 
@@ -80,7 +82,7 @@ makeSquare = function() {
       }
       record.onBigImageClose = function() {
         uiHelper.showExistingImages(data);
-        uiHelper.replaceCloseUpImage(record, data, 250)
+        uiHelper.waitFor(1)
           .then(() => uiHelper.removeBigImage(data, canvas))
           .then(() => uiHelper.removeCloseUpImages(record, data, 500))
           .then(() => uiHelper.restoreOtherRecords(record, data, 750))

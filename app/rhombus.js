@@ -151,7 +151,7 @@ makeRhombus = function() {
       }
       record.onBigImageClose = function() {
         uiHelper.showExistingImages(data);
-        uiHelper.replaceCloseUpImage(record, data, 250)
+        uiHelper.waitFor(1)
           .then(() => uiHelper.removeBigImage(data, canvas))
           .then(() => uiHelper.removeCloseUpImages(record, data, 500))
           .then(() => uiHelper.restoreOtherRecords(record, data, 750))
