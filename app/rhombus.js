@@ -153,8 +153,8 @@ makeRhombus = function() {
         uiHelper.showExistingImages(data);
         uiHelper.waitFor(1)
           .then(() => uiHelper.removeBigImage(data, canvas))
-          .then(() => uiHelper.removeCloseUpImages(record, data, 500))
-          .then(() => uiHelper.restoreOtherRecords(record, data, 750))
+          .then(() => uiHelper.removeCloseUpImages(record, data, 400))
+          .then(() => uiHelper.restoreOtherRecords(record, data, 625))
           .then(() => uiState.bigImageShowing = false)
       }
     }
