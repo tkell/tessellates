@@ -141,20 +141,20 @@ makeRhombus = function() {
       record.onMouseDown = function() {
         uiState.bigImageShowing = true;
         uiHelper.updateTextWithArtistAndTitle(record);
-        uiHelper.replaceOtherRecords(record, data, 250, 750)
+        uiHelper.replaceOtherRecords(record, data, 750)
           .then(() => {
             uiHelper.hideExistingImages(data);
-            uiHelper.replaceCloseUpImage(record, data, 125, 625);
+            uiHelper.replaceCloseUpImage(record, data, 625);
           })
           .then(() => uiHelper.waitFor(750))
           .then(() => uiHelper.displayBigImage(record, data, canvas));
       }
       record.onBigImageClose = function() {
         uiHelper.showExistingImages(data);
-        uiHelper.replaceCloseUpImage(record, data, 50, 250)
+        uiHelper.replaceCloseUpImage(record, data, 250)
           .then(() => uiHelper.removeBigImage(data, canvas))
-          .then(() => uiHelper.removeCloseUpImages(record, data, 150, 500))
-          .then(() => uiHelper.restoreOtherRecords(record, data, 250, 750))
+          .then(() => uiHelper.removeCloseUpImages(record, data, 500))
+          .then(() => uiHelper.restoreOtherRecords(record, data, 750))
           .then(() => uiState.bigImageShowing = false)
       }
     }

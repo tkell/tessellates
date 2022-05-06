@@ -107,20 +107,20 @@ makeTriangle = function () {
       }
       record.onMouseDown = function() {
         uiHelper.updateTextWithArtistAndTitle(record);
-        uiHelper.replaceOtherRecords(record, data, 250, 625)
+        uiHelper.replaceOtherRecords(record, data, 625)
           .then(() => {
             uiHelper.hideExistingImages(data);
-            uiHelper.replaceCloseUpImage(record, data, 125, 625);
+            uiHelper.replaceCloseUpImage(record, data, 625);
           })
           .then(() => uiHelper.waitFor(1250))
           .then(() => uiHelper.displayBigImage(record, data, canvas));
       }
       record.onBigImageClose = function() {
         uiHelper.showExistingImages(data);
-        uiHelper.replaceCloseUpImage(record, data, 100, 500)
+        uiHelper.replaceCloseUpImage(record, data, 500)
           .then(() => uiHelper.removeBigImage(data, canvas))
-          .then(() => uiHelper.removeCloseUpImages(record, data, 200, 625))
-          .then(() => uiHelper.restoreOtherRecords(record, data, 250, 750))
+          .then(() => uiHelper.removeCloseUpImages(record, data, 625))
+          .then(() => uiHelper.restoreOtherRecords(record, data, 750))
           .then(() => uiState.bigImageShowing = false)
       }
     }

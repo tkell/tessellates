@@ -41,7 +41,7 @@ uiHelper.showExistingImages = function(data) {
   }
 }
 
-uiHelper.replaceCloseUpImage = function(record, data, minTimeMs, maxTimeMs) {
+uiHelper.replaceCloseUpImage = function(record, data, maxTimeMs) {
   let promises = [];
   var indexes = [...Array(data.length).keys()];
   for (var i = 0; i < indexes.length; i++) {
@@ -80,7 +80,7 @@ uiHelper.loadCloseUpReplacementImage = function(record, otherRecord) {
   });
 }
 
-uiHelper.replaceOtherRecords = function(record, data, minTimeMs, maxTimeMs) {
+uiHelper.replaceOtherRecords = function(record, data, maxTimeMs) {
   let promises = [];
   var indexes = [...Array(data.length).keys()];
 
@@ -114,7 +114,7 @@ uiHelper.loadReplacementImage = function(record, otherRecord) {
   });
 }
 
-uiHelper.restoreOtherRecords = function(record, data, minTimeMs, maxTimeMs) {
+uiHelper.restoreOtherRecords = function(record, data, maxTimeMs) {
   let promises = [];
   var indexes = [...Array(data.length).keys()];
 
@@ -128,7 +128,7 @@ uiHelper.restoreOtherRecords = function(record, data, minTimeMs, maxTimeMs) {
   return Promise.all(promises);
 }
 
-uiHelper.removeCloseUpImages = function(record, data, minTimeMs, maxTimeMs) {
+uiHelper.removeCloseUpImages = function(record, data, maxTimeMs) {
   let promises = [];
   for (let tempImage of uiState.closeUpImages) {
     let timeoutMs = record.reverseTimeoutFunction(tempImage.index, data.length, maxTimeMs);
