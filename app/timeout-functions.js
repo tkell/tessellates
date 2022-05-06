@@ -105,12 +105,7 @@ function getOtherDiagonalGroupedReversedTimeout(index, maxIndex, maxTimeMs) {
 function getLeftToRightSquareTimeout(index, maxIndex, maxTimeMs) {
   let numSteps = 3;
   let step = Math.floor(maxTimeMs / numSteps);
-  let indexToSteps = [
-    0, 1, 2,
-    0, 1, 2,
-    0, 1, 2,
-  ];
-  return step * indexToSteps[index];
+  return step * (index % 3);
 }
 
 function getLeftToRightSquareReversedTimeout(index, maxIndex, maxTimeMs) {
