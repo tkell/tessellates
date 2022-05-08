@@ -3,9 +3,8 @@ let imageHelper = {}
 imageHelper.loadImages = function(data) {
     let promises = [];
     for (let record of data) {
-      let promise = fabricImageLoad(record.imagePath).then(img => {
+      let promise = fabricImageLoad(record.smallImagePath).then(img => {
         record.image = img;
-        record.bigImage = fabric.util.object.clone(record.image);
       });
       promises.push(promise);
     }

@@ -53,6 +53,7 @@ makeSquare = function() {
       let record = data[i];
       record.isAnimating = false;
       record.imagePath = "images/" + record.id + ".jpg";
+      record.smallImagePath = "images/" + record.id + "-small.jpg";
       record.isCloseUp = true;
       record.index = i;
       let directionId = Math.floor(record.id / 100) % 2;

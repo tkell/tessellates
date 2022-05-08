@@ -73,8 +73,8 @@ uiHelper.loadCloseUpReplacementImage = function(record, otherRecord) {
     addAndClipImage(
       tempImage,
       tempImage.clipPath,
-      record.bigImageX - (record.bigImage.width / 2),
-      record.bigImageY - (record.bigImage.height / 2),
+      record.bigImageX - (tempImage.width / 2),
+      record.bigImageY - (tempImage.height / 2),
     );
     uiState.closeUpImages.push({img: tempImage, index: otherRecord.index});
   });
@@ -103,7 +103,7 @@ function promiseToLoadRegularImage(record, otherRecord, timeoutMs) {
 }
 
 uiHelper.loadReplacementImage = function(record, otherRecord) {
-  return fabricImageLoad(record.imagePath).then(tempImage => {
+  return fabricImageLoad(record.smallImagePath).then(tempImage => {
     addAndClipImage(
       tempImage,
       otherRecord.clipPath,
@@ -151,14 +151,18 @@ function promiseToRemoveImage(image, timeoutMs) {
 // Big Image
 uiHelper.displayBigImage = function(record, data, canvas) {
   canvas.remove(uiState.currentBigImage);
+  return fabricImageLoad(record.imagePath).then(img => {
+    record.bigImage = img;
     addAndClipImage(
       record.bigImage,
       record.bigClipPath,
       record.bigImageX - (record.bigImage.width / 2),
       record.bigImageY - (record.bigImage.height / 2),
     );
-  uiState.currentBigImage = record.bigImage;
-  return record.bigImage;
+    record.bigImage.on('mousedown', record.onBigImageClose);
+    uiState.currentBigImage = record.bigImage;
+    return record.bigImage;
+  });
 }
 
 uiHelper.removeBigImage = function (data, canvas) {

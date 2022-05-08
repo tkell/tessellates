@@ -123,6 +123,7 @@ makeRhombus = function() {
       record.index = i;
       record.isAnimating = false;
       record.imagePath = "images/" + record.id + ".jpg";
+      record.smallImagePath = "images/" + record.id + "-small.jpg";
       let directionId = Math.floor(record.id / 100) % 2;
       let timeoutIndex = record.id % rhombus.timeoutFunctions.length;
 

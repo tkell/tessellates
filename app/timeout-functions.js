@@ -54,7 +54,7 @@ function getLeftToRightTimeout(index, maxIndex, maxTimeMs) {
 }
 
 function getLeftToRightReversedTimeout(index, maxIndex, maxTimeMs) {
-  return maxTimeMS - getLeftToRightTimeout(index, maxIndex, maxTimeMs);
+  return maxTimeMs - getLeftToRightTimeout(index, maxIndex, maxTimeMs);
 }
 
 function getLeftToRightGroupedTimeout(index, maxIndex, maxTimeMs) {
