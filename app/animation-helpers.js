@@ -10,18 +10,21 @@ let animationHelper = {};
  We continue to connect the previous animation to the next via onComplete ...
  After we've done everything, we return the "first" animation function, so we can run it!
 */ 
-animationHelper.setupAnimationChain = function(record, animations) {
+animationHelper.setupAnimationChain = function(image, record, animations) {
   let finishAnimation = function () {
-    record.image.clipPath = record.clipPath;
-    canvas.insertAt(record.image);
+    // this is a terrible conditional, need to split this up
+    if (record.clipPath) {
+      image.clipPath = record.clipPath;
+    } else {
+      image.clipPath = image.clipPath;
+    }
     record.isAnimating = false;
   }
 
-  let backwardsAnimations = animations.reverse();
   let animationFunctions = [finishAnimation];
   for (let i=0; i < animations.length; i++) {
     let animation = animations[i];
-    let scopedOnComplete = animationFunctions[animationFunctions.length -1];
+    let scopedOnComplete = animationFunctions[animationFunctions.length - 1];
     let a = function() {
       let options = {
         onChange: canvas.renderAll.bind(canvas),
@@ -29,16 +32,15 @@ animationHelper.setupAnimationChain = function(record, animations) {
         onComplete: scopedOnComplete
       }
       record.isAnimating = true;
-      record.image.animate(animation.target, animation.change, options)
+      image.animate(animation.target, animation.change, options);
     }
-
     animationFunctions.push(a);
   }
 
   return animationFunctions[animationFunctions.length - 1];
 }
 
-animationHelper.makeBounce = function(record) {
+animationHelper.makeBounce = function(image, record) {
   let durations = [getRandomInt(75, 150), getRandomInt(75, 150), getRandomInt(35, 75)]
   let possibleChanges = [
     ['+=10', '-=15', '+=5'],
@@ -57,7 +59,7 @@ animationHelper.makeBounce = function(record) {
     {target: changeTarget, change: change[1], duration: durations[1]},
     {target: changeTarget, change: change[2], duration: durations[2]}
   ]
-  return animationHelper.setupAnimationChain(record, bounces);
+  return animationHelper.setupAnimationChain(image, record, bounces);
 }
 
 function getRandomInt(min, max) {

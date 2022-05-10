@@ -1,8 +1,9 @@
 var vinylData = [];
 var uiState = {
   closeUpImages: [],
+  currentBigImage: null,
   bigImageShowing: false,
-  currentBigImage: null
+  bigImageLoading: false
 };
 
 let params = getSearchParameters();

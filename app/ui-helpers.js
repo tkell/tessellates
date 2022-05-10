@@ -22,7 +22,13 @@ uiHelper.updateTextWithTitle = function(record, data) {
 // Bounces
 uiHelper.bounceRecord = function(record) {
   if (record.isAnimating === false) {
-    animationHelper.makeBounce(record)();
+    animationHelper.makeBounce(record.image, record)();
+  }
+}
+
+uiHelper.bounceBigImage = function() {
+  if (uiState.bigImageShowing && !uiState.bigImageLoading) {
+    animationHelper.makeBounce(uiState.currentBigImage, {})();
   }
 }
 
@@ -159,8 +165,9 @@ uiHelper.displayBigImage = function(record, data, canvas) {
       record.bigImageX - (record.bigImage.width / 2),
       record.bigImageY - (record.bigImage.height / 2),
     );
-    record.bigImage.on('mousedown', record.onBigImageClose);
     uiState.currentBigImage = record.bigImage;
+    record.bigImage.on('mousedown', record.onBigImageClose);
+    record.bigImage.on('mouseover', uiHelper.bounceBigImage);
     return record.bigImage;
   });
 }
