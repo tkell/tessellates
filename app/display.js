@@ -3,7 +3,8 @@ var uiState = {
   closeUpImages: [],
   currentBigImage: null,
   bigImageShowing: false,
-  bigImageLoading: false
+  bigImageLoading: false,
+  bigImageAnimating: false,
 };
 
 let params = getSearchParameters();

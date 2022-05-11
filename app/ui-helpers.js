@@ -22,13 +22,13 @@ uiHelper.updateTextWithTitle = function(record, data) {
 // Bounces
 uiHelper.bounceRecord = function(record) {
   if (record.isAnimating === false) {
-    animationHelper.makeBounce(record.image, record)();
+    animationHelper.makeBounceForRecord(record)();
   }
 }
 
 uiHelper.bounceBigImage = function() {
-  if (uiState.bigImageShowing && !uiState.bigImageLoading) {
-    animationHelper.makeBounce(uiState.currentBigImage, {})();
+  if (uiState.bigImageShowing && !uiState.bigImageLoading && !uiState.bigImageAnimating) {
+    animationHelper.makeBounceForBigImage(uiState.currentBigImage)();
   }
 }
 

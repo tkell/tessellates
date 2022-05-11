@@ -10,19 +10,14 @@ let animationHelper = {};
  We continue to connect the previous animation to the next via onComplete ...
  After we've done everything, we return the "first" animation function, so we can run it!
 */ 
-animationHelper.setupAnimationChain = function(image, record, animations) {
+animationHelper.setupAnimationChain = function(record, animations) {
   let finishAnimation = function () {
-    // this is a terrible conditional, need to split this up
-    if (record.clipPath) {
-      image.clipPath = record.clipPath;
-    } else {
-      image.clipPath = image.clipPath;
-    }
+    record.image.clipPath = record.image.clipPath;
     record.isAnimating = false;
   }
 
   let animationFunctions = [finishAnimation];
-  for (let i=0; i < animations.length; i++) {
+  for (let i = 0; i < animations.length; i++) {
     let animation = animations[i];
     let scopedOnComplete = animationFunctions[animationFunctions.length - 1];
     let a = function() {
@@ -32,7 +27,7 @@ animationHelper.setupAnimationChain = function(image, record, animations) {
         onComplete: scopedOnComplete
       }
       record.isAnimating = true;
-      image.animate(animation.target, animation.change, options);
+      record.image.animate(animation.target, animation.change, options);
     }
     animationFunctions.push(a);
   }
@@ -40,7 +35,31 @@ animationHelper.setupAnimationChain = function(image, record, animations) {
   return animationFunctions[animationFunctions.length - 1];
 }
 
-animationHelper.makeBounce = function(image, record) {
+animationHelper.setupAnimationChainNew = function(bigImage, animations) {
+  let finishAnimation = function () {
+    uiState.bigImageAnimating = false;
+  }
+
+  let animationFunctions = [finishAnimation];
+  for (let i = 0; i < animations.length; i++) {
+    let animation = animations[i];
+    let scopedOnComplete = animationFunctions[animationFunctions.length - 1];
+    let a = function() {
+      let options = {
+        onChange: canvas.renderAll.bind(canvas),
+        duration: animation.duration,
+        onComplete: scopedOnComplete
+      }
+      uiState.bigImageAnimating = true;
+      bigImage.animate(animation.target, animation.change, options);
+    }
+    animationFunctions.push(a);
+  }
+
+  return animationFunctions[animationFunctions.length - 1];
+}
+
+function setUpBounces() {
   let durations = [getRandomInt(75, 150), getRandomInt(75, 150), getRandomInt(35, 75)]
   let possibleChanges = [
     ['+=10', '-=15', '+=5'],
@@ -59,7 +78,17 @@ animationHelper.makeBounce = function(image, record) {
     {target: changeTarget, change: change[1], duration: durations[1]},
     {target: changeTarget, change: change[2], duration: durations[2]}
   ]
-  return animationHelper.setupAnimationChain(image, record, bounces);
+  return bounces;
+}
+
+animationHelper.makeBounceForRecord = function(record) {
+  let bounced = setUpBounces();
+  return animationHelper.setupAnimationChain(record, bounces);
+}
+
+animationHelper.makeBounceForBigImage = function(currentBigImage) {
+  let bounced = setUpBounces();
+  return animationHelper.setupAnimationChainNew(currentBigImage, bounces);
 }
 
 function getRandomInt(min, max) {
