@@ -37,7 +37,7 @@ animationHelper.setupAnimationChain = function(record, animations) {
 
 animationHelper.setupAnimationChainNew = function(bigImage, animations) {
   let finishAnimation = function () {
-    uiState.bigImageAnimating = false;
+    uiState.bigImage.animating = false;
   }
 
   let animationFunctions = [finishAnimation];
@@ -50,7 +50,7 @@ animationHelper.setupAnimationChainNew = function(bigImage, animations) {
         duration: animation.duration,
         onComplete: scopedOnComplete
       }
-      uiState.bigImageAnimating = true;
+      uiState.bigImage.animating = true;
       bigImage.animate(animation.target, animation.change, options);
     }
     animationFunctions.push(a);

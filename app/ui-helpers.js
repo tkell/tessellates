@@ -13,7 +13,7 @@ uiHelper.updateTextWithArtistAndTitle = function(record) {
 }
 
 uiHelper.updateTextWithTitle = function(record, data) {
-  if (uiState.bigImageShowing === false) {
+  if (uiState.bigImage.showing === false) {
     var t = document.getElementById('text');
     t.textContent = record.title;
   }
@@ -27,8 +27,8 @@ uiHelper.bounceRecord = function(record) {
 }
 
 uiHelper.bounceBigImage = function() {
-  if (uiState.bigImageShowing && !uiState.bigImageLoading && !uiState.bigImageAnimating) {
-    animationHelper.makeBounceForBigImage(uiState.currentBigImage)();
+  if (uiState.bigImage.showing && !uiState.bigImage.loading && !uiState.bigImage.animating) {
+    animationHelper.makeBounceForBigImage(uiState.bigImage.image)();
   }
 }
 
@@ -156,7 +156,7 @@ function promiseToRemoveImage(image, timeoutMs) {
 
 // Big Image
 uiHelper.displayBigImage = function(record, data, canvas) {
-  canvas.remove(uiState.currentBigImage);
+  canvas.remove(uiState.bigImage.image);
   return fabricImageLoad(record.imagePath).then(img => {
     record.bigImage = img;
     addAndClipImage(
@@ -165,7 +165,7 @@ uiHelper.displayBigImage = function(record, data, canvas) {
       record.bigImageX - (record.bigImage.width / 2),
       record.bigImageY - (record.bigImage.height / 2),
     );
-    uiState.currentBigImage = record.bigImage;
+    uiState.bigImage.image = record.bigImage;
     record.bigImage.on('mousedown', record.onBigImageClose);
     record.bigImage.on('mouseover', uiHelper.bounceBigImage);
     return record.bigImage;
@@ -173,8 +173,8 @@ uiHelper.displayBigImage = function(record, data, canvas) {
 }
 
 uiHelper.removeBigImage = function (data, canvas) {
-  canvas.remove(uiState.currentBigImage);
-  uiState.currentBigImage = undefined;
+  canvas.remove(uiState.bigImage.image);
+  uiState.bigImage.image = undefined;
 }
 
 

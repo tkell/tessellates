@@ -1,10 +1,12 @@
 var vinylData = [];
 var uiState = {
   closeUpImages: [],
-  currentBigImage: null,
-  bigImageShowing: false,
-  bigImageLoading: false,
-  bigImageAnimating: false,
+  bigImage: {
+    image: null,
+    showing: false,
+    loading: false,
+    animating: false
+  }
 };
 
 let params = getSearchParameters();
@@ -32,7 +34,7 @@ function renderCanvas(canvas, tess, data, params) {
 
 function addPagingClick(elementId, offsetDelta) {
     document.getElementById(elementId).addEventListener("click", function(e) {
-      if (!uiState.bigImageShowing) {
+      if (!uiState.bigImage.showing) {
         params['offset'] = Math.max(0, params['offset'] +  offsetDelta);
         renderCanvas(canvas, tess, vinylData, params);
       }

@@ -87,7 +87,7 @@ makeSquare = function() {
           .then(() => uiHelper.removeBigImage(data, canvas))
           .then(() => uiHelper.removeCloseUpImages(record, data, 400))
           .then(() => uiHelper.restoreOtherRecords(record, data, 625))
-          .then(() => uiState.bigImageShowing = false)
+          .then(() => uiState.bigImage.showing = false)
       }
     }
 
