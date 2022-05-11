@@ -140,8 +140,8 @@ makeRhombus = function() {
         uiHelper.updateTextWithTitle(record, data);
       }
       record.onMouseDown = function() {
-        uiState.bigImage.showing = true;
-        uiState.bigImage.loading = true;
+        uiState.bigImage.isShowing = true;
+        uiState.bigImage.isAnimating = true;
         uiHelper.updateTextWithArtistAndTitle(record);
         uiHelper.replaceOtherRecords(record, data, 750)
           .then(() => {
@@ -152,11 +152,11 @@ makeRhombus = function() {
           .then(() => {
             uiHelper.displayBigImage(record, data, canvas);
             uiHelper.removeCloseUpImages(record, data, 1);
-            uiState.bigImage.loading = false;
+            uiState.bigImage.isAnimating = false;
           });
       }
       record.onBigImageClose = function() {
-        uiState.bigImage.loading = true;
+        uiState.bigImage.isAnimating = true;
         uiHelper.showExistingImages(data);
         uiHelper.waitFor(1)
           .then(() => uiHelper.replaceCloseUpImage(record, data, 1))
@@ -164,8 +164,8 @@ makeRhombus = function() {
           .then(() => uiHelper.removeCloseUpImages(record, data, 400))
           .then(() => uiHelper.restoreOtherRecords(record, data, 625))
           .then(() => {
-            uiState.bigImage.showing = false;
-            uiState.bigImage.loading = false;
+            uiState.bigImage.isShowing = false;
+            uiState.bigImage.isAnimating = false;
           });
       }
     }

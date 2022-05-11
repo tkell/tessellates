@@ -13,7 +13,7 @@ uiHelper.updateTextWithArtistAndTitle = function(record) {
 }
 
 uiHelper.updateTextWithTitle = function(record, data) {
-  if (uiState.bigImage.showing === false) {
+  if (uiState.bigImage.IsShowing === false) {
     var t = document.getElementById('text');
     t.textContent = record.title;
   }
@@ -22,13 +22,13 @@ uiHelper.updateTextWithTitle = function(record, data) {
 // Bounces
 uiHelper.bounceRecord = function(record) {
   if (record.isAnimating === false) {
-    animationHelper.makeBounceForRecord(record)();
+    animationHelper.makeBounce(record)();
   }
 }
 
-uiHelper.bounceBigImage = function() {
-  if (uiState.bigImage.showing && !uiState.bigImage.loading && !uiState.bigImage.animating) {
-    animationHelper.makeBounceForBigImage(uiState.bigImage.image)();
+uiHelper.bounceBigImage = function(bigImage) {
+  if (bigImage.isShowing === true && bigImage.isAnimating === false) {
+    animationHelper.makeBounce(bigImage)();
   }
 }
 
@@ -167,7 +167,9 @@ uiHelper.displayBigImage = function(record, data, canvas) {
     );
     uiState.bigImage.image = record.bigImage;
     record.bigImage.on('mousedown', record.onBigImageClose);
-    record.bigImage.on('mouseover', uiHelper.bounceBigImage);
+    record.bigImage.on('mouseover', function() {
+      uiHelper.bounceBigImage(uiState.bigImage);
+    });
     return record.bigImage;
   });
 }

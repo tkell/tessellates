@@ -3,9 +3,8 @@ var uiState = {
   closeUpImages: [],
   bigImage: {
     image: null,
-    showing: false,
-    loading: false,
-    animating: false
+    isShowing: false,
+    isAnimating: false
   }
 };
 
@@ -34,7 +33,7 @@ function renderCanvas(canvas, tess, data, params) {
 
 function addPagingClick(elementId, offsetDelta) {
     document.getElementById(elementId).addEventListener("click", function(e) {
-      if (!uiState.bigImage.showing) {
+      if (!uiState.bigImage.isShowing) {
         params['offset'] = Math.max(0, params['offset'] +  offsetDelta);
         renderCanvas(canvas, tess, vinylData, params);
       }

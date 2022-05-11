@@ -12,7 +12,6 @@ let animationHelper = {};
 */ 
 animationHelper.setupAnimationChain = function(record, animations) {
   let finishAnimation = function () {
-    record.image.clipPath = record.image.clipPath;
     record.isAnimating = false;
   }
 
@@ -28,30 +27,6 @@ animationHelper.setupAnimationChain = function(record, animations) {
       }
       record.isAnimating = true;
       record.image.animate(animation.target, animation.change, options);
-    }
-    animationFunctions.push(a);
-  }
-
-  return animationFunctions[animationFunctions.length - 1];
-}
-
-animationHelper.setupAnimationChainNew = function(bigImage, animations) {
-  let finishAnimation = function () {
-    uiState.bigImage.animating = false;
-  }
-
-  let animationFunctions = [finishAnimation];
-  for (let i = 0; i < animations.length; i++) {
-    let animation = animations[i];
-    let scopedOnComplete = animationFunctions[animationFunctions.length - 1];
-    let a = function() {
-      let options = {
-        onChange: canvas.renderAll.bind(canvas),
-        duration: animation.duration,
-        onComplete: scopedOnComplete
-      }
-      uiState.bigImage.animating = true;
-      bigImage.animate(animation.target, animation.change, options);
     }
     animationFunctions.push(a);
   }
@@ -81,14 +56,9 @@ function setUpBounces() {
   return bounces;
 }
 
-animationHelper.makeBounceForRecord = function(record) {
+animationHelper.makeBounce = function(record) {
   let bounces = setUpBounces();
   return animationHelper.setupAnimationChain(record, bounces);
-}
-
-animationHelper.makeBounceForBigImage = function(bigImage) {
-  let bounces = setUpBounces();
-  return animationHelper.setupAnimationChainNew(bigImage, bounces);
 }
 
 function getRandomInt(min, max) {
