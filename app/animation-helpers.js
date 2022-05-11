@@ -73,7 +73,7 @@ function setUpBounces() {
   let change = possibleChanges[Math.floor(Math.random() * possibleChanges.length)];
   let changeTarget = possibleTargets[Math.floor(Math.random() * possibleTargets.length)];
 
-  bounces = [
+  let bounces = [
     {target: changeTarget, change: change[0], duration: durations[0]},
     {target: changeTarget, change: change[1], duration: durations[1]},
     {target: changeTarget, change: change[2], duration: durations[2]}
@@ -82,13 +82,13 @@ function setUpBounces() {
 }
 
 animationHelper.makeBounceForRecord = function(record) {
-  let bounced = setUpBounces();
+  let bounces = setUpBounces();
   return animationHelper.setupAnimationChain(record, bounces);
 }
 
-animationHelper.makeBounceForBigImage = function(currentBigImage) {
-  let bounced = setUpBounces();
-  return animationHelper.setupAnimationChainNew(currentBigImage, bounces);
+animationHelper.makeBounceForBigImage = function(bigImage) {
+  let bounces = setUpBounces();
+  return animationHelper.setupAnimationChainNew(bigImage, bounces);
 }
 
 function getRandomInt(min, max) {
