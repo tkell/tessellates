@@ -27,7 +27,7 @@ uiHelper.bounceRecord = function(record) {
 }
 
 uiHelper.bounceBigImage = function(bigImage) {
-  if (bigImage.isShowing === true && bigImage.isAnimating === false) {
+  if (bigImage.image && bigImage.isShowing === true && bigImage.isAnimating === false) {
     animationHelper.makeBounce(bigImage)();
   }
 }
@@ -166,6 +166,7 @@ uiHelper.displayBigImage = function(record, data, canvas) {
       record.bigImageY - (record.bigImage.height / 2),
     );
     uiState.bigImage.image = record.bigImage;
+    // I want to refactor these function assignments out, they should be in rhombus.js
     record.bigImage.on('mousedown', record.onBigImageClose);
     record.bigImage.on('mouseover', function() {
       uiHelper.bounceBigImage(uiState.bigImage);
