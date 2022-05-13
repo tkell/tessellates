@@ -149,9 +149,11 @@ makeRhombus = function() {
             uiHelper.replaceCloseUpImage(record, data, 625);
           })
           .then(() => uiHelper.waitFor(750))
+          .then(() => uiHelper.displayBigImage(record, data, canvas))
           .then(() => {
-            uiHelper.displayBigImage(record, data, canvas);
             uiHelper.removeCloseUpImages(record, data, 1);
+            record.bigImage.on('mousedown', record.onBigImageClose);
+            record.bigImage.on('mouseover', uiHelper.bounceBigImage)
             uiState.bigImage.isAnimating = false;
           });
       }
