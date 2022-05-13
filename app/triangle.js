@@ -107,6 +107,8 @@ makeTriangle = function () {
         uiHelper.updateTextWithTitle(record, data);
       }
       record.onMouseDown = function() {
+        uiState.bigImage.isShowing = true;
+        uiState.bigImage.isAnimating = true;
         uiHelper.updateTextWithArtistAndTitle(record);
         uiHelper.replaceOtherRecords(record, data, 625)
           .then(() => {
@@ -114,15 +116,26 @@ makeTriangle = function () {
             uiHelper.replaceCloseUpImage(record, data, 625);
           })
           .then(() => uiHelper.waitFor(750))
-          .then(() => uiHelper.displayBigImage(record, data, canvas));
+          .then(() => uiHelper.displayBigImage(record, data, canvas))
+          .then(() => {
+            uiHelper.removeCloseUpImages(record, data, 1);
+            record.bigImage.on('mousedown', record.onBigImageClose);
+            record.bigImage.on('mouseover', uiHelper.bounceBigImage)
+            uiState.bigImage.isAnimating = false;
+          });
       }
       record.onBigImageClose = function() {
+        uiState.bigImage.isAnimating = true;
         uiHelper.showExistingImages(data);
         uiHelper.waitFor(1)
+          .then(() => uiHelper.replaceCloseUpImage(record, data, 1))
           .then(() => uiHelper.removeBigImage(data, canvas))
           .then(() => uiHelper.removeCloseUpImages(record, data, 400))
           .then(() => uiHelper.restoreOtherRecords(record, data, 625))
-          .then(() => uiState.bigImage.isShowing = false)
+          .then(() => {
+            uiState.bigImage.isShowing = false;
+            uiState.bigImage.isAnimating = false;
+          });
       }
     }
     return data;
