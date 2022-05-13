@@ -13,7 +13,7 @@ uiHelper.updateTextWithArtistAndTitle = function(record) {
 }
 
 uiHelper.updateTextWithTitle = function(record, data) {
-  if (uiState.bigImage.IsShowing === false) {
+  if (uiState.bigImage.isShowing === false) {
     var t = document.getElementById('text');
     t.textContent = record.title;
   }
