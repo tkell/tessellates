@@ -1,4 +1,4 @@
-P
+function rhombusPoints(x, y, size) {
   yDelta = Math.floor(Math.cos(Math.PI / 6) * size);
   xDelta = Math.floor(Math.sin(Math.PI / 6) * size);
 
