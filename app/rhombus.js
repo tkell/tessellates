@@ -1,4 +1,4 @@
-function rhombusPoints(x, y, size) {
+P
   yDelta = Math.floor(Math.cos(Math.PI / 6) * size);
   xDelta = Math.floor(Math.sin(Math.PI / 6) * size);
 
@@ -121,6 +121,7 @@ makeRhombus = function() {
     for (var i = 0; i < data.length; i++) {
       let record = data[i];
       record.index = i;
+      record.nextTrackToShow = 0;
       record.isAnimating = false;
       record.imagePath = "images/" + record.id + ".jpg";
       record.smallImagePath = "images/" + record.id + "-small.jpg";
@@ -137,7 +138,7 @@ makeRhombus = function() {
 
       record.onMouseOver = function() {
         uiHelper.bounceRecord(record);
-        uiHelper.updateTextWithTitle(record, data);
+        uiHelper.updateTextWithTitle(record);
       }
       record.onMouseDown = function() {
         uiState.bigImage.isShowing = true;
@@ -153,7 +154,10 @@ makeRhombus = function() {
           .then(() => {
             uiHelper.removeCloseUpImages(record, data, 1);
             record.bigImage.on('mousedown', record.onBigImageClose);
-            record.bigImage.on('mouseover', uiHelper.bounceBigImage)
+            record.bigImage.on('mouseover', function() {
+              uiHelper.updateTextWithTrack(record);
+              uiHelper.bounceBigImage();
+            });
             uiState.bigImage.isAnimating = false;
           });
       }
@@ -168,10 +172,12 @@ makeRhombus = function() {
           .then(() => {
             uiState.bigImage.isShowing = false;
             uiState.bigImage.isAnimating = false;
+            record.nextTrackToShow = 0;
+            uiHelper.clearTrack();
           });
       }
     }
-    return data
+    return data;
   }
 
   rhombus.render = function(c, data) {

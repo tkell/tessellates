@@ -52,6 +52,7 @@ makeSquare = function() {
     for (var i = 0; i < data.length; i++) {
       let record = data[i];
       record.isAnimating = false;
+      record.nextTrackToShow = 0;
       record.imagePath = "images/" + record.id + ".jpg";
       record.smallImagePath = "images/" + record.id + "-small.jpg";
       record.isCloseUp = true;
@@ -85,7 +86,10 @@ makeSquare = function() {
           .then(() => {
             uiHelper.removeCloseUpImages(record, data, 1);
             record.bigImage.on('mousedown', record.onBigImageClose);
-            record.bigImage.on('mouseover', uiHelper.bounceBigImage)
+            record.bigImage.on('mouseover', function() {
+              uiHelper.updateTextWithTrack(record);
+              uiHelper.bounceBigImage();
+            });
             uiState.bigImage.isAnimating = false;
           });
       }
@@ -99,6 +103,8 @@ makeSquare = function() {
           .then(() => {
             uiState.bigImage.isShowing = false;
             uiState.bigImage.isAnimating = false;
+            record.nextTrackToShow = 0;
+            uiHelper.clearTrack();
           });
       }
     }

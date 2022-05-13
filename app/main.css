@@ -20,3 +20,9 @@ div.centre {
     font-family: 'Inconsolata', "Courier New", Courier, monospace;
     font-size: 22px;
 }
+
+div#text {
+    white-space: nowrap;
+    margin-top: 30px;
+    font-size: 33px;
+}

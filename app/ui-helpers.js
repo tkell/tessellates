@@ -12,11 +12,29 @@ uiHelper.updateTextWithArtistAndTitle = function(record) {
   t.textContent = `${record.artist} - ${record.title} [${record.label}]`;
 }
 
-uiHelper.updateTextWithTitle = function(record, data) {
+uiHelper.updateTextWithTitle = function(record) {
   if (uiState.bigImage.isShowing === false) {
-    var t = document.getElementById('text');
+    let t = document.getElementById('text');
     t.textContent = record.title;
   }
+}
+
+uiHelper.clearTitle = function(record) {
+  let t = document.getElementById('text');
+  t.textContent = "tessellates";
+}
+
+uiHelper.updateTextWithTrack = function(record) {
+  let t = document.getElementById('track-text');
+  let track = record.tracks[record.nextTrackToShow];
+  let trackString = `${track.position} - ${track.title}`
+  t.textContent = trackString;
+  record.nextTrackToShow = (record.nextTrackToShow + 1) % record.tracks.length;
+}
+
+uiHelper.clearTrack = function() {
+  let t = document.getElementById('track-text');
+  t.textContent = "-";
 }
 
 // Bounces
