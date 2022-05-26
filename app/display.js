@@ -24,20 +24,26 @@ let parsedParams = parseTessellatesParams(params, tess)
 var canvas = null;
 
 function renderCanvas(canvas, tess, data, params) {
-    canvas.clear();
-    offset = params['offset'];
-    end = offset + params['items'];
-    slicedData = data.slice(offset, end);
-    tess.render(canvas, tess.prepare(slicedData))
+  canvas.clear();
+  let folder = params['folder'];
+  var filteredData = data;
+  if (folder) {
+    filteredData = data.filter(record => record.folder.toLowerCase() === folder.toLowerCase());
+  }
+
+  let offset = params['offset'];
+  let end = offset + params['items'];
+  let slicedData = filteredData.slice(offset, end);
+  tess.render(canvas, tess.prepare(slicedData))
 }
 
 function addPagingClick(elementId, offsetDelta) {
-    document.getElementById(elementId).addEventListener("click", function(e) {
-      if (!uiState.bigImage.isShowing) {
-        params['offset'] = Math.max(0, params['offset'] +  offsetDelta);
-        renderCanvas(canvas, tess, vinylData, params);
-      }
-    });
+  document.getElementById(elementId).addEventListener("click", function(e) {
+    if (!uiState.bigImage.isShowing) {
+      params['offset'] = Math.max(0, params['offset'] +  offsetDelta);
+      renderCanvas(canvas, tess, vinylData, params);
+    }
+  });
 }
 
 fetch('vinyl.json')
