@@ -2,6 +2,7 @@ import json
 import requests
 import shutil
 import os.path
+import time
 
 with open("app/vinyl.json") as f:
     vinyl_data = json.load(f)
@@ -16,6 +17,6 @@ for release in vinyl_data:
         with open(path, "wb") as out_file:
             shutil.copyfileobj(response.raw, out_file)
         del response
+        time.sleep(1)
     else:
         print("file already exists: ", discogs_id, discogs_cover_url)
-        response = requests.get(discogs_cover_url, stream=True)
