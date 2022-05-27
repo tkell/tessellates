@@ -12,6 +12,7 @@ makeTriangle = function () {
   triangle.paging = {"small": 1, "medium": 9, "big": 45};
   triangle.timeoutFunctions = timeoutFunctions.concat(triangleTimeoutFunctions);
   triangle.timeouts = {"slow": 625, "fast": 350};
+  triangle.fabricKlass = fabric.Triangle;
 
   let triangleClipPathUp = new fabric.Triangle({
     originX: 'center',
@@ -90,19 +91,7 @@ makeTriangle = function () {
   }
 
   triangle.render = function(c, data) {
-    for (let i = 0; i < data.length; i++) {
-      let record = data[i];
-      tessellationHelper.addStartingStateToRecord(record, i, triangle);
-      uiHelper.setMouseListeners(record, data, triangle);
-    }
-    imageHelper.loadImages(data)
-    .then(() => {
-      for (let record of data) {
-        record.image = tessellationHelper.createAndRenderImage(c, record);
-        record.clickable = tessellationHelper.createClickableMask(fabric.Triangle, record, triangle.xSize, triangle.ySize)
-        tessellationHelper.createDefaultClickState(c, record, data);
-      }
-    });
+    tessellationHelper.render(canvas, data, triangle);
   }
 
   return triangle;

@@ -8,6 +8,7 @@ makeSquare = function() {
   square.paging = {"small": 1, "medium": 3, "big": 9};
   square.timeoutFunctions = timeoutFunctions.concat(squareTimeoutFunctions);
   square.timeouts = {"slow": 825, "fast": 400};
+  square.fabricKlass = fabric.Rect;
 
   let squareClipPath = new fabric.Rect({
     originX: 'center',
@@ -55,19 +56,7 @@ makeSquare = function() {
   }
 
   square.render = function(c, data) {
-    for (var i = 0; i < data.length; i++) {
-      let record = data[i];
-      tessellationHelper.addStartingStateToRecord(record, i, square);
-      uiHelper.setMouseListeners(record, data, square);
-    }
-    imageHelper.loadImages(data)
-    .then(() => {
-      for (let record of data) {
-        record.image = tessellationHelper.createAndRenderImage(c, record);
-        record.clickable = tessellationHelper.createClickableMask(fabric.Rect, record, square.xSize, square.ySize)
-        tessellationHelper.createDefaultClickState(c, record, data);
-      }
-    });
+    tessellationHelper.render(canvas, data, square);
   }
 
   return square;

@@ -21,10 +21,10 @@ makeRhombus = function() {
   rhombus.paging = {"small": 3, "medium": 9, "big": 24};
   rhombus.timeoutFunctions = timeoutFunctions.concat(rhombusTimeoutFunctions);
   rhombus.timeouts = {"slow": 750, "fast": 400};
+  rhombus.polygonPoints = rhombusPoints(0, 0, rhombus.sideLength);
+  rhombus.fabricKlass = fabric.Polygon;
 
-  let rpoints = rhombusPoints(0, 0, rhombus.sideLength);
-
-  let clipPathLeft = new fabric.Polygon(rpoints, {
+  let clipPathLeft = new fabric.Polygon(rhombus.polygonPoints, {
     left: 0,
     top: 0,
     originX: 'center',
@@ -32,7 +32,7 @@ makeRhombus = function() {
     selectable: false,
     angle: -30,
   });
-  let clipPathCenter = new fabric.Polygon(rpoints, {
+  let clipPathCenter = new fabric.Polygon(rhombus.polygonPoints, {
     left: 0,
     top: 0,
     originX: 'center',
@@ -40,7 +40,7 @@ makeRhombus = function() {
     selectable: false,
     angle: 90,
   });
-  let clipPathRight = new fabric.Polygon(rpoints, {
+  let clipPathRight = new fabric.Polygon(rhombus.polygonPoints, {
     left: 0,
     top: 0,
     originX: 'center',
@@ -121,21 +121,8 @@ makeRhombus = function() {
     return data;
   }
 
-  rhombus.render = function(c, data) {
-    for (var i = 0; i < data.length; i++) {
-      let record = data[i];
-      tessellationHelper.addStartingStateToRecord(record, i, rhombus);
-      uiHelper.setMouseListeners(record, data, rhombus);
-    }
-    imageHelper.loadImages(data)
-    .then(() => {
-      for (var i = 0; i < data.length; i++) {
-        let record = data[i];
-        record.image = tessellationHelper.createAndRenderImage(c, record);
-        record.clickable = tessellationHelper.createClickableMask(fabric.Polygon, record, rhombus.xSize, rhombus.ySize, rpoints)
-        tessellationHelper.createDefaultClickState(c, record, data);
-      }
-    });
+  rhombus.render = function(canvas, data) {
+    tessellationHelper.render(canvas, data, rhombus);
   }
 
   return rhombus;

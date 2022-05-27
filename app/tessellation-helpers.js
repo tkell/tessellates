@@ -1,5 +1,22 @@
 let tessellationHelper = {};
 
+tessellationHelper.render = function(canvas, data, tessellation) {
+  for (var i = 0; i < data.length; i++) {
+    let record = data[i];
+    tessellationHelper.addStartingStateToRecord(record, i, tessellation);
+    uiHelper.setMouseListeners(record, data, tessellation);
+  }
+  imageHelper.loadImages(data)
+  .then(() => {
+    for (var i = 0; i < data.length; i++) {
+      let record = data[i];
+      record.image = tessellationHelper.createAndRenderImage(canvas, record);
+      record.clickable = tessellationHelper.createClickableMask(record, tessellation)
+      tessellationHelper.createDefaultClickState(canvas, record, data);
+    }
+  });
+}
+
 tessellationHelper.addStartingStateToRecord = function(record, index, tessellation) {
   record.index = index;
   record.nextTrackToShow = 0;
@@ -28,7 +45,12 @@ tessellationHelper.createAndRenderImage = function(canvas, record) {
   return record.image;
 }
 
-tessellationHelper.createClickableMask = function(fabricKlass, record, width, height, polygonPoints) {
+tessellationHelper.createClickableMask = function(record, tessellation) {
+  let fabricKlass = tessellation.fabricKlass;
+  let width = tessellation.xSize;
+  let height = tessellation.ySize;
+  let polygonPoints = tessellation.polygonPoints;
+
   let params = {
       left: record.clickX,
       top: record.clickY,
