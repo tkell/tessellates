@@ -47,16 +47,16 @@ makeSquare = function() {
         x = 0;
         y = y + this.ySize;
       }
+      record.isCloseUp = true;
     }
 
     for (var i = 0; i < data.length; i++) {
       let record = data[i];
-      record.isAnimating = false;
+      record.index = i;
       record.nextTrackToShow = 0;
+      record.isAnimating = false;
       record.imagePath = "images/" + record.id + ".jpg";
       record.smallImagePath = "images/" + record.id + "-small.jpg";
-      record.isCloseUp = true;
-      record.index = i;
       let directionId = Math.floor(record.id / 100) % 2;
       let timeoutIndex = record.id % square.timeoutFunctions.length;
 
@@ -82,11 +82,7 @@ makeSquare = function() {
     .then(() => {
       for (let record of data) {
         record.image = tessellationHelper.createAndRenderImage(canvas, record);
-      }
-      for (let record of data) {
         record.clickable = tessellationHelper.createClickableMask(fabric.Rect, record, square.xSize, square.ySize)
-      }
-      for (let record of data) {
         tessellationHelper.createDefaultClickState(c, record, data);
       }
     });

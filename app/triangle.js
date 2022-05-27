@@ -88,8 +88,8 @@ makeTriangle = function () {
     for (let i = 0; i < data.length; i++) {
       let record = data[i];
       record.index = i;
-      record.isAnimating = false;
       record.nextTrackToShow = 0;
+      record.isAnimating = false;
       record.imagePath = "images/" + record.id + ".jpg";
       record.smallImagePath = "images/" + record.id + "-small.jpg";
       let directionId = Math.floor(record.id / 100) % 2;
@@ -116,11 +116,7 @@ makeTriangle = function () {
     .then(() => {
       for (let record of data) {
         record.image = tessellationHelper.createAndRenderImage(canvas, record);
-      }
-      for (let record of data) {
         record.clickable = tessellationHelper.createClickableMask(fabric.Triangle, record, triangle.xSize, triangle.ySize)
-      }
-      for (let record of data) {
         tessellationHelper.createDefaultClickState(c, record, data);
       }
     });

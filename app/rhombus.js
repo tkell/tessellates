@@ -149,11 +149,7 @@ makeRhombus = function() {
     .then(() => {
       for (let record of data) {
         record.image = tessellationHelper.createAndRenderImage(canvas, record);
-      }
-      for (let record of data) {
         record.clickable = tessellationHelper.createClickableMask(fabric.Polygon, record, rhombus.xSize, rhombus.ySize, rpoints)
-      }
-      for (let record of data) {
         tessellationHelper.createDefaultClickState(c, record, data);
       }
     });
