@@ -4,7 +4,7 @@ tessellationHelper.render = function(canvas, data, tessellation) {
   for (var i = 0; i < data.length; i++) {
     let record = data[i];
     tessellationHelper.addStartingStateToRecord(record, i, tessellation);
-    uiHelper.setMouseListeners(record, data, tessellation);
+    tessellationHelper.setMouseListeners(record, data, tessellation);
   }
   imageHelper.loadImages(data)
   .then(() => {
@@ -33,6 +33,51 @@ tessellationHelper.addStartingStateToRecord = function(record, index, tessellati
     record.timeoutFunction = tessellation.timeoutFunctions[timeoutIndex][1];
     record.reverseTimeoutFunction = tessellation.timeoutFunctions[timeoutIndex][0];
   }
+}
+
+tessellationHelper.setMouseListeners = function(record, data, tessellation) {
+  record.onMouseOver = function() {
+    uiHelper.bounceRecord(record);
+    uiHelper.updateTextWithTitle(record);
+  }
+
+  record.onMouseDown = function() {
+    uiState.bigImage.isShowing = true;
+    uiState.bigImage.isAnimating = true;
+    uiHelper.updateTextWithArtistAndTitle(record);
+    uiHelper.replaceOtherRecords(record, data, tessellation.timeouts.slow)
+      .then(() => {
+        uiHelper.hideExistingImages(data);
+        uiHelper.replaceCloseUpImage(record, data, tessellation.timeouts.slow);
+      })
+      .then(() => uiHelper.waitFor(tessellation.timeouts.slow))
+      .then(() => uiHelper.displayBigImage(record, data, canvas))
+        .then(() => {
+          uiHelper.removeCloseUpImages(record, data, 1);
+          record.bigImage.on('mousedown', record.onBigImageClose);
+          record.bigImage.on('mouseover', function() {
+            uiHelper.updateTextWithTrack(record);
+            uiHelper.bounceBigImage();
+          });
+          uiState.bigImage.isAnimating = false;
+        });
+    }
+
+    record.onBigImageClose = function() {
+      uiState.bigImage.isAnimating = true;
+      uiHelper.showExistingImages(data);
+      uiHelper.waitFor(1)
+        .then(() => uiHelper.replaceCloseUpImage(record, data, 1))
+        .then(() => uiHelper.removeBigImage(data, canvas))
+        .then(() => uiHelper.removeCloseUpImages(record, data, tessellation.timeouts.fast))
+        .then(() => uiHelper.restoreOtherRecords(record, data, tessellation.timeouts.slow))
+        .then(() => {
+          uiState.bigImage.isShowing = false;
+          uiState.bigImage.isAnimating = false;
+          record.nextTrackToShow = 0;
+          uiHelper.clearTrack();
+        });
+    }
 }
 
 tessellationHelper.createAndRenderImage = function(canvas, record) {
