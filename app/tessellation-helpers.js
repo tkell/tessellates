@@ -6,9 +6,9 @@ tessellationHelper.addStartingStateToRecord = function(record, index, tessellati
   record.isAnimating = false;
   record.imagePath = "images/" + record.id + ".jpg";
   record.smallImagePath = "images/" + record.id + "-small.jpg";
+
   let directionId = Math.floor(record.id / 100) % 2;
   let timeoutIndex = record.id % tessellation.timeoutFunctions.length;
-
   if (directionId === 0) {
     record.timeoutFunction = tessellation.timeoutFunctions[timeoutIndex][0];
     record.reverseTimeoutFunction = tessellation.timeoutFunctions[timeoutIndex][1];

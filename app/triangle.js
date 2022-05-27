@@ -86,19 +86,19 @@ makeTriangle = function () {
       }
     }
 
+    return data;
+  }
+
+  triangle.render = function(c, data) {
     for (let i = 0; i < data.length; i++) {
       let record = data[i];
       tessellationHelper.addStartingStateToRecord(record, i, triangle);
       uiHelper.setMouseListeners(record, data, triangle);
     }
-    return data;
-  }
-  
-  triangle.render = function(c, data) {
     imageHelper.loadImages(data)
     .then(() => {
       for (let record of data) {
-        record.image = tessellationHelper.createAndRenderImage(canvas, record);
+        record.image = tessellationHelper.createAndRenderImage(c, record);
         record.clickable = tessellationHelper.createClickableMask(fabric.Triangle, record, triangle.xSize, triangle.ySize)
         tessellationHelper.createDefaultClickState(c, record, data);
       }

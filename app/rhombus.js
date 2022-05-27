@@ -115,25 +115,23 @@ makeRhombus = function() {
           record.isCloseUp = false;
         }
       }
-
       x = x + rhombus.xSize;
     }
 
-    // all this can move into tessellationHelper, which maybe should be rename?
-    // "tessellationModule", har har
+    return data;
+  }
+
+  rhombus.render = function(c, data) {
     for (var i = 0; i < data.length; i++) {
       let record = data[i];
       tessellationHelper.addStartingStateToRecord(record, i, rhombus);
       uiHelper.setMouseListeners(record, data, rhombus);
     }
-    return data;
-  }
-
-  rhombus.render = function(c, data) {
     imageHelper.loadImages(data)
     .then(() => {
-      for (let record of data) {
-        record.image = tessellationHelper.createAndRenderImage(canvas, record);
+      for (var i = 0; i < data.length; i++) {
+        let record = data[i];
+        record.image = tessellationHelper.createAndRenderImage(c, record);
         record.clickable = tessellationHelper.createClickableMask(fabric.Polygon, record, rhombus.xSize, rhombus.ySize, rpoints)
         tessellationHelper.createDefaultClickState(c, record, data);
       }

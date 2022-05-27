@@ -51,20 +51,19 @@ makeSquare = function() {
       record.isCloseUp = true;
     }
 
+    return data;
+  }
+
+  square.render = function(c, data) {
     for (var i = 0; i < data.length; i++) {
       let record = data[i];
       tessellationHelper.addStartingStateToRecord(record, i, square);
       uiHelper.setMouseListeners(record, data, square);
     }
-
-    return data;
-  }
-  
-  square.render = function(c, data) {
     imageHelper.loadImages(data)
     .then(() => {
       for (let record of data) {
-        record.image = tessellationHelper.createAndRenderImage(canvas, record);
+        record.image = tessellationHelper.createAndRenderImage(c, record);
         record.clickable = tessellationHelper.createClickableMask(fabric.Rect, record, square.xSize, square.ySize)
         tessellationHelper.createDefaultClickState(c, record, data);
       }
