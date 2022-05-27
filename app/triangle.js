@@ -102,47 +102,11 @@ makeTriangle = function () {
         record.timeoutFunction = triangle.timeoutFunctions[timeoutIndex][1];
         record.reverseTimeoutFunction = triangle.timeoutFunctions[timeoutIndex][0];
       }
-
-      record.onMouseOver = function() {
-        uiHelper.bounceRecord(record);
-        uiHelper.updateTextWithTitle(record, data);
+      record.timeouts = {
+        slow: 625,
+        fast: 350,
       }
-      record.onMouseDown = function() {
-        uiState.bigImage.isShowing = true;
-        uiState.bigImage.isAnimating = true;
-        uiHelper.updateTextWithArtistAndTitle(record);
-        uiHelper.replaceOtherRecords(record, data, 625)
-          .then(() => {
-            uiHelper.hideExistingImages(data);
-            uiHelper.replaceCloseUpImage(record, data, 625);
-          })
-          .then(() => uiHelper.waitFor(750))
-          .then(() => uiHelper.displayBigImage(record, data, canvas))
-          .then(() => {
-            uiHelper.removeCloseUpImages(record, data, 1);
-            record.bigImage.on('mousedown', record.onBigImageClose);
-            record.bigImage.on('mouseover', function() {
-              uiHelper.updateTextWithTrack(record);
-              uiHelper.bounceBigImage();
-            });
-            uiState.bigImage.isAnimating = false;
-          });
-      }
-      record.onBigImageClose = function() {
-        uiState.bigImage.isAnimating = true;
-        uiHelper.showExistingImages(data);
-        uiHelper.waitFor(1)
-          .then(() => uiHelper.replaceCloseUpImage(record, data, 1))
-          .then(() => uiHelper.removeBigImage(data, canvas))
-          .then(() => uiHelper.removeCloseUpImages(record, data, 400))
-          .then(() => uiHelper.restoreOtherRecords(record, data, 625))
-          .then(() => {
-            uiState.bigImage.isShowing = false;
-            uiState.bigImage.isAnimating = false;
-            record.nextTrackToShow = 0;
-            uiHelper.clearTrack();
-          });
-      }
+      uiHelper.setMouseListeners(record, data);
     }
     return data;
   }
