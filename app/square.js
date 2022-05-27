@@ -7,6 +7,7 @@ makeSquare = function() {
   square.closeUpIndexes = [0, 1, 2, 3, 4, 5, 6, 7, 8];
   square.paging = {"small": 1, "medium": 3, "big": 9};
   square.timeoutFunctions = timeoutFunctions.concat(squareTimeoutFunctions);
+  square.timeouts = {"slow": 825, "fast": 400};
 
   let squareClipPath = new fabric.Rect({
     originX: 'center',
@@ -52,26 +53,8 @@ makeSquare = function() {
 
     for (var i = 0; i < data.length; i++) {
       let record = data[i];
-      record.index = i;
-      record.nextTrackToShow = 0;
-      record.isAnimating = false;
-      record.imagePath = "images/" + record.id + ".jpg";
-      record.smallImagePath = "images/" + record.id + "-small.jpg";
-      let directionId = Math.floor(record.id / 100) % 2;
-      let timeoutIndex = record.id % square.timeoutFunctions.length;
-
-      if (directionId === 0) {
-        record.timeoutFunction = square.timeoutFunctions[timeoutIndex][0];
-        record.reverseTimeoutFunction = square.timeoutFunctions[timeoutIndex][1];
-      } else {
-        record.timeoutFunction = square.timeoutFunctions[timeoutIndex][1];
-        record.reverseTimeoutFunction = square.timeoutFunctions[timeoutIndex][0];
-      }
-      record.timeouts = {
-        slow: 825,
-        fast: 400,
-      }
-      uiHelper.setMouseListeners(record, data);
+      tessellationHelper.addStartingStateToRecord(record, i, square);
+      uiHelper.setMouseListeners(record, data, square);
     }
 
     return data;

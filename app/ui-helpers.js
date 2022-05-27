@@ -8,7 +8,7 @@ uiHelper.waitFor = function(milliseconds) {
 
 
 // These should go somewhere else, eventually
-uiHelper.setMouseListeners = function(record, data) {
+uiHelper.setMouseListeners = function(record, data, tessellation) {
   record.onMouseOver = function() {
     uiHelper.bounceRecord(record);
     uiHelper.updateTextWithTitle(record);
@@ -18,12 +18,12 @@ uiHelper.setMouseListeners = function(record, data) {
     uiState.bigImage.isShowing = true;
     uiState.bigImage.isAnimating = true;
     uiHelper.updateTextWithArtistAndTitle(record);
-    uiHelper.replaceOtherRecords(record, data, record.timeouts.slow)
+    uiHelper.replaceOtherRecords(record, data, tessellation.timeouts.slow)
       .then(() => {
         uiHelper.hideExistingImages(data);
-        uiHelper.replaceCloseUpImage(record, data, record.timeouts.slow);
+        uiHelper.replaceCloseUpImage(record, data, tessellation.timeouts.slow);
       })
-      .then(() => uiHelper.waitFor(record.timeouts.slow))
+      .then(() => uiHelper.waitFor(tessellation.timeouts.slow))
       .then(() => uiHelper.displayBigImage(record, data, canvas))
         .then(() => {
           uiHelper.removeCloseUpImages(record, data, 1);
@@ -42,8 +42,8 @@ uiHelper.setMouseListeners = function(record, data) {
       uiHelper.waitFor(1)
         .then(() => uiHelper.replaceCloseUpImage(record, data, 1))
         .then(() => uiHelper.removeBigImage(data, canvas))
-        .then(() => uiHelper.removeCloseUpImages(record, data, record.timeouts.fast))
-        .then(() => uiHelper.restoreOtherRecords(record, data, record.timeouts.slow))
+        .then(() => uiHelper.removeCloseUpImages(record, data, tessellation.timeouts.fast))
+        .then(() => uiHelper.restoreOtherRecords(record, data, tessellation.timeouts.slow))
         .then(() => {
           uiState.bigImage.isShowing = false;
           uiState.bigImage.isAnimating = false;

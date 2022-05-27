@@ -20,6 +20,7 @@ makeRhombus = function() {
   rhombus.closeUpIndexes = [2, 3, 4, 5, 6, 9, 10, 11, 12, 13, 14, 15, 19];
   rhombus.paging = {"small": 3, "medium": 9, "big": 24};
   rhombus.timeoutFunctions = timeoutFunctions.concat(rhombusTimeoutFunctions);
+  rhombus.timeouts = {"slow": 750, "fast": 400};
 
   let rpoints = rhombusPoints(0, 0, rhombus.sideLength);
 
@@ -118,28 +119,12 @@ makeRhombus = function() {
       x = x + rhombus.xSize;
     }
 
+    // all this can move into tessellationHelper, which maybe should be rename?
+    // "tessellationModule", har har
     for (var i = 0; i < data.length; i++) {
       let record = data[i];
-      record.index = i;
-      record.nextTrackToShow = 0;
-      record.isAnimating = false;
-      record.imagePath = "images/" + record.id + ".jpg";
-      record.smallImagePath = "images/" + record.id + "-small.jpg";
-      let directionId = Math.floor(record.id / 100) % 2;
-      let timeoutIndex = record.id % rhombus.timeoutFunctions.length;
-
-      if (directionId === 0) {
-        record.timeoutFunction = rhombus.timeoutFunctions[timeoutIndex][0];
-        record.reverseTimeoutFunction = rhombus.timeoutFunctions[timeoutIndex][1];
-      } else {
-        record.timeoutFunction = rhombus.timeoutFunctions[timeoutIndex][1];
-        record.reverseTimeoutFunction = rhombus.timeoutFunctions[timeoutIndex][0];
-      }
-      record.timeouts = {
-        slow: 750,
-        fast: 400,
-      }
-      uiHelper.setMouseListeners(record, data);
+      tessellationHelper.addStartingStateToRecord(record, i, rhombus);
+      uiHelper.setMouseListeners(record, data, rhombus);
     }
     return data;
   }

@@ -11,6 +11,7 @@ makeTriangle = function () {
   ];
   triangle.paging = {"small": 1, "medium": 9, "big": 45};
   triangle.timeoutFunctions = timeoutFunctions.concat(triangleTimeoutFunctions);
+  triangle.timeouts = {"slow": 625, "fast": 350};
 
   let triangleClipPathUp = new fabric.Triangle({
     originX: 'center',
@@ -87,26 +88,8 @@ makeTriangle = function () {
 
     for (let i = 0; i < data.length; i++) {
       let record = data[i];
-      record.index = i;
-      record.nextTrackToShow = 0;
-      record.isAnimating = false;
-      record.imagePath = "images/" + record.id + ".jpg";
-      record.smallImagePath = "images/" + record.id + "-small.jpg";
-      let directionId = Math.floor(record.id / 100) % 2;
-      let timeoutIndex = record.id % triangle.timeoutFunctions.length;
-
-      if (directionId === 0) {
-        record.timeoutFunction = triangle.timeoutFunctions[timeoutIndex][0];
-        record.reverseTimeoutFunction = triangle.timeoutFunctions[timeoutIndex][1];
-      } else {
-        record.timeoutFunction = triangle.timeoutFunctions[timeoutIndex][1];
-        record.reverseTimeoutFunction = triangle.timeoutFunctions[timeoutIndex][0];
-      }
-      record.timeouts = {
-        slow: 625,
-        fast: 350,
-      }
-      uiHelper.setMouseListeners(record, data);
+      tessellationHelper.addStartingStateToRecord(record, i, triangle);
+      uiHelper.setMouseListeners(record, data, triangle);
     }
     return data;
   }
