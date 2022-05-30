@@ -49,7 +49,9 @@ function addPagingClick(elementId, offsetDelta) {
 function addFolderClick(elementId, folder) {
   document.getElementById(elementId).addEventListener("click", function(e) {
     if (!uiState.bigImage.isShowing) {
+      uiHelper.clearTitle();
       params['folder'] = folder;
+      params['offset'] = 0;
       renderCanvas(canvas, tess, vinylData, params);
     }
   });
