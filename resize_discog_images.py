@@ -4,10 +4,6 @@ from PIL import Image
 small_size = (350, 350)
 image_dir = "app/images"
 for filename in os.listdir(image_dir):
-    # These are bad files, unsure what they're doing
-    if "2374743" in filename or "9682091" in filename:
-        continue
-
     if ".jpg" in filename and "-small" not in filename:
         record_id = filename.split(".")[0]
         outfile = image_dir + os.path.sep + f"{record_id}-small.jpg"
