@@ -4,13 +4,13 @@ import shutil
 import os.path
 import time
 
-with open("app/vinyl.json") as f:
+with open("app/vinyl/vinyl.json") as f:
     vinyl_data = json.load(f)
 
 for release in vinyl_data:
     discogs_id = release["id"]
     discogs_cover_url = release["cover_image"]
-    path = f"app/images/{discogs_id}.jpg"
+    path = f"app/vinyl/images/{discogs_id}.jpg"
     if not os.path.isfile(path):
         print("downloading: ", discogs_id, discogs_cover_url)
         response = requests.get(discogs_cover_url, stream=True)
