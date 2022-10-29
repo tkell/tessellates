@@ -1,4 +1,6 @@
-app/images
-app/vinyl.json
+app/vinyl/images
+app/vinyl/vinyl.json
+app/digital/images
+app/digital/digital.json
 notes.txt
 deploy.sh

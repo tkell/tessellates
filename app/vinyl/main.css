@@ -1,0 +1,32 @@
+/* This div is part of Fabric, be careful!*/
+div.canvas-container {
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+}
+
+div.centre {
+    text-align: center;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    font-family: 'Inconsolata', "Courier New", Courier, monospace;
+    font-size: 22px;
+}
+
+div#text {
+    white-space: nowrap;
+    margin-top: 30px;
+    font-size: 33px;
+}
+
+button.emoji-button {
+    font-size: 20px;
+}
