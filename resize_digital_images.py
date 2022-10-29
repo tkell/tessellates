@@ -7,20 +7,6 @@ for filename in os.listdir(image_dir):
     record_id = filename.split(".")[0]
     file_format = filename.split(".")[1]
 
-    # convert pngs to jpgs
-    if file_format == "png":
-        filepath = os.path.join(image_dir, filename)
-        im = Image.open(filepath)
-
-        out_filename = f"{record_id}.jpg"
-        out_filepath = os.path.join(image_dir, out_filename)
-        rgb_im = im.convert("RGB")
-        rgb_im.save(out_filepath)
-
-        filename = out_filename
-        record_id = filename.split(".")[0]
-        file_format = filename.split(".")[1]
-
     if file_format == "jpg" and "-small" not in filename:
         record_id = filename.split(".")[0]
         outfile = os.path.join(image_dir, f"{record_id}-small.jpg")

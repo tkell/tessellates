@@ -24,17 +24,8 @@ tessellationHelper.addStartingStateToRecord = function(record, index, tessellati
   record.imagePath = "images/" + record.id + ".jpg";
   record.smallImagePath = "images/" + record.id + "-small.jpg";
 
-  // Hate this!
-  // I will eventually refactor my id generation to be numeric on the python side,
-  // but that will mean re-making and re-uploading all the images
-  var record_id = record.id
-  if (typeof(record.id) === "string") {
-    record_id = Number("0x" + record.id.substring(0, 4));
-  }
-
-
-  let directionId = Math.floor(record_id / 100) % 2;
-  let timeoutIndex = record_id % tessellation.timeoutFunctions.length;
+  let directionId = Math.floor(record.id / 100) % 2;
+  let timeoutIndex = record.id % tessellation.timeoutFunctions.length;
   if (directionId === 0) {
     record.timeoutFunction = tessellation.timeoutFunctions[timeoutIndex][0];
     record.reverseTimeoutFunction = tessellation.timeoutFunctions[timeoutIndex][1];
