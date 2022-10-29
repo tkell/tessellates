@@ -57,7 +57,9 @@ function addFolderClick(elementId, folder) {
   });
 }
 
-fetch('vinyl.json')
+// To my surprise, this looks in folder it is import to,
+// so this will load vinyl/ or digital/, which is what we want!
+fetch('release_source.json')
   .then(response => response.json())
   .then(data => {
     canvas = new fabric.Canvas('vinylCanvas');
@@ -72,19 +74,24 @@ fetch('vinyl.json')
     addPagingClick("forward-medium", tess.paging.medium);
     addPagingClick("forward-big", tess.paging.big);
 
-    addFolderClick("balearic", '\"Balearic\"');
-    addFolderClick("world", '\"World Music\" / Exotica');
-    addFolderClick("seven-inches", '7\"');
-    addFolderClick("battletech", 'Battletech');
-    addFolderClick("breaks", 'Breaks');
-    addFolderClick("classical", 'Classical');
-    addFolderClick("disco", 'Disco');
-    addFolderClick("ambient-albums", 'Electronic Albums / Ambient');
-    addFolderClick("house-tech-dance", 'House/Tech/Dance');
-    addFolderClick("progressive", 'Progressive');
-    addFolderClick("swing-rock-albums", 'Swing / Rock / Soul Albums');
-    addFolderClick("techno", 'Techno');
-    addFolderClick("trance", 'Trance');
-    addFolderClick("wall-records", 'Wall Records');
-    addFolderClick("all", false);
+    // If we have folders, add some folder filters!
+    // This will be vinyl only for some time, I am sure.
+    let testItem = vinylData[0];
+    if (testItem.folder !== undefined) {
+      addFolderClick("balearic", '\"Balearic\"');
+      addFolderClick("world", '\"World Music\" / Exotica');
+      addFolderClick("seven-inches", '7\"');
+      addFolderClick("battletech", 'Battletech');
+      addFolderClick("breaks", 'Breaks');
+      addFolderClick("classical", 'Classical');
+      addFolderClick("disco", 'Disco');
+      addFolderClick("ambient-albums", 'Electronic Albums / Ambient');
+      addFolderClick("house-tech-dance", 'House/Tech/Dance');
+      addFolderClick("progressive", 'Progressive');
+      addFolderClick("swing-rock-albums", 'Swing / Rock / Soul Albums');
+      addFolderClick("techno", 'Techno');
+      addFolderClick("trance", 'Trance');
+      addFolderClick("wall-records", 'Wall Records');
+      addFolderClick("all", false);
+    }
   });
