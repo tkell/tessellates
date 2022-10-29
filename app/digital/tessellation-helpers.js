@@ -24,14 +24,13 @@ tessellationHelper.addStartingStateToRecord = function(record, index, tessellati
   record.imagePath = "images/" + record.id + ".jpg";
   record.smallImagePath = "images/" + record.id + "-small.jpg";
 
-  // Hate this - I will eventually refactor my id generation to be numeric on the python side
-  // but that woudld mean re-uploading all the images
+  // Hate this!
+  // I will eventually refactor my id generation to be numeric on the python side,
+  // but that will mean re-making and re-uploading all the images
+  var record_id = record.id
   if (typeof(record.id) === "string") {
-    let record_id = Number("0x" + record.id.substring(0, 4))
-  else
-    let record_id = record.id
+    record_id = Number("0x" + record.id.substring(0, 4));
   }
-
 
 
   let directionId = Math.floor(record_id / 100) % 2;
