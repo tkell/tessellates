@@ -1,6 +1,6 @@
 app/vinyl/images
-app/vinyl/vinyl.json
+app/vinyl/release_source.json
 app/digital/images
-app/digital/digital.json
+app/digital/release_source.json
 notes.txt
 deploy.sh
