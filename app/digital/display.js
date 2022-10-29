@@ -57,7 +57,7 @@ function addFolderClick(elementId, folder) {
   });
 }
 
-fetch('vinyl.json')
+fetch('digital.json')
   .then(response => response.json())
   .then(data => {
     canvas = new fabric.Canvas('vinylCanvas');
@@ -71,20 +71,4 @@ fetch('vinyl.json')
     addPagingClick("forward-small", tess.paging.small);
     addPagingClick("forward-medium", tess.paging.medium);
     addPagingClick("forward-big", tess.paging.big);
-
-    addFolderClick("balearic", '\"Balearic\"');
-    addFolderClick("world", '\"World Music\" / Exotica');
-    addFolderClick("seven-inches", '7\"');
-    addFolderClick("battletech", 'Battletech');
-    addFolderClick("breaks", 'Breaks');
-    addFolderClick("classical", 'Classical');
-    addFolderClick("disco", 'Disco');
-    addFolderClick("ambient-albums", 'Electronic Albums / Ambient');
-    addFolderClick("house-tech-dance", 'House/Tech/Dance');
-    addFolderClick("progressive", 'Progressive');
-    addFolderClick("swing-rock-albums", 'Swing / Rock / Soul Albums');
-    addFolderClick("techno", 'Techno');
-    addFolderClick("trance", 'Trance');
-    addFolderClick("wall-records", 'Wall Records');
-    addFolderClick("all", false);
   });
