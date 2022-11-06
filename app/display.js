@@ -34,7 +34,7 @@ function renderCanvas(canvas, tess, data, params) {
   let searchString = params['filter'];
   if (searchString) {
     let s = searchString.toLowerCase();
-    filteredData = data.filter(record =>
+    filteredData = filteredData.filter(record =>
       record.artist.toLowerCase().includes(s) ||
       record.title.toLowerCase().includes(s) ||
       record.label.toLowerCase().includes(s)
@@ -89,8 +89,10 @@ fetch('release_source.json')
         let searchString = document.getElementById("filter-input").value;
         if (searchString.length > 0) {
           params['filter'] = searchString;
+          params['offset'] = 0;
         } else {
           params['filter'] = undefined;
+          params['offset'] = 0;
         }
         renderCanvas(canvas, tess, vinylData, params);
       }
