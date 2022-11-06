@@ -33,7 +33,12 @@ function renderCanvas(canvas, tess, data, params) {
 
   let searchString = params['filter'];
   if (searchString) {
-    filteredData = data.filter(record => record.artist.toLowerCase().includes(searchString.toLowerCase()));
+    let s = searchString.toLowerCase();
+    filteredData = data.filter(record =>
+      record.artist.toLowerCase().includes(s) ||
+      record.title.toLowerCase().includes(s) ||
+      record.label.toLowerCase().includes(s)
+    );
   }
 
   let offset = params['offset'];
@@ -78,6 +83,18 @@ fetch('release_source.json')
     addPagingClick("forward-small", tess.paging.small);
     addPagingClick("forward-medium", tess.paging.medium);
     addPagingClick("forward-big", tess.paging.big);
+
+    document.getElementById("filter-submit").addEventListener("click", function(e) {
+      if (!uiState.bigImage.isShowing) {
+        let searchString = document.getElementById("filter-input").value;
+        if (searchString.length > 0) {
+          params['filter'] = searchString;
+        } else {
+          params['filter'] = undefined;
+        }
+        renderCanvas(canvas, tess, vinylData, params);
+      }
+    });
 
     // If we have folders, add some folder filters!
     // This will be vinyl only for some time, I am sure.
