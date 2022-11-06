@@ -31,6 +31,11 @@ function renderCanvas(canvas, tess, data, params) {
     filteredData = data.filter(record => record.folder.toLowerCase() === folder.toLowerCase());
   }
 
+  let searchString = params['filter'];
+  if (searchString) {
+    filteredData = data.filter(record => record.artist.toLowerCase().includes(searchString.toLowerCase()));
+  }
+
   let offset = params['offset'];
   let end = offset + params['items'];
   let slicedData = filteredData.slice(offset, end);
