@@ -50,6 +50,8 @@ tessellationHelper.setMouseListeners = function(record, data, tessellation) {
         uiHelper.hideExistingImages(data);
         uiHelper.replaceCloseUpImage(record, data, tessellation.timeouts.slow);
       })
+       // is this timeout the culprit?
+       // or are we invoking it somewhere else?
       .then(() => uiHelper.waitFor(tessellation.timeouts.slow))
       .then(() => uiHelper.displayBigImage(record, data, canvas))
         .then(() => {
