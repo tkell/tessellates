@@ -48,21 +48,19 @@ tessellationHelper.setMouseListeners = function(record, data, tessellation) {
     uiHelper.replaceOtherRecords(record, data, tessellation.timeouts.slow)
       .then(() => {
         uiHelper.hideExistingImages(data);
-        uiHelper.replaceCloseUpImage(record, data, tessellation.timeouts.slow);
+        return uiHelper.replaceCloseUpImage(record, data, tessellation.timeouts.slow);
       })
-       // is this timeout the culprit?
-       // or are we invoking it somewhere else?
       .then(() => uiHelper.waitFor(tessellation.timeouts.slow))
       .then(() => uiHelper.displayBigImage(record, data, canvas))
-        .then(() => {
-          uiHelper.removeCloseUpImages(record, data, 1);
-          record.bigImage.on('mousedown', record.onBigImageClose);
-          record.bigImage.on('mouseover', function() {
-            uiHelper.updateTextWithTrack(record);
-            uiHelper.bounceBigImage();
-          });
-          uiState.bigImage.isAnimating = false;
+      .then(() => {
+        uiHelper.removeCloseUpImages(record, data, 1);
+        record.bigImage.on('mousedown', record.onBigImageClose);
+        record.bigImage.on('mouseover', function() {
+          uiHelper.updateTextWithTrack(record);
+          uiHelper.bounceBigImage();
         });
+        uiState.bigImage.isAnimating = false;
+      });
     }
 
     record.onBigImageClose = function() {
