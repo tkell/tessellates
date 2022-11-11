@@ -13,7 +13,7 @@ imageHelper.loadImages = function(data) {
 
 let fabricImageLoad = async function(imagePath) {
   return new Promise((resolve, reject) => {
-    fabric.Image.fromURL(imagePath, function(img) {
+    return fabric.Image.fromURL(imagePath, function(img) {
       resolve(img);
     });
   });

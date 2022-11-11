@@ -1,10 +1,6 @@
 let uiHelper = {}
 
-uiHelper.waitFor = function(milliseconds) {
-  return new Promise(function(resolve) {
-    setTimeout(resolve, milliseconds)
-  });
-}
+uiHelper.waitFor = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 // Text updates
 uiHelper.updateTextWithArtistAndTitle = function(record) {
@@ -83,7 +79,7 @@ uiHelper.replaceCloseUpImage = function(record, data, maxTimeMs) {
 function promiseToLoadCloseUpImage(record, otherRecord, timeoutMs) {
   return new Promise(function (resolve, reject) {
     setTimeout(() => {
-      uiHelper.loadCloseUpReplacementImage(record, otherRecord).then(() => { resolve(); })
+      return uiHelper.loadCloseUpReplacementImage(record, otherRecord).then(() => resolve());
     }, timeoutMs);
   });
 }
@@ -102,6 +98,7 @@ uiHelper.loadCloseUpReplacementImage = function(record, otherRecord) {
       record.bigImageY - (tempImage.height / 2),
     );
     uiState.closeUpImages.push({img: tempImage, index: otherRecord.index});
+    return tempImage;
   });
 }
 
@@ -122,7 +119,7 @@ uiHelper.replaceOtherRecords = function(record, data, maxTimeMs) {
 function promiseToLoadRegularImage(record, otherRecord, timeoutMs) {
   return new Promise(function (resolve, reject) {
     setTimeout(() => {
-      uiHelper.loadReplacementImage(record, otherRecord).then(() => { resolve(); })
+      return uiHelper.loadReplacementImage(record, otherRecord).then(() => { resolve(); })
     }, timeoutMs);
   });
 }
@@ -136,6 +133,7 @@ uiHelper.loadReplacementImage = function(record, otherRecord) {
       otherRecord.imageY - (record.image.height / 2),
     );
     otherRecord.tempImageOverlay = tempImage;
+    return tempImage;
   });
 }
 
