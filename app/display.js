@@ -9,7 +9,6 @@ var uiState = {
 };
 
 let params = getSearchParameters();
-
 // pick a tessellation, then ..
 let tess = null;
 if (params['t'] == 'square') {
@@ -19,8 +18,7 @@ if (params['t'] == 'square') {
 } else {
   tess = makeRhombus();
 }
-
-let parsedParams = parseTessellatesParams(params, tess)
+params = parseTessellatesParams(params, tess)
 var canvas = null;
 
 function renderCanvas(canvas, tess, data, params) {
@@ -41,9 +39,11 @@ function renderCanvas(canvas, tess, data, params) {
     );
   }
 
-  let offset = params['offset'];
-  let end = offset + params['items'];
-  let slicedData = filteredData.slice(offset, end);
+  if (params['offset'] === null) {
+    params['offset'] = Math.floor(Math.random() * filteredData.length);
+  }
+  let end = params['offset'] + params['items'];
+  let slicedData = filteredData.slice(params['offset'], end);
   tess.render(canvas, tess.prepare(slicedData))
 }
 
