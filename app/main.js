@@ -45,9 +45,8 @@ function addFolderClick(elementId, folder) {
   });
 }
 
+// ---- Entrypoint is here:
 
-
-// ---- execution starts here
 var vinylData = [];
 var uiState = {
   closeUpImages: [],
@@ -70,7 +69,6 @@ if (params['t'] == 'square') {
 }
 params = parseTessellatesParams(params, tess)
 var canvas = null;
-
 
 // To my surprise, this looks in folder it is importing to,
 // so this will load vinyl/ or digital/, which is what we want!
