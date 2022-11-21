@@ -91,7 +91,7 @@ makeTriangle = function () {
   }
 
   triangle.render = function(c, data) {
-    tessellationHelper.render(canvas, data, triangle);
+    renderHelper.render(canvas, data, triangle);
   }
 
   return triangle;

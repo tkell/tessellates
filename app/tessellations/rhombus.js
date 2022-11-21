@@ -122,7 +122,7 @@ makeRhombus = function() {
   }
 
   rhombus.render = function(canvas, data) {
-    tessellationHelper.render(canvas, data, rhombus);
+    renderHelper.render(canvas, data, rhombus);
   }
 
   return rhombus;

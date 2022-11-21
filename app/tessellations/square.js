@@ -56,7 +56,7 @@ makeSquare = function() {
   }
 
   square.render = function(c, data) {
-    tessellationHelper.render(canvas, data, square);
+    renderHelper.render(canvas, data, square);
   }
 
   return square;
