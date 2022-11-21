@@ -1,5 +1,10 @@
 let tessellationHelper = {};
 
+// this is only called by Triangle / Square / Rhombus,
+// so it should probably be a Tessellation class?
+// or, this could be the "render" class, and the main classes can be "data" classes? hm
+// I'd like some more-real private methods, but maybe `tesselationHelper._methodName` would be fine
+// or some ... fooolders, maybe?
 tessellationHelper.render = function(canvas, data, tessellation) {
   for (var i = 0; i < data.length; i++) {
     let record = data[i];
@@ -16,6 +21,8 @@ tessellationHelper.render = function(canvas, data, tessellation) {
     }
   });
 }
+
+// --- so thes are all private methods, hmm
 
 tessellationHelper.addStartingStateToRecord = function(record, index, tessellation) {
   record.index = index;

@@ -15,11 +15,6 @@ uiHelper.updateTextWithTitle = function(record) {
   }
 }
 
-uiHelper.clearTitle = function(record) {
-  let t = document.getElementById('text');
-  t.textContent = "tessellates";
-}
-
 uiHelper.updateTextWithTrack = function(record) {
   let t = document.getElementById('track-text');
   let track = record.tracks[record.nextTrackToShow];

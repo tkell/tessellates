@@ -1,26 +1,3 @@
-var vinylData = [];
-var uiState = {
-  closeUpImages: [],
-  bigImage: {
-    image: null,
-    isShowing: false,
-    isAnimating: false
-  }
-};
-
-let params = getSearchParameters();
-// pick a tessellation, then ..
-let tess = null;
-if (params['t'] == 'square') {
-  tess = makeSquare();
-} else if (params['t']== 'triangle') {
-  tess = makeTriangle();
-} else {
-  tess = makeRhombus();
-}
-params = parseTessellatesParams(params, tess)
-var canvas = null;
-
 function renderCanvas(canvas, tess, data, params) {
   canvas.clear();
   let folder = params['folder'];
@@ -59,7 +36,8 @@ function addPagingClick(elementId, offsetDelta) {
 function addFolderClick(elementId, folder) {
   document.getElementById(elementId).addEventListener("click", function(e) {
     if (!uiState.bigImage.isShowing) {
-      uiHelper.clearTitle();
+      let t = document.getElementById('text');
+      t.textContent = "tessellates";
       params['folder'] = folder;
       params['offset'] = 0;
       renderCanvas(canvas, tess, vinylData, params);
@@ -67,7 +45,34 @@ function addFolderClick(elementId, folder) {
   });
 }
 
-// To my surprise, this looks in folder it is import to,
+
+
+// ---- execution starts here
+var vinylData = [];
+var uiState = {
+  closeUpImages: [],
+  bigImage: {
+    image: null,
+    isShowing: false,
+    isAnimating: false
+  }
+};
+
+let params = getSearchParameters();
+// pick a tessellation, then ..
+let tess = null;
+if (params['t'] == 'square') {
+  tess = makeSquare();
+} else if (params['t']== 'triangle') {
+  tess = makeTriangle();
+} else {
+  tess = makeRhombus();
+}
+params = parseTessellatesParams(params, tess)
+var canvas = null;
+
+
+// To my surprise, this looks in folder it is importing to,
 // so this will load vinyl/ or digital/, which is what we want!
 fetch('release_source.json')
   .then(response => response.json())
