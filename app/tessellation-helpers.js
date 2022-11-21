@@ -1,30 +1,25 @@
 let tessellationHelper = {};
 
-// this is only called by Triangle / Square / Rhombus,
-// so it should probably be a Tessellation class?
-// or, this could be the "render" class, and the main classes can be "data" classes? hm
-// I'd like some more-real private methods, but maybe `tesselationHelper._methodName` would be fine
-// or some ... fooolders, maybe?
 tessellationHelper.render = function(canvas, data, tessellation) {
   for (var i = 0; i < data.length; i++) {
     let record = data[i];
-    tessellationHelper.addStartingStateToRecord(record, i, tessellation);
-    tessellationHelper.setMouseListeners(record, data, tessellation);
+    tessellationHelper._addStartingStateToRecord(record, i, tessellation);
+    tessellationHelper._setMouseListeners(record, data, tessellation);
   }
-  imageHelper.loadImages(data)
-  .then(() => {
+
+  imageHelper.loadImages(data).then(() => {
     for (var i = 0; i < data.length; i++) {
       let record = data[i];
-      record.image = tessellationHelper.createAndRenderImage(canvas, record);
-      record.clickable = tessellationHelper.createClickableMask(record, tessellation)
-      tessellationHelper.createDefaultClickState(canvas, record, data);
+      record.image = tessellationHelper._createAndRenderImage(canvas, record);
+      record.clickable = tessellationHelper._createClickableMask(record, tessellation)
+      tessellationHelper._createDefaultClickState(canvas, record, data);
     }
   });
 }
 
-// --- so thes are all private methods, hmm
+// "Private" methods from here:
 
-tessellationHelper.addStartingStateToRecord = function(record, index, tessellation) {
+tessellationHelper._addStartingStateToRecord = function(record, index, tessellation) {
   record.index = index;
   record.nextTrackToShow = 0;
   record.isAnimating = false;
@@ -42,7 +37,7 @@ tessellationHelper.addStartingStateToRecord = function(record, index, tessellati
   }
 }
 
-tessellationHelper.setMouseListeners = function(record, data, tessellation) {
+tessellationHelper._setMouseListeners = function(record, data, tessellation) {
   record.onMouseOver = function() {
     uiHelper.bounceRecord(record);
     uiHelper.updateTextWithTitle(record);
@@ -91,7 +86,7 @@ tessellationHelper.setMouseListeners = function(record, data, tessellation) {
     }
 }
 
-tessellationHelper.createAndRenderImage = function(canvas, record) {
+tessellationHelper._createAndRenderImage = function(canvas, record) {
   record.image.left = record.imageX - (record.image.width / 2);
   record.image.top = record.imageY - (record.image.height / 2);
   record.image.selectable = false;
@@ -101,7 +96,7 @@ tessellationHelper.createAndRenderImage = function(canvas, record) {
   return record.image;
 }
 
-tessellationHelper.createClickableMask = function(record, tessellation) {
+tessellationHelper._createClickableMask = function(record, tessellation) {
   let fabricKlass = tessellation.fabricKlass;
   let width = tessellation.xSize;
   let height = tessellation.ySize;
@@ -126,7 +121,7 @@ tessellationHelper.createClickableMask = function(record, tessellation) {
   }
 }
 
-tessellationHelper.createDefaultClickState = function(canvas, record, data) {
+tessellationHelper._createDefaultClickState = function(canvas, record, data) {
   let objectToClick = record.clickable;
   let matchingImg = record.image;
   objectToClick.on('mouseover', record.onMouseOver);
