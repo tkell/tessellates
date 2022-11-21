@@ -1,25 +1,25 @@
-let tessellationHelper = {};
+let renderHelper = {};
 
-tessellationHelper.render = function(canvas, data, tessellation) {
+renderHelper.render = function(canvas, data, tessellation) {
   for (var i = 0; i < data.length; i++) {
     let record = data[i];
-    tessellationHelper._addStartingStateToRecord(record, i, tessellation);
-    tessellationHelper._setMouseListeners(record, data, tessellation);
+    renderHelper._addStartingStateToRecord(record, i, tessellation);
+    renderHelper._setMouseListeners(record, data, tessellation);
   }
 
   imageHelper.loadImages(data).then(() => {
     for (var i = 0; i < data.length; i++) {
       let record = data[i];
-      record.image = tessellationHelper._createAndRenderImage(canvas, record);
-      record.clickable = tessellationHelper._createClickableMask(record, tessellation)
-      tessellationHelper._createDefaultClickState(canvas, record, data);
+      record.image = renderHelper._createAndRenderImage(canvas, record);
+      record.clickable = renderHelper._createClickableMask(record, tessellation)
+      renderHelper._createDefaultClickState(canvas, record, data);
     }
   });
 }
 
 // "Private" methods from here:
 
-tessellationHelper._addStartingStateToRecord = function(record, index, tessellation) {
+renderHelper._addStartingStateToRecord = function(record, index, tessellation) {
   record.index = index;
   record.nextTrackToShow = 0;
   record.isAnimating = false;
@@ -37,7 +37,7 @@ tessellationHelper._addStartingStateToRecord = function(record, index, tessellat
   }
 }
 
-tessellationHelper._setMouseListeners = function(record, data, tessellation) {
+renderHelper._setMouseListeners = function(record, data, tessellation) {
   record.onMouseOver = function() {
     uiHelper.bounceRecord(record);
     uiHelper.updateTextWithTitle(record);
@@ -86,7 +86,7 @@ tessellationHelper._setMouseListeners = function(record, data, tessellation) {
     }
 }
 
-tessellationHelper._createAndRenderImage = function(canvas, record) {
+renderHelper._createAndRenderImage = function(canvas, record) {
   record.image.left = record.imageX - (record.image.width / 2);
   record.image.top = record.imageY - (record.image.height / 2);
   record.image.selectable = false;
@@ -96,7 +96,7 @@ tessellationHelper._createAndRenderImage = function(canvas, record) {
   return record.image;
 }
 
-tessellationHelper._createClickableMask = function(record, tessellation) {
+renderHelper._createClickableMask = function(record, tessellation) {
   let fabricKlass = tessellation.fabricKlass;
   let width = tessellation.xSize;
   let height = tessellation.ySize;
@@ -121,7 +121,7 @@ tessellationHelper._createClickableMask = function(record, tessellation) {
   }
 }
 
-tessellationHelper._createDefaultClickState = function(canvas, record, data) {
+renderHelper._createDefaultClickState = function(canvas, record, data) {
   let objectToClick = record.clickable;
   let matchingImg = record.image;
   objectToClick.on('mouseover', record.onMouseOver);
