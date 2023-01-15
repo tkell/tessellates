@@ -45,6 +45,26 @@ function addFolderClick(elementId, folder) {
   });
 }
 
+function addFilterInteraction(elementId, eventType, filterStringElementId) {
+    document.getElementById(elementId).addEventListener(eventType, function(e) {
+      if (eventType === "keypress" && e.key !== "Enter") {
+        return;
+      }
+      if (!uiState.bigImage.isShowing) {
+        let searchString = document.getElementById(filterStringElementId).value;
+        if (searchString.length > 0) {
+          params['filter'] = searchString;
+          params['offset'] = 0;
+        } else {
+          params['filter'] = undefined;
+          params['offset'] = 0;
+        }
+        renderCanvas(canvas, tess, vinylData, params);
+      }
+    });
+}
+
+
 // ---- Entrypoint is here:
 
 var vinylData = [];
@@ -87,19 +107,8 @@ fetch('release_source.json')
     addPagingClick("forward-medium", tess.paging.medium);
     addPagingClick("forward-big", tess.paging.big);
 
-    document.getElementById("filter-submit").addEventListener("click", function(e) {
-      if (!uiState.bigImage.isShowing) {
-        let searchString = document.getElementById("filter-input").value;
-        if (searchString.length > 0) {
-          params['filter'] = searchString;
-          params['offset'] = 0;
-        } else {
-          params['filter'] = undefined;
-          params['offset'] = 0;
-        }
-        renderCanvas(canvas, tess, vinylData, params);
-      }
-    });
+    addFilterInteraction("filter-input", "keypress", "filter-input");
+    addFilterInteraction("filter-submit", "click", "filter-input");
 
     // If we have folders, add some folder filters!
     // This will be vinyl only for some time, I am sure.
