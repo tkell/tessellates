@@ -2,7 +2,7 @@ import os
 from PIL import Image
 
 small_size = (350, 350)
-image_dir = "app/digital/images"
+image_dir = "tessellates/app/digital/images"
 for filename in os.listdir(image_dir):
     record_id = filename.split(".")[0]
     file_format = filename.split(".")[1]
