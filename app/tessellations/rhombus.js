@@ -20,7 +20,7 @@ makeRhombus = function() {
   rhombus.closeUpIndexes = [2, 3, 4, 5, 6, 9, 10, 11, 12, 13, 14, 15, 19];
   rhombus.paging = {"small": 3, "medium": 9, "big": 24};
   rhombus.timeoutFunctions = timeoutFunctions.concat(rhombusTimeoutFunctions);
-  rhombus.timeouts = {"slow": 625, "fast": 325};
+  rhombus.timeouts = {"slow": 625, "fast": 325, "veryFast": 25};
   rhombus.polygonPoints = rhombusPoints(0, 0, rhombus.sideLength);
   rhombus.fabricKlass = fabric.Polygon;
 

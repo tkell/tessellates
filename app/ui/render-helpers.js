@@ -1,19 +1,42 @@
 let renderHelper = {};
 
 renderHelper.render = function(canvas, data, tessellation) {
+
+  let preloadColorPromises = [];
+  let preloadColorObjects = [];
   for (var i = 0; i < data.length; i++) {
+    // old things
     let record = data[i];
     renderHelper._addStartingStateToRecord(record, i, tessellation);
     renderHelper._setMouseListeners(record, data, tessellation);
+
+    // new things
+    console.log("hmm", record);
+    p = new Promise(function (resolve, reject) {
+      setTimeout(() => {
+        var circle = new fabric.Circle({radius: 5, fill: 'black', left: record.imageX, top: record.imageY});
+        canvas.add(circle);
+        preloadColorObjects.push(circle)
+        resolve();
+      }, tessellation.timeouts["veryFast"] * i);
+    });
+    preloadColorPromises.push(p);
   }
 
-  imageHelper.loadImages(data).then(() => {
-    for (var i = 0; i < data.length; i++) {
-      let record = data[i];
-      record.image = renderHelper._createAndRenderImage(canvas, record);
-      record.clickable = renderHelper._createClickableMask(record, tessellation)
-      renderHelper._createDefaultClickState(canvas, record, data);
-    }
+  Promise.all(preloadColorPromises).then(() => {
+    imageHelper.loadImages(data).then(() => {
+      for (var i = 0; i < data.length; i++) {
+        let record = data[i];
+        record.image = renderHelper._createAndRenderImage(canvas, record);
+        record.clickable = renderHelper._createClickableMask(record, tessellation)
+        renderHelper._createDefaultClickState(canvas, record, data);
+      }
+      // remove the preloads
+      for (var i = 0; i < preloadColorObjects.length; i++) {
+        canvas.remove(preloadColorObjects[i]);
+      }
+    });
+
   });
 }
 
