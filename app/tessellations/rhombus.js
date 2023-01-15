@@ -23,6 +23,8 @@ makeRhombus = function() {
   rhombus.timeouts = {"slow": 625, "fast": 325, "veryFast": 25};
   rhombus.polygonPoints = rhombusPoints(0, 0, rhombus.sideLength);
   rhombus.fabricKlass = fabric.Polygon;
+  rhombus.hasPreloaded = false;
+  rhombus.preloadRadius = 35;
 
   let clipPathLeft = new fabric.Polygon(rhombus.polygonPoints, {
     left: 0,

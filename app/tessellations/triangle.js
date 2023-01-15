@@ -13,6 +13,8 @@ makeTriangle = function () {
   triangle.timeoutFunctions = timeoutFunctions.concat(triangleTimeoutFunctions);
   triangle.timeouts = {"slow": 500, "fast": 225, "veryFast": 18};
   triangle.fabricKlass = fabric.Triangle;
+  triangle.hasPreloaded = false;
+  triangle.preloadRadius = 25;
 
   let triangleClipPathUp = new fabric.Triangle({
     originX: 'center',

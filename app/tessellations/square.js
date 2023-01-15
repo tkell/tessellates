@@ -9,6 +9,8 @@ makeSquare = function() {
   square.timeoutFunctions = timeoutFunctions.concat(squareTimeoutFunctions);
   square.timeouts = {"slow": 725, "fast": 350, "veryFast": 75};
   square.fabricKlass = fabric.Rect;
+  square.hasPreloaded = false;
+  square.preloadRadius = 40;
 
   let squareClipPath = new fabric.Rect({
     originX: 'center',
