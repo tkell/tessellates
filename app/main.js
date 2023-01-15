@@ -21,6 +21,7 @@ function renderCanvas(canvas, tess, data, params) {
   }
   let end = params['offset'] + params['items'];
   let slicedData = filteredData.slice(params['offset'], end);
+
   tess.render(canvas, tess.prepare(slicedData))
 }
 

@@ -11,17 +11,35 @@ renderHelper.render = function(canvas, data, tessellation) {
     renderHelper._setMouseListeners(record, data, tessellation);
 
     // new things
-    console.log("hmm", record);
-    p = new Promise(function (resolve, reject) {
-      setTimeout(() => {
-        var circle = new fabric.Circle({radius: 5, fill: 'black', left: record.imageX, top: record.imageY});
-        canvas.add(circle);
-        preloadColorObjects.push(circle)
-        resolve();
-      }, tessellation.timeouts["veryFast"] * i);
-    });
-    preloadColorPromises.push(p);
+    // should be in own loop, with the conditional above the loop
+    // need to also get radius and suchlike into each tesellation
+    // then need to get the color into each record!
+  
+    console.log(tessellation.hasPreloaded);
+    if (!tessellation.hasPreloaded) {
+      p = new Promise(function (resolve, reject) {
+        setTimeout(() => {
+          let radius = 40
+          var circle = new fabric.Circle({radius: radius, left: record.imageX - radius, top: record.imageY - radius});
+          var gradient = new fabric.Gradient({
+            type: 'linear',
+            gradientUnits: 'pixels',
+            coords: { x1: 0, y1: 0, x2: 0, y2: circle.height },
+            colorStops:[
+              { offset: 0, color: '#000' },
+              { offset: 1, color: '#fff'}
+            ]
+          });
+          circle.set('fill', gradient)
+          canvas.add(circle);
+          preloadColorObjects.push(circle)
+          resolve();
+        }, tessellation.timeouts["veryFast"] * i + 200);
+      });
+      preloadColorPromises.push(p);
+    }
   }
+  tessellation.hasPreloaded = true;
 
   Promise.all(preloadColorPromises).then(() => {
     imageHelper.loadImages(data).then(() => {
