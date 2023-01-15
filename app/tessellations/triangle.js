@@ -11,7 +11,7 @@ makeTriangle = function () {
   ];
   triangle.paging = {"small": 1, "medium": 9, "big": 45};
   triangle.timeoutFunctions = timeoutFunctions.concat(triangleTimeoutFunctions);
-  triangle.timeouts = {"slow": 625, "fast": 350};
+  triangle.timeouts = {"slow": 500, "fast": 225};
   triangle.fabricKlass = fabric.Triangle;
 
   let triangleClipPathUp = new fabric.Triangle({

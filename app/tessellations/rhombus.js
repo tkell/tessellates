@@ -20,7 +20,7 @@ makeRhombus = function() {
   rhombus.closeUpIndexes = [2, 3, 4, 5, 6, 9, 10, 11, 12, 13, 14, 15, 19];
   rhombus.paging = {"small": 3, "medium": 9, "big": 24};
   rhombus.timeoutFunctions = timeoutFunctions.concat(rhombusTimeoutFunctions);
-  rhombus.timeouts = {"slow": 750, "fast": 400};
+  rhombus.timeouts = {"slow": 625, "fast": 325};
   rhombus.polygonPoints = rhombusPoints(0, 0, rhombus.sideLength);
   rhombus.fabricKlass = fabric.Polygon;
 
@@ -49,14 +49,13 @@ makeRhombus = function() {
     angle: 30,
   });
 
-  let bigRPoints = rhombusPoints(0, 0, rhombus.sideLength * 4);
-  let clipPathBig = new fabric.Polygon(bigRPoints, {
-    left: 0,
-    top: 0,
+  // Even though this is a non-square, we want a square overlay!
+  let clipPathBig = new fabric.Rect({
     originX: 'center',
     originY: 'center',
+    width: rhombus.sideLength * 3.25,
+    height: rhombus.sideLength * 3.25,
     selectable: false,
-    angle: 90,
   });
 
   rhombus.prepare = function(data) {
