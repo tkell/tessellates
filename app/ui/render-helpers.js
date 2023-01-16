@@ -9,13 +9,7 @@ renderHelper.render = function(canvas, data, tessellation) {
 
   renderHelper._preload(canvas, data, tessellation)
     .then(() => imageHelper.loadImages(data))
-    .then(() => renderHelper._createImages(canvas, data, tessellation))
-    .then(() => {
-      // remove the preloads, don't looove that we need this here, but we'll leave it for now
-      for (var i = 0; i < data.length; i++) {
-        canvas.remove(data[i].preloadObject);
-      }
-    });
+    .then(() => renderHelper._createImages(canvas, data, tessellation));
 }
 
 // "Private" methods from here:
@@ -95,8 +89,8 @@ renderHelper._preload = function(canvas, data, tessellation) {
         p = new Promise(function (resolve, reject) {
           setTimeout(() => {
             let radius = tessellation.preloadRadius;
-            var circle = new fabric.Circle({radius: radius, left: record.imageX - radius, top: record.imageY - radius});
-            var gradient = new fabric.Gradient({
+            let circle = new fabric.Circle({radius: radius, left: record.imageX - radius, top: record.imageY - radius});
+            let gradient = new fabric.Gradient({
               type: 'linear',
               gradientUnits: 'pixels',
               coords: { x1: 0, y1: 0, x2: 0, y2: circle.height },
@@ -109,7 +103,7 @@ renderHelper._preload = function(canvas, data, tessellation) {
             canvas.add(circle);
             record.preloadObject = circle;
             resolve();
-          }, tessellation.timeouts["veryFast"] * i + 200);
+          }, tessellation.timeouts["veryFast"] * i);
         });
         preloadColorPromises.push(p);
       }
@@ -122,9 +116,12 @@ renderHelper._preload = function(canvas, data, tessellation) {
 renderHelper._createImages = function(canvas, data, tessellation) {
   for (var i = 0; i < data.length; i++) {
     let record = data[i];
-    record.image = renderHelper._createAndRenderImage(canvas, record);
-    record.clickable = renderHelper._createClickableMask(record, tessellation)
-    renderHelper._createDefaultClickState(canvas, record, data);
+    setTimeout(() => {
+      canvas.remove(record.preloadObject);
+      record.image = renderHelper._createAndRenderImage(canvas, record);
+      record.clickable = renderHelper._createClickableMask(record, tessellation)
+      renderHelper._createDefaultClickState(canvas, record, data);
+    }, i * tessellation.timeouts["veryFast"]);
   }
 }
 
