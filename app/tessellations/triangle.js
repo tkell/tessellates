@@ -14,7 +14,7 @@ makeTriangle = function () {
   triangle.timeouts = {"slow": 500, "fast": 225, "veryFast": 18};
   triangle.fabricKlass = fabric.Triangle;
   triangle.hasPreloaded = false;
-  triangle.preloadRadius = 25;
+  triangle.preloadRadius = 40;
 
   let triangleClipPathUp = new fabric.Triangle({
     originX: 'center',

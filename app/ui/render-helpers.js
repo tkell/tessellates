@@ -95,8 +95,8 @@ renderHelper._preload = function(canvas, data, tessellation) {
               gradientUnits: 'pixels',
               coords: { x1: 0, y1: 0, x2: 0, y2: circle.height },
               colorStops:[
-                { offset: 0, color: '#000' },
-                { offset: 1, color: '#fff'}
+                { offset: 0, color: record.colors[0] },
+                { offset: 1, color: record.colors[1]}
               ]
             });
             circle.set('fill', gradient)
