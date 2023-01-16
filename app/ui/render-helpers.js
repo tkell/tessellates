@@ -1,58 +1,21 @@
 let renderHelper = {};
 
 renderHelper.render = function(canvas, data, tessellation) {
-
   for (var i = 0; i < data.length; i++) {
     let record = data[i];
     renderHelper._addStartingStateToRecord(record, i, tessellation);
     renderHelper._setMouseListeners(record, data, tessellation);
   }
 
-  let preloadColorPromises = [];
-  let preloadColorObjects = [];
-  if (!tessellation.hasPreloaded) {
-    for (var i = 0; i < data.length; i++) {
-      let record = data[i];
-        p = new Promise(function (resolve, reject) {
-          setTimeout(() => {
-            let radius = tessellation.preloadRadius;
-            var circle = new fabric.Circle({radius: radius, left: record.imageX - radius, top: record.imageY - radius});
-            var gradient = new fabric.Gradient({
-              type: 'linear',
-              gradientUnits: 'pixels',
-              coords: { x1: 0, y1: 0, x2: 0, y2: circle.height },
-              colorStops:[
-                { offset: 0, color: '#000' },
-                { offset: 1, color: '#fff'}
-              ]
-            });
-            circle.set('fill', gradient)
-            canvas.add(circle);
-            preloadColorObjects.push(circle)
-            resolve();
-          }, tessellation.timeouts["veryFast"] * i + 200);
-        });
-        preloadColorPromises.push(p);
-      }
-    tessellation.hasPreloaded = true;
-  }
-
-  Promise.all(preloadColorPromises).then(() => {
-    imageHelper.loadImages(data).then(() => {
+  renderHelper._preload(canvas, data, tessellation)
+    .then(() => imageHelper.loadImages(data))
+    .then(() => renderHelper._createImages(canvas, data, tessellation))
+    .then(() => {
+      // remove the preloads, don't looove that we need this here, but we'll leave it for now
       for (var i = 0; i < data.length; i++) {
-        let record = data[i];
-        record.image = renderHelper._createAndRenderImage(canvas, record);
-        record.clickable = renderHelper._createClickableMask(record, tessellation)
-        renderHelper._createDefaultClickState(canvas, record, data);
-      }
-
-      // remove the preloads, don't looove that we need this here
-      for (var i = 0; i < preloadColorObjects.length; i++) {
-        canvas.remove(preloadColorObjects[i]);
+        canvas.remove(data[i].preloadObject);
       }
     });
-
-  });
 }
 
 // "Private" methods from here:
@@ -122,6 +85,47 @@ renderHelper._setMouseListeners = function(record, data, tessellation) {
           uiHelper.clearTrack();
         });
     }
+}
+
+renderHelper._preload = function(canvas, data, tessellation) {
+  let preloadColorPromises = [];
+  if (!tessellation.hasPreloaded) {
+    for (var i = 0; i < data.length; i++) {
+      let record = data[i];
+        p = new Promise(function (resolve, reject) {
+          setTimeout(() => {
+            let radius = tessellation.preloadRadius;
+            var circle = new fabric.Circle({radius: radius, left: record.imageX - radius, top: record.imageY - radius});
+            var gradient = new fabric.Gradient({
+              type: 'linear',
+              gradientUnits: 'pixels',
+              coords: { x1: 0, y1: 0, x2: 0, y2: circle.height },
+              colorStops:[
+                { offset: 0, color: '#000' },
+                { offset: 1, color: '#fff'}
+              ]
+            });
+            circle.set('fill', gradient)
+            canvas.add(circle);
+            record.preloadObject = circle;
+            resolve();
+          }, tessellation.timeouts["veryFast"] * i + 200);
+        });
+        preloadColorPromises.push(p);
+      }
+    tessellation.hasPreloaded = true;
+  }
+
+  return Promise.all(preloadColorPromises);
+}
+
+renderHelper._createImages = function(canvas, data, tessellation) {
+  for (var i = 0; i < data.length; i++) {
+    let record = data[i];
+    record.image = renderHelper._createAndRenderImage(canvas, record);
+    record.clickable = renderHelper._createClickableMask(record, tessellation)
+    renderHelper._createDefaultClickState(canvas, record, data);
+  }
 }
 
 renderHelper._createAndRenderImage = function(canvas, record) {
