@@ -10,7 +10,7 @@ makeSquare = function() {
   square.timeouts = {"slow": 725, "fast": 350, "veryFast": 75};
   square.fabricKlass = fabric.Rect;
   square.hasPreloaded = false;
-  square.preloadRadius = 90;
+  square.preloadRadius = 110;
 
   let squareClipPath = new fabric.Rect({
     originX: 'center',
