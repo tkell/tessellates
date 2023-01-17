@@ -7,9 +7,17 @@ renderHelper.render = function(canvas, data, tessellation) {
     renderHelper._setMouseListeners(record, data, tessellation);
   }
 
-  renderHelper._preload(canvas, data, tessellation)
-    .then(() => imageHelper.loadImages(data))
-    .then(() => renderHelper._createImages(canvas, data, tessellation));
+  if (!uiState.hasPreloaded) {
+    const preloadTimeout = tessellation.timeouts["veryFast"];
+    renderHelper._preload(canvas, data, tessellation)
+      .then(() => imageHelper.loadImages(data))
+      .then(() => renderHelper._createImages(canvas, data, tessellation, preloadTimeout));
+    uiState.hasPreloaded = true;
+  } else {
+    imageHelper.loadImages(data)
+    .then(() => renderHelper._createImages(canvas, data, tessellation, 0));
+  }
+
 }
 
 // "Private" methods from here:
@@ -113,7 +121,7 @@ renderHelper._preload = function(canvas, data, tessellation) {
   return Promise.all(preloadColorPromises);
 }
 
-renderHelper._createImages = function(canvas, data, tessellation) {
+renderHelper._createImages = function(canvas, data, tessellation, timeout) {
   for (var i = 0; i < data.length; i++) {
     let record = data[i];
     setTimeout(() => {
@@ -121,7 +129,7 @@ renderHelper._createImages = function(canvas, data, tessellation) {
       record.image = renderHelper._createAndRenderImage(canvas, record);
       record.clickable = renderHelper._createClickableMask(record, tessellation)
       renderHelper._createDefaultClickState(canvas, record, data);
-    }, i * tessellation.timeouts["veryFast"]);
+    }, i * timeout);
   }
 }
 

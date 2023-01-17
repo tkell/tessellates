@@ -70,6 +70,7 @@ function addFilterInteraction(elementId, eventType, filterStringElementId) {
 
 var vinylData = [];
 var uiState = {
+  hasPreloaded: false,
   closeUpImages: [],
   bigImage: {
     image: null,
@@ -90,8 +91,6 @@ if (params['t'] == 'square') {
 }
 params = parseTessellatesParams(params, tess)
 var canvas = null;
-canvas = new fabric.Canvas('vinylCanvas');
-canvas.hoverCursor = 'default';
 
 window.addEventListener("load", (event) => {
   canvas = new fabric.Canvas('vinylCanvas');
