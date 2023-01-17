@@ -8,8 +8,13 @@ renderHelper.render = function(canvas, data, tessellation) {
       .then(() => renderHelper._createImages(canvas, data, tessellation, preloadTimeout));
     uiState.hasPreloaded = true;
   } else {
-    canvas.clear();
-    imageHelper.loadImages(data)
+    const canvasClearPromise = new Promise(function (resolve, reject) {
+      canvas.clear();
+      resolve();
+    });
+
+    canvasClearPromise
+    .then(() => imageHelper.loadImages(data))
     .then(() => renderHelper._createImages(canvas, data, tessellation, 0));
   }
 
@@ -95,7 +100,7 @@ renderHelper._preload = function(canvas, data, tessellation) {
   for (var i = 0; i < data.length; i++) {
     let record = data[i];
     let preloadCircle = uiState.preloadedObjects[i];
-    p = new Promise(function (resolve, reject) {
+    let p = new Promise(function (resolve, reject) {
       setTimeout(() => {
         canvas.remove(preloadCircle);
         let radius = tessellation.preloadRadius;
