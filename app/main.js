@@ -90,14 +90,45 @@ if (params['t'] == 'square') {
 }
 params = parseTessellatesParams(params, tess)
 var canvas = null;
+canvas = new fabric.Canvas('vinylCanvas');
+canvas.hoverCursor = 'default';
+
+window.addEventListener("load", (event) => {
+  canvas = new fabric.Canvas('vinylCanvas');
+  canvas.hoverCursor = 'default';
+  var tempData = []
+  for (let i = 0; i < tess.defaultItems; i++) {
+    tempData.push({});
+  }
+  tempData = tess.prepare(tempData);
+  console.log(tempData);
+
+  for (let i = 0; i < tempData.length; i++) {
+    const record = tempData[i];
+    const radius = tess.preloadRadius;
+    let circle = new fabric.Circle({radius: radius, left: record.imageX - radius, top: record.imageY - radius});
+    let gradient = new fabric.Gradient({
+      type: 'linear',
+      gradientUnits: 'pixels',
+      coords: { x1: 0, y1: 0, x2: 0, y2: circle.height },
+      colorStops:[
+        { offset: 0, color: "#000"},
+        { offset: 1, color: "#FFF"}
+      ]
+    });
+    circle.set('fill', gradient)
+    canvas.add(circle);
+  }
+});
+
+
+
 
 // To my surprise, this looks in folder it is importing to,
 // so this will load vinyl/ or digital/, which is what we want!
 fetch('release_source.json')
   .then(response => response.json())
   .then(data => {
-    canvas = new fabric.Canvas('vinylCanvas');
-    canvas.hoverCursor = 'default';
     vinylData = data;
     renderCanvas(canvas, tess, vinylData, params)
 
