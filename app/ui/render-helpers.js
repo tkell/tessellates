@@ -1,12 +1,6 @@
 let renderHelper = {};
 
 renderHelper.render = function(canvas, data, tessellation) {
-  for (var i = 0; i < data.length; i++) {
-    let record = data[i];
-    renderHelper._addStartingStateToRecord(record, i, tessellation);
-    renderHelper._setMouseListeners(record, data, tessellation);
-  }
-
   if (!uiState.hasPreloaded) {
     const preloadTimeout = tessellation.timeouts["veryFast"];
     renderHelper._preload(canvas, data, tessellation)
@@ -14,8 +8,15 @@ renderHelper.render = function(canvas, data, tessellation) {
       .then(() => renderHelper._createImages(canvas, data, tessellation, preloadTimeout));
     uiState.hasPreloaded = true;
   } else {
+    canvas.clear();
     imageHelper.loadImages(data)
     .then(() => renderHelper._createImages(canvas, data, tessellation, 0));
+  }
+
+  for (var i = 0; i < data.length; i++) {
+    let record = data[i];
+    renderHelper._addStartingStateToRecord(record, i, tessellation);
+    renderHelper._setMouseListeners(record, data, tessellation);
   }
 
 }
@@ -91,31 +92,30 @@ renderHelper._setMouseListeners = function(record, data, tessellation) {
 
 renderHelper._preload = function(canvas, data, tessellation) {
   let preloadColorPromises = [];
-  if (!tessellation.hasPreloaded) {
-    for (var i = 0; i < data.length; i++) {
-      let record = data[i];
-        p = new Promise(function (resolve, reject) {
-          setTimeout(() => {
-            let radius = tessellation.preloadRadius;
-            let circle = new fabric.Circle({radius: radius, left: record.imageX - radius, top: record.imageY - radius});
-            let gradient = new fabric.Gradient({
-              type: 'linear',
-              gradientUnits: 'pixels',
-              coords: { x1: 0, y1: 0, x2: 0, y2: circle.height },
-              colorStops:[
-                { offset: 0, color: record.colors[0] },
-                { offset: 1, color: record.colors[1]}
-              ]
-            });
-            circle.set('fill', gradient)
-            canvas.add(circle);
-            record.preloadObject = circle;
-            resolve();
-          }, tessellation.timeouts["veryFast"] * i);
+  for (var i = 0; i < data.length; i++) {
+    let record = data[i];
+    let preloadCircle = uiState.preloadedObjects[i];
+    p = new Promise(function (resolve, reject) {
+      setTimeout(() => {
+        canvas.remove(preloadCircle);
+        let radius = tessellation.preloadRadius;
+        let circle = new fabric.Circle({radius: radius, left: record.imageX - radius, top: record.imageY - radius});
+        let gradient = new fabric.Gradient({
+          type: 'linear',
+          gradientUnits: 'pixels',
+          coords: { x1: 0, y1: 0, x2: 0, y2: circle.height },
+          colorStops:[
+            { offset: 0, color: record.colors[0] },
+            { offset: 1, color: record.colors[1]}
+          ]
         });
-        preloadColorPromises.push(p);
-      }
-    tessellation.hasPreloaded = true;
+        circle.set('fill', gradient)
+        canvas.add(circle);
+        record.preloadObject = circle;
+        resolve();
+      }, tessellation.timeouts["veryFast"] * i);
+    });
+    preloadColorPromises.push(p);
   }
 
   return Promise.all(preloadColorPromises);

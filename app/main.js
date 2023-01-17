@@ -1,5 +1,4 @@
 function renderCanvas(canvas, tess, data, params) {
-  canvas.clear();
   let folder = params['folder'];
   var filteredData = data;
   if (folder) {
@@ -71,6 +70,7 @@ function addFilterInteraction(elementId, eventType, filterStringElementId) {
 var vinylData = [];
 var uiState = {
   hasPreloaded: false,
+  preloadedObjects: [],
   closeUpImages: [],
   bigImage: {
     image: null,
@@ -100,7 +100,6 @@ window.addEventListener("load", (event) => {
     tempData.push({});
   }
   tempData = tess.prepare(tempData);
-  console.log(tempData);
 
   for (let i = 0; i < tempData.length; i++) {
     const record = tempData[i];
@@ -117,6 +116,7 @@ window.addEventListener("load", (event) => {
     });
     circle.set('fill', gradient)
     canvas.add(circle);
+    uiState.preloadedObjects.push(circle); // I don't love the parallel lists here, but maybe it is OK?
   }
 });
 
