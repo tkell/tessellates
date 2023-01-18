@@ -7,7 +7,7 @@ makeSquare = function() {
   square.closeUpIndexes = [0, 1, 2, 3, 4, 5, 6, 7, 8];
   square.paging = {"small": 1, "medium": 3, "big": 9};
   square.timeoutFunctions = timeoutFunctions.concat(squareTimeoutFunctions);
-  square.timeouts = {"slow": 725, "fast": 350, "veryFast": 75};
+  square.timeouts = {"slow": 725, "fast": 350};
   square.fabricKlass = fabric.Rect;
   square.preloadRadius = 110;
 

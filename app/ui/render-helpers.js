@@ -1,11 +1,11 @@
 let renderHelper = {};
 
+// don't love this `true` here, give it a think
 renderHelper.render = function(canvas, data, tessellation) {
   if (!uiState.hasPreloaded) {
-    const preloadTimeout = tessellation.timeouts["veryFast"];
     renderHelper._preload(canvas, data, tessellation)
       .then(() => imageHelper.loadImages(data))
-      .then(() => renderHelper._createImages(canvas, data, tessellation, preloadTimeout));
+      .then(() => renderHelper._createImages(canvas, data, tessellation, true));
     uiState.hasPreloaded = true;
   } else {
     const canvasClearPromise = new Promise(function (resolve, reject) {
@@ -15,7 +15,7 @@ renderHelper.render = function(canvas, data, tessellation) {
 
     canvasClearPromise
     .then(() => imageHelper.loadImages(data))
-    .then(() => renderHelper._createImages(canvas, data, tessellation, 0));
+    .then(() => renderHelper._createImages(canvas, data, tessellation, false));
   }
 
   for (var i = 0; i < data.length; i++) {
@@ -97,17 +97,18 @@ renderHelper._setMouseListeners = function(record, data, tessellation) {
 
 // this should be somewhere else!
 renderHelper._pickTimeout = function(tessellation) {
-    const timeoutIndex = Math.floor(Math.random() * tessellation.timeoutFunctions.length);
-    const reverseIndex = Math.floor(Math.random() * 2);
-    return tessellation.timeoutFunctions[timeoutIndex][reverseIndex];
+  const timeoutIndex = Math.floor(Math.random() * tessellation.timeoutFunctions.length);
+  const reverseIndex = Math.floor(Math.random() * 2);
+  console.log(timeoutIndex, reverseIndex);
+  return tessellation.timeoutFunctions[timeoutIndex][reverseIndex];
 }
 
 renderHelper._preload = function(canvas, data, tessellation) {
   let preloadColorPromises = [];
+  const timeoutFunction = renderHelper._pickTimeout(tessellation);
   for (var i = 0; i < data.length; i++) {
     let record = data[i];
     let preloadCircle = uiState.preloadedObjects[i];
-    const timeoutFunction = renderHelper._pickTimeout(tessellation);
     const timeoutMs = timeoutFunction(i, data.length, tessellation.timeouts["slow"])
 
     let p = new Promise(function (resolve, reject) {
@@ -136,15 +137,22 @@ renderHelper._preload = function(canvas, data, tessellation) {
   return Promise.all(preloadColorPromises);
 }
 
-renderHelper._createImages = function(canvas, data, tessellation, timeout) {
+renderHelper._createImages = function(canvas, data, tessellation, useTimeout) {
+  const timeoutFunction = renderHelper._pickTimeout(tessellation);
+
   for (var i = 0; i < data.length; i++) {
     let record = data[i];
+    let timeout = 0;
+    if (useTimeout) {
+      timeout = timeoutFunction(i, data.length, tessellation.timeouts["slow"])
+    }
+
     setTimeout(() => {
       canvas.remove(record.preloadObject);
       record.image = renderHelper._createAndRenderImage(canvas, record);
       record.clickable = renderHelper._createClickableMask(record, tessellation)
       renderHelper._createDefaultClickState(canvas, record, data);
-    }, i * timeout);
+    }, timeout);
   }
 }
 
