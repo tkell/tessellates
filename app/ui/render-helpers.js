@@ -95,11 +95,21 @@ renderHelper._setMouseListeners = function(record, data, tessellation) {
     }
 }
 
+// this should be somewhere else!
+renderHelper._pickTimeout = function(tessellation) {
+    const timeoutIndex = Math.floor(Math.random() * tessellation.timeoutFunctions.length);
+    const reverseIndex = Math.floor(Math.random() * 2);
+    return tessellation.timeoutFunctions[timeoutIndex][reverseIndex];
+}
+
 renderHelper._preload = function(canvas, data, tessellation) {
   let preloadColorPromises = [];
   for (var i = 0; i < data.length; i++) {
     let record = data[i];
     let preloadCircle = uiState.preloadedObjects[i];
+    const timeoutFunction = renderHelper._pickTimeout(tessellation);
+    const timeoutMs = timeoutFunction(i, data.length, tessellation.timeouts["slow"])
+
     let p = new Promise(function (resolve, reject) {
       setTimeout(() => {
         canvas.remove(preloadCircle);
@@ -118,7 +128,7 @@ renderHelper._preload = function(canvas, data, tessellation) {
         canvas.add(circle);
         record.preloadObject = circle;
         resolve();
-      }, tessellation.timeouts["veryFast"] * i);
+      }, timeoutMs);
     });
     preloadColorPromises.push(p);
   }
