@@ -4,7 +4,17 @@ renderHelper.render = function(canvas, data, tessellation) {
   if (!uiState.hasPreloaded) {
     renderHelper._preload(canvas, data, tessellation)
       .then(() => imageHelper.loadImages(data))
-      .then(() => renderHelper._createImagesWithTimeout(canvas, data, tessellation));
+      .then(() => renderHelper._createImagesWithTimeout(canvas, data, tessellation))
+      .then(() => {
+        for (var i = 0; i < data.length; i++) {
+          let record = data[i];
+          const interval = Math.ceil(Math.random() * 114000) + 6000
+          setInterval(() => {
+            uiHelper.bounceRecord(record);
+          }, interval);
+        }
+      })
+
     uiState.hasPreloaded = true;
   } else {
     const canvasClearPromise = new Promise(function (resolve, reject) {
@@ -16,6 +26,8 @@ renderHelper.render = function(canvas, data, tessellation) {
       .then(() => renderHelper._createImagesWithNoTimeout(canvas, data, tessellation));
   }
 
+  // I am very concerned that this is actually firing in the middle of one of the above promise chains,
+  // and that it only ever worse because of big coincidences
   for (var i = 0; i < data.length; i++) {
     let record = data[i];
     renderHelper._addStartingStateToRecord(record, i, tessellation);
@@ -95,7 +107,6 @@ renderHelper._setMouseListeners = function(record, data, tessellation) {
 renderHelper._pickTimeout = function(tessellation) {
   const timeoutIndex = Math.floor(Math.random() * tessellation.timeoutFunctions.length);
   const reverseIndex = Math.floor(Math.random() * 2);
-  console.log(timeoutIndex, reverseIndex);
   return tessellation.timeoutFunctions[timeoutIndex][reverseIndex];
 }
 
