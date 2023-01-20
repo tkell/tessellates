@@ -56,9 +56,22 @@ function setUpBounces() {
   return bounces;
 }
 
+function setUpFades() {
+  let fades = [
+    {target: 'opacity', change: '1', duration: 500},
+    {target: 'opacity', change: '0', duration: 400}
+  ]
+  return fades;
+}
+
 animationHelper.makeBounce = function(record) {
-  let bounces = setUpBounces();
+  const bounces = setUpBounces();
   return animationHelper.setupAnimationChain(record, bounces);
+}
+
+animationHelper.makeFade = function(record) {
+  const fades = setUpFades();
+  return animationHelper.setupAnimationChain(record, fades);
 }
 
 function getRandomInt(min, max) {

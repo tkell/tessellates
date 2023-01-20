@@ -8,9 +8,13 @@ renderHelper.render = function(canvas, data, tessellation) {
       .then(() => {
         for (var i = 0; i < data.length; i++) {
           let record = data[i];
-          const interval = Math.ceil(Math.random() * 114000) + 6000
+          const interval = Math.ceil(Math.random() * 120000 + 7000);
           setInterval(() => {
-            uiHelper.bounceRecord(record);
+            if (Math.random() > 0.5) {
+              uiHelper.bounceRecord(record);
+            } else {
+              uiHelper.fadeRecord(record);
+            }
           }, interval);
         }
       })

@@ -28,10 +28,22 @@ uiHelper.clearTrack = function() {
   t.textContent = "-";
 }
 
-// Bounces
+// Animations
 uiHelper.bounceRecord = function(record) {
   if (record.isAnimating === false) {
     animationHelper.makeBounce(record)();
+  }
+}
+
+uiHelper.fadeRecord = function(record) {
+  if (record.isAnimating === false) {
+    animationHelper.makeFade(record)();
+  }
+}
+
+uiHelper.horizontalWipeRecord = function(record) {
+  if (record.isAnimating === false) {
+    animationHelper.makeHorizontalWipe(record)();
   }
 }
 
