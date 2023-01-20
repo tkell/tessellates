@@ -8,13 +8,9 @@ renderHelper.render = function(canvas, data, tessellation) {
       .then(() => {
         for (var i = 0; i < data.length; i++) {
           let record = data[i];
-          const interval = Math.ceil(Math.random() * 120000 + 7000);
+          const interval = Math.ceil(Math.random() * tessellation.defaultItems * 1000 * 16) + 8000;
           setInterval(() => {
-            if (Math.random() > 0.5) {
-              uiHelper.bounceRecord(record);
-            } else {
-              uiHelper.fadeRecord(record);
-            }
+            uiHelper.ambientAnimate(record);
           }, interval);
         }
       })
@@ -30,8 +26,8 @@ renderHelper.render = function(canvas, data, tessellation) {
       .then(() => renderHelper._createImagesWithNoTimeout(canvas, data, tessellation));
   }
 
-  // I am very concerned that this is actually firing in the middle of one of the above promise chains,
-  // and that it only ever worse because of big coincidences
+  // I am concerned that this is actually firing in the middle of one of the above promise chains,
+  // and that it only ever works because of big coincidences, eek
   for (var i = 0; i < data.length; i++) {
     let record = data[i];
     renderHelper._addStartingStateToRecord(record, i, tessellation);

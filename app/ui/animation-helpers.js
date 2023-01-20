@@ -57,9 +57,10 @@ function setUpBounces() {
 }
 
 function setUpFades() {
+  const fadeDuration = getRandomInt(400, 600);
   let fades = [
-    {target: 'opacity', change: '1', duration: 500},
-    {target: 'opacity', change: '0', duration: 400}
+    {target: 'opacity', change: '1', duration: fadeDuration},
+    {target: 'opacity', change: '0', duration: fadeDuration}
   ]
   return fades;
 }
@@ -72,6 +73,35 @@ animationHelper.makeBounce = function(record) {
 animationHelper.makeFade = function(record) {
   const fades = setUpFades();
   return animationHelper.setupAnimationChain(record, fades);
+}
+
+function setUpWalkabout() {
+  const walkOutDuration = getRandomInt(750, 1250);
+  const walkBackDuration = getRandomInt(750, 1250);
+  const distance = getRandomInt(200, 750);
+  let outChange = "";
+  let backCHange = "";
+  if (Math.random() > 0.5) {
+    outChange = "+=" + distance;
+    backChange = "-=" + distance;
+  } else {
+    outChange = "-=" + distance;
+    backChange = "+=" + distance;
+  }
+
+  let possibleTargets = ['left', 'top'];
+  let changeTarget = possibleTargets[Math.floor(Math.random() * possibleTargets.length)];
+
+  let walk = [
+    {target: changeTarget, change: outChange, duration: walkOutDuration},
+    {target: changeTarget, change: backChange, duration: walkBackDuration},
+  ]
+  return walk;
+}
+
+animationHelper.makeWalkabout = function(record) {
+  const walk = setUpWalkabout();
+  return animationHelper.setupAnimationChain(record, walk);
 }
 
 function getRandomInt(min, max) {

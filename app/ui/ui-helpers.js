@@ -28,6 +28,7 @@ uiHelper.clearTrack = function() {
   t.textContent = "-";
 }
 
+
 // Animations
 uiHelper.bounceRecord = function(record) {
   if (record.isAnimating === false) {
@@ -41,11 +42,25 @@ uiHelper.fadeRecord = function(record) {
   }
 }
 
-uiHelper.horizontalWipeRecord = function(record) {
+uiHelper.walkaboutRecord = function(record) {
   if (record.isAnimating === false) {
-    animationHelper.makeHorizontalWipe(record)();
+    animationHelper.makeWalkabout(record)();
   }
 }
+
+uiHelper.ambientAnimate = function(record) {
+  const functionIndex = Math.floor(Math.random() * uiHelper._ambientAnimations.length);
+  const animation = uiHelper._ambientAnimations[functionIndex];
+  animation(record);
+}
+
+uiHelper._ambientAnimations = [
+  uiHelper.bounceRecord,
+  uiHelper.bounceRecord,
+  uiHelper.fadeRecord,
+  uiHelper.fadeRecord,
+  uiHelper.walkaboutRecord
+];
 
 uiHelper.bounceBigImage = function() {
   let bigImage = uiState.bigImage;
