@@ -104,19 +104,12 @@ window.addEventListener("load", (event) => {
   for (let i = 0; i < tempData.length; i++) {
     const record = tempData[i];
     const radius = tess.preloadRadius;
-    let circle = new fabric.Circle({radius: radius, left: record.imageX - radius, top: record.imageY - radius});
-    let gradient = new fabric.Gradient({
-      type: 'linear',
-      gradientUnits: 'pixels',
-      coords: { x1: 0, y1: 0, x2: 0, y2: circle.height },
-      colorStops:[
-        { offset: 0, color: "#000"},
-        { offset: 1, color: "#FFF"}
-      ]
-    });
-    circle.set('fill', gradient)
-    canvas.add(circle);
-    uiState.preloadedObjects.push(circle); // I don't love the parallel lists here, but maybe it is OK?
+    const hexPoints = uiHelper.getHexPoints(radius);
+    const hex = new fabric.Polygon(hexPoints, {left: record.imageX - radius, top: record.imageY - radius});
+    const gradient = uiHelper.getGradient("#000","#FFF", hex.height);
+    hex.set('fill', gradient)
+    canvas.add(hex);
+    uiState.preloadedObjects.push(hex); // I don't love the parallel lists here, but maybe it is OK?
   }
 });
 

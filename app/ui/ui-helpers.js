@@ -214,6 +214,38 @@ uiHelper.removeBigImage = function (data, canvas) {
   uiState.bigImage.image = undefined;
 }
 
+// Fabric helpers:  Hexagons and gradients
+uiHelper.getHexPoints = function(radius) {
+    const sideCount = 6
+    const sweep = Math.PI * 2 / sideCount;
+    const cx = radius;
+    const cy = radius;
+    const points = [];
+    for (let i = 0; i < sideCount; i++) {
+        let x = cx + radius * Math.cos(i * sweep);
+        let y = cy + radius * Math.sin(i * sweep);
+        points.push({x:x, y:y});
+    }
+    return(points);
+}
+
+uiHelper.getGradient = function(color1, color2, size) {
+  return new fabric.Gradient({
+    type: 'linear',
+    coords: {
+      x1: 0, y1: 0,
+      x2: 0, y2: size
+    },
+    colorStops: [
+      {offset: 0, color: color1},
+      {offset: 1, color: color2}
+    ]
+  });
+}
+
+
+
+
 
 // Private helpers
 

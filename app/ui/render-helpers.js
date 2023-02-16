@@ -110,6 +110,7 @@ renderHelper._pickTimeout = function(tessellation) {
   return tessellation.timeoutFunctions[timeoutIndex][reverseIndex];
 }
 
+
 renderHelper._preload = function(canvas, data, tessellation) {
   let preloadColorPromises = [];
   const timeoutFunction = renderHelper._pickTimeout(tessellation);
@@ -121,20 +122,13 @@ renderHelper._preload = function(canvas, data, tessellation) {
     let p = new Promise(function (resolve, reject) {
       setTimeout(() => {
         canvas.remove(preloadCircle);
-        let radius = tessellation.preloadRadius;
-        let circle = new fabric.Circle({radius: radius, left: record.imageX - radius, top: record.imageY - radius});
-        let gradient = new fabric.Gradient({
-          type: 'linear',
-          gradientUnits: 'pixels',
-          coords: { x1: 0, y1: 0, x2: 0, y2: circle.height },
-          colorStops:[
-            { offset: 0, color: record.colors[0] },
-            { offset: 1, color: record.colors[1]}
-          ]
-        });
-        circle.set('fill', gradient)
-        canvas.add(circle);
-        record.preloadObject = circle;
+        const radius = tessellation.preloadRadius;
+        let hexPoints = uiHelper.getHexPoints(radius);
+        let hex = new fabric.Polygon(hexPoints, {left: record.imageX - radius, top: record.imageY - radius});
+        let gradient = uiHelper.getGradient(record.colors[0], record.colors[1], hex.height);
+        hex.set('fill', gradient)
+        canvas.add(hex);
+        record.preloadObject = hex;
         resolve();
       }, timeoutMs);
     });
