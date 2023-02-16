@@ -1,41 +1,40 @@
 let renderHelper = {};
 
+
 renderHelper.render = function(canvas, data, tessellation) {
   if (!uiState.hasPreloaded) {
     renderHelper._preload(canvas, data, tessellation)
+      .then(() => renderHelper._addStartingStates(data, tessellation))
       .then(() => imageHelper.loadImages(data))
       .then(() => renderHelper._createImagesWithTimeout(canvas, data, tessellation))
-      .then(() => {
-        for (var i = 0; i < data.length; i++) {
-          let record = data[i];
-          const interval = Math.ceil(Math.random() * tessellation.defaultItems * 1000 * 16) + 8000;
-          setInterval(() => {
-            uiHelper.ambientAnimate(record);
-          }, interval);
-        }
-      })
+      .then(() => renderHelper._addAmbientAnimations(data, tessellation));
 
-    uiState.hasPreloaded = true;
+  uiState.hasPreloaded = true;
   } else {
     const canvasClearPromise = new Promise(function (resolve, reject) {
       canvas.clear();
       resolve();
     });
     canvasClearPromise
+      .then(() => renderHelper._addStartingStates(data, tessellation))
       .then(() => imageHelper.loadImages(data))
       .then(() => renderHelper._createImagesWithNoTimeout(canvas, data, tessellation));
   }
 
   // I am concerned that this is actually firing in the middle of one of the above promise chains,
   // and that it only ever works because of big coincidences, eek
-  for (var i = 0; i < data.length; i++) {
-    let record = data[i];
-    renderHelper._addStartingStateToRecord(record, i, tessellation);
-    renderHelper._setMouseListeners(record, data, tessellation);
-  }
+  // I think this might be why, on the live website, rhombus and triangle fail, and don't load the bigImage
 }
 
 // "Private" methods from here:
+renderHelper._addStartingStates = function(data, tessellation) {
+  for (let i = 0; i < data.length; i++) {
+    const record = data[i];
+    renderHelper._addStartingStateToRecord(record, i, tessellation);
+    renderHelper._setMouseListeners(record, data, tessellation);
+  }
+  return;
+}
 
 renderHelper._addStartingStateToRecord = function(record, index, tessellation) {
   record.index = index;
@@ -139,15 +138,21 @@ renderHelper._preload = function(canvas, data, tessellation) {
 }
 
 renderHelper._createImagesWithTimeout = function(canvas, data, tessellation) {
+  let imageLoadPromises = [];
   const timeoutFunction = renderHelper._pickTimeout(tessellation);
   for (var i = 0; i < data.length; i++) {
     const record = data[i];
     const timeout = timeoutFunction(i, data.length, tessellation.timeouts["slow"])
 
-    setTimeout(() => {
-      renderHelper._createImageAndClickState(canvas, record, data, tessellation);
-    }, timeout);
+    let p = new Promise(function (resolve, reject) {
+      setTimeout(() => {
+        renderHelper._createImageAndClickState(canvas, record, data, tessellation);
+        resolve();
+      }, timeout);
+    })
+    imageLoadPromises.push(p);
   }
+  return Promise.all(imageLoadPromises);
 }
 
 renderHelper._createImagesWithNoTimeout = function(canvas, data, tessellation) {
@@ -207,4 +212,17 @@ renderHelper._createDefaultClickState = function(canvas, record, data) {
 
   canvas.add(objectToClick);
   canvas.bringToFront(objectToClick);
+}
+
+renderHelper._addAmbientAnimations = function(data, tessellation) {
+  const timeoutOffsetMs = 8000;
+  const maxTimeoutMs = tessellation.defaultItems * 1000 * 16;
+  for (let i = 0; i < data.length; i++) {
+    const record = data[i];
+    const interval = Math.ceil(Math.random() * maxTimeoutMs) + timeoutOffsetMs;
+    setInterval(() => {
+      uiHelper.ambientAnimate(record);
+    }, interval);
+  }
+  return;
 }
