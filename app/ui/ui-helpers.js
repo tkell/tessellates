@@ -230,12 +230,14 @@ uiHelper.getHexPoints = function(radius) {
 }
 
 uiHelper.getGradient = function(color1, color2, size) {
+  const x1 = Math.floor(Math.random() * 10);
+  const y1 = Math.floor(Math.random() * 10);
+  const x2 = Math.floor(Math.random() * 10);
+  const y2 = size - Math.floor(Math.random() * 10);
+
   return new fabric.Gradient({
     type: 'linear',
-    coords: {
-      x1: 0, y1: 0,
-      x2: 0, y2: size
-    },
+    coords: {x1: x1, y1: y1, x2: x2, y2: y2},
     colorStops: [
       {offset: 0, color: color1},
       {offset: 1, color: color2}
@@ -244,11 +246,7 @@ uiHelper.getGradient = function(color1, color2, size) {
 }
 
 
-
-
-
 // Private helpers
-
 function addAndClipImage(image, clipPath, left, top) {
   image.clipPath = clipPath;
   image.left = left;
