@@ -27,8 +27,8 @@ if __name__ == "__main__":
         print("collection type must be one of vinyl or digital")
         sys.exit()
 
-    release_source_path = f"app/{collection_type}/release_source.json"
-    image_dir = f"app/{collection_type}/images"
+    release_source_path = f"tessellates/app/{collection_type}/release_source.json"
+    image_dir = f"tessellates/app/{collection_type}/images"
 
     with open(release_source_path, "r") as f:
         releases = json.load(f)
