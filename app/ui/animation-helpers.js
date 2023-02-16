@@ -14,6 +14,7 @@ animationHelper.setupAnimationChain = function(record, animations) {
   let finishAnimation = function () {
     record.isAnimating = false;
   }
+  animations.reverse();
 
   let animationFunctions = [finishAnimation];
   for (let i = 0; i < animations.length; i++) {
@@ -59,8 +60,8 @@ function setUpBounces() {
 function setUpFades() {
   const fadeDuration = getRandomInt(400, 600);
   let fades = [
-    {target: 'opacity', change: '1', duration: fadeDuration},
-    {target: 'opacity', change: '0', duration: fadeDuration}
+    {target: 'opacity', change: '0', duration: fadeDuration},
+    {target: 'opacity', change: '1', duration: fadeDuration}
   ]
   return fades;
 }
