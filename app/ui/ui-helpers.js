@@ -49,6 +49,8 @@ uiHelper.walkaboutRecord = function(record) {
 }
 
 uiHelper.ambientAnimate = function(record) {
+  if (uiState.bigImage.isShowing === true) return;
+
   const functionIndex = Math.floor(Math.random() * uiHelper._ambientAnimations.length);
   const animation = uiHelper._ambientAnimations[functionIndex];
   animation(record);
