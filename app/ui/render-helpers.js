@@ -64,10 +64,7 @@ renderHelper._setMouseListeners = function(record, data, tessellation) {
     uiState.bigImage.isShowing = true;
     uiState.bigImage.isAnimating = true;
     uiHelper.updateTextWithArtistAndTitle(record);
-
-    const loadMainImageEarly = fabricImageLoad(record.imagePath);
-    const replaceOtherRecordsPromise = uiHelper.replaceOtherRecords(record, data, tessellation.timeouts.slow)
-    Promise.all([loadMainImageEarly, replaceOtherRecordsPromise])
+    uiHelper.replaceOtherRecords(record, data, tessellation.timeouts.slow)
       .then(() => {
         uiHelper.hideExistingImages(data);
         return uiHelper.replaceCloseUpImage(record, data, tessellation.timeouts.slow);
