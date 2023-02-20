@@ -61,6 +61,12 @@ renderHelper._setMouseListeners = function(record, data, tessellation) {
   }
 
   record.onMouseDown = function() {
+    // This call returns a promise, but we don't use it, because it clashes with the next load
+    // Hopefully, this finishes before and our next load uses the cache.
+    // I've tried passing this into the promise chain below, and
+    // it did not work, which is odd - but this is fine for now
+    const loadBigImageEarly = fabricImageLoad(record.imagePath);
+
     uiState.bigImage.isShowing = true;
     uiState.bigImage.isAnimating = true;
     uiHelper.updateTextWithArtistAndTitle(record);
