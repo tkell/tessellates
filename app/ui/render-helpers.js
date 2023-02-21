@@ -20,10 +20,6 @@ renderHelper.render = function(canvas, data, tessellation) {
       .then(() => imageHelper.loadImages(data))
       .then(() => renderHelper._createImagesWithNoTimeout(canvas, data, tessellation));
   }
-
-  // I am concerned that this is actually firing in the middle of one of the above promise chains,
-  // and that it only ever works because of big coincidences, eek
-  // I think this might be why, on the live website, rhombus and triangle fail, and don't load the bigImage
 }
 
 // "Private" methods from here:
@@ -61,10 +57,7 @@ renderHelper._setMouseListeners = function(record, data, tessellation) {
   }
 
   record.onMouseDown = function() {
-    // This call returns a promise, but we don't use it, because it clashes with the next load
-    // Hopefully, this finishes before and our next load uses the cache.
-    // I've tried passing this into the promise chain below, and
-    // it did not work, which is odd - but this is fine for now
+    // See notes for commentary about the Weird Image Loading!
     const loadBigImageEarly = fabricImageLoad(record.imagePath);
 
     uiState.bigImage.isShowing = true;
