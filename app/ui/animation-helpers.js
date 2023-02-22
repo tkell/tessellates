@@ -27,9 +27,9 @@ const smallBounceChanges = [
  We continue to connect the previous animation to the next via onComplete ...
  After we've done everything, we return the "first" animation function, so we can run it!
 */ 
-animationHelper.setupAnimationChain = function(record, animations) {
+animationHelper.setupAnimationChain = function(objectToAnimate, animations, optionalRecord) {
   let finishAnimation = function () {
-    record.isAnimating = false;
+    optionalRecord.isAnimating = false;
   }
   animations.reverse();
 
@@ -43,8 +43,8 @@ animationHelper.setupAnimationChain = function(record, animations) {
         duration: animation.duration,
         onComplete: scopedOnComplete
       }
-      record.isAnimating = true;
-      record.image.animate(animation.target, animation.change, options);
+      optionalRecord.isAnimating = true;
+      objectToAnimate.animate(animation.target, animation.change, options);
     }
     animationFunctions.push(a);
   }
@@ -75,21 +75,6 @@ function setUpFades() {
   return fades;
 }
 
-animationHelper.makeBounce = function(record) {
-  const bounces = setUpBounces(bounceChanges);
-  return animationHelper.setupAnimationChain(record, bounces);
-}
-
-animationHelper.makeSmallBounce = function(record) {
-  const bounces = setUpBounces(smallBounceChanges);
-  return animationHelper.setupAnimationChain(record, bounces);
-}
-
-animationHelper.makeFade = function(record) {
-  const fades = setUpFades();
-  return animationHelper.setupAnimationChain(record, fades);
-}
-
 function setUpWalkabout() {
   const walkOutDuration = getRandomInt(750, 1250);
   const walkBackDuration = getRandomInt(750, 1250);
@@ -114,10 +99,43 @@ function setUpWalkabout() {
   return walk;
 }
 
-animationHelper.makeWalkabout = function(record) {
-  const walk = setUpWalkabout();
-  return animationHelper.setupAnimationChain(record, walk);
+animationHelper.makeBounce = function(record) {
+  return animationHelper.makeBounceRaw(record.image, record);
 }
+
+animationHelper.makeSmallBounce = function(record) {
+  return animationHelper.makeSmallBounceRaw(record.image, record);
+}
+
+animationHelper.makeFade = function(record) {
+  return animationHelper.makeFadeRaw(record.image, record);
+}
+
+animationHelper.makeWalkabout = function(record) {
+  return animationHelper.makeWalkaboutRaw(record.image, record);
+}
+
+animationHelper.makeBounceRaw = function(object, stateToUpdate) {
+  const bounces = setUpBounces(bounceChanges);
+  return animationHelper.setupAnimationChain(object, bounces, stateToUpdate);
+}
+
+animationHelper.makeSmallBounceRaw = function(object, stateToUpdate) {
+  const bounces = setUpBounces(smallBounceChanges);
+  return animationHelper.setupAnimationChain(object, bounces, stateToUpdate);
+}
+
+animationHelper.makeFadeRaw = function(object, stateToUpdate) {
+  const fades = setUpFades();
+  return animationHelper.setupAnimationChain(object, fades, stateToUpdate);
+}
+
+animationHelper.makeWalkaboutRaw = function(object, stateToUpdate) {
+  const walkabout = setUpWalkabout();
+  return animationHelper.setupAnimationChain(object, walkabout, stateToUpdate);
+}
+
+
 
 function getRandomInt(min, max) {
   min = Math.ceil(min);
