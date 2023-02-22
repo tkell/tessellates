@@ -7,7 +7,8 @@ renderHelper.render = function(canvas, data, tessellation) {
       .then(() => renderHelper._addStartingStates(data, tessellation))
       .then(() => imageHelper.loadImages(data))
       .then(() => renderHelper._createImagesWithTimeout(canvas, data, tessellation))
-      .then(() => renderHelper._addAmbientAnimations(data, tessellation));
+      .then(() => renderHelper._addAmbientAnimations(data, tessellation))
+      .then(() => renderHelper._bounceAfterLoad(data));
 
   uiState.hasPreloaded = true;
   } else {
@@ -23,6 +24,13 @@ renderHelper.render = function(canvas, data, tessellation) {
 }
 
 // "Private" methods from here:
+renderHelper._bounceAfterLoad = function (data) {
+  for (let i = 0; i < data.length; i++) {
+      const record = data[i];
+      uiHelper.bounceRecordSmall(record);
+  }
+}
+
 renderHelper._addStartingStates = function(data, tessellation) {
   for (let i = 0; i < data.length; i++) {
     const record = data[i];

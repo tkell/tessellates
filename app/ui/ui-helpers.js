@@ -36,6 +36,12 @@ uiHelper.bounceRecord = function(record) {
   }
 }
 
+uiHelper.bounceRecordSmall = function(record) {
+  if (record.isAnimating === false) {
+    animationHelper.makeSmallBounce(record)();
+  }
+}
+
 uiHelper.fadeRecord = function(record) {
   if (record.isAnimating === false) {
     animationHelper.makeFade(record)();

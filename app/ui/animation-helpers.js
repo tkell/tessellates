@@ -1,5 +1,22 @@
 let animationHelper = {};
 
+const bounceChanges = [
+    ['+=10', '-=15', '+=5'],
+    ['+=11', '-=16', '+=5'],
+    ['+=8', '-=14', '+=6'],
+    ['-=12', '+=15', '-=3'],
+    ['-=9', '+=15', '-=6'],
+    ['-=10', '+=17', '-=7'],
+  ];
+const smallBounceChanges = [
+    ['+=4', '-=8', '+=4'],
+    ['+=3', '-=5', '+=2'],
+    ['+=3', '-=8', '+=5'],
+    ['-=5', '+=7', '-=2'],
+    ['-=3', '+=6', '-=3'],
+    ['-=4', '+=7', '-=3'],
+];
+
 /*
  Some complexity here, as Fabric is not great at animation chains:
  We take a list of animations, in the order we want them to happen:  [go left, then go right]
@@ -35,16 +52,8 @@ animationHelper.setupAnimationChain = function(record, animations) {
   return animationFunctions[animationFunctions.length - 1];
 }
 
-function setUpBounces() {
+function setUpBounces(possibleChanges) {
   let durations = [getRandomInt(75, 150), getRandomInt(75, 150), getRandomInt(35, 75)]
-  let possibleChanges = [
-    ['+=10', '-=15', '+=5'],
-    ['+=11', '-=16', '+=5'],
-    ['+=8', '-=14', '+=6'],
-    ['-=12', '+=15', '-=3'],
-    ['-=9', '+=15', '-=6'],
-    ['-=10', '+=17', '-=7'],
-  ];
   let possibleTargets = ['left', 'top'];
   let change = possibleChanges[Math.floor(Math.random() * possibleChanges.length)];
   let changeTarget = possibleTargets[Math.floor(Math.random() * possibleTargets.length)];
@@ -67,7 +76,12 @@ function setUpFades() {
 }
 
 animationHelper.makeBounce = function(record) {
-  const bounces = setUpBounces();
+  const bounces = setUpBounces(bounceChanges);
+  return animationHelper.setupAnimationChain(record, bounces);
+}
+
+animationHelper.makeSmallBounce = function(record) {
+  const bounces = setUpBounces(smallBounceChanges);
   return animationHelper.setupAnimationChain(record, bounces);
 }
 
