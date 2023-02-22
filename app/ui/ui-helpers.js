@@ -45,6 +45,7 @@ uiHelper.fadeRecord = function(record) {
 uiHelper.walkaboutRecord = function(record) {
   if (record.isAnimating === false) {
     animationHelper.makeWalkabout(record)();
+    animationHelper.makeBounce(record)();
   }
 }
 
