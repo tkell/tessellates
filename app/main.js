@@ -108,7 +108,11 @@ window.addEventListener("load", (event) => {
     const hex = new fabric.Polygon(hexPoints, {left: record.imageX - radius, top: record.imageY - radius});
     const gradient = uiHelper.getGradient("#000","#FFF", hex.height);
     hex.set('fill', gradient)
+    const timeout = Math.floor(Math.random() * 3000) + 250;
     canvas.add(hex);
+      setTimeout(() => {
+        animationHelper.makeSmallBounceRaw(hex, {})();
+      }, timeout);
     uiState.preloadedObjects.push(hex); // I don't love the parallel lists here, but maybe it is OK?
   }
 });

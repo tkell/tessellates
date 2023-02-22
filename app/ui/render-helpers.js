@@ -132,6 +132,10 @@ renderHelper._preload = function(canvas, data, tessellation) {
         hex.set('fill', gradient)
         canvas.add(hex);
         record.preloadObject = hex;
+        const timeout = Math.floor(Math.random() * 1000) + 250;
+        setTimeout(() => {
+          animationHelper.makeSmallBounceRaw(hex, {})();
+        }, timeout);
         resolve();
       }, timeoutMs);
     });
