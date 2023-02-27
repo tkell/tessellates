@@ -4,7 +4,7 @@ import shutil
 import os.path
 import time
 
-with open("app/vinyl/vinyl.json") as f:
+with open("app/vinyl/release_source.json") as f:
     vinyl_data = json.load(f)
 
 for release in vinyl_data:
@@ -13,10 +13,13 @@ for release in vinyl_data:
     path = f"app/vinyl/images/{discogs_id}.jpg"
     if not os.path.isfile(path):
         print("downloading: ", discogs_id, discogs_cover_url)
-        response = requests.get(discogs_cover_url, stream=True)
+        headers = {"user-agent": "DiscogsOrganize +http://tide-pool.ca"}
+        response = requests.get(discogs_cover_url, headers=headers, stream=True)
+
         with open(path, "wb") as out_file:
             shutil.copyfileobj(response.raw, out_file)
         del response
         time.sleep(1)
     else:
+        pass
         print("file already exists: ", discogs_id, discogs_cover_url)
