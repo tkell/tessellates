@@ -2,7 +2,7 @@ import os
 from PIL import Image
 
 small_size = (350, 350)
-image_dir = "app/vinyl/images"
+image_dir = "tessellates/app/vinyl/images"
 for filename in os.listdir(image_dir):
     if ".jpg" in filename and "-small" not in filename:
         record_id = filename.split(".")[0]

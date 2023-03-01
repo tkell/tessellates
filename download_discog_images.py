@@ -4,13 +4,13 @@ import shutil
 import os.path
 import time
 
-with open("app/vinyl/release_source.json") as f:
+with open("tessellates/app/vinyl/release_source.json") as f:
     vinyl_data = json.load(f)
 
 for release in vinyl_data:
     discogs_id = release["id"]
     discogs_cover_url = release["cover_image"]
-    path = f"app/vinyl/images/{discogs_id}.jpg"
+    path = f"tessellates/app/vinyl/images/{discogs_id}.jpg"
     if not os.path.isfile(path):
         print("downloading: ", discogs_id, discogs_cover_url)
         headers = {"user-agent": "DiscogsOrganize +http://tide-pool.ca"}
