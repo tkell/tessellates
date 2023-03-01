@@ -56,8 +56,8 @@ makeSquare = function() {
     return data;
   }
 
-  square.render = function(c, data) {
-    renderHelper.render(canvas, data, square);
+  square.render = function(c, data, previousData, paginationOffset) {
+    renderHelper.render(c, data, square, previousData, paginationOffset);
   }
 
   return square;

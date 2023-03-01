@@ -75,12 +75,20 @@ function setUpFades() {
   return fades;
 }
 
+function setUpFadeOut() {
+  const fadeDuration = getRandomInt(400, 600);
+  let fades = [
+    {target: 'opacity', change: '0', duration: fadeDuration},
+  ]
+  return fades;
+}
+
 function setUpWalkabout() {
   const walkOutDuration = getRandomInt(750, 1250);
   const walkBackDuration = getRandomInt(750, 1250);
   const distance = getRandomInt(200, 750);
   let outChange = "";
-  let backCHange = "";
+  let backChange = "";
   if (Math.random() > 0.5) {
     outChange = "+=" + distance;
     backChange = "-=" + distance;
@@ -99,6 +107,20 @@ function setUpWalkabout() {
   return walk;
 }
 
+function setUpMove(record, newX, newY) {
+  const moveDuration = getRandomInt(400, 600);
+  let move = [
+    {target: 'left', change: newX, duration: moveDuration},
+    {target: 'top', change: newY, duration: moveDuration},
+  ]
+  return move;
+}
+
+animationHelper.makeMove = function(record, newX, newY) {
+  const moves = setUpMove(record, newX, newY);
+  return animationHelper.setupAnimationChain(record.image, moves, {});
+}
+
 animationHelper.makeBounce = function(record) {
   return animationHelper.makeBounceRaw(record.image, record);
 }
@@ -109,6 +131,10 @@ animationHelper.makeSmallBounce = function(record) {
 
 animationHelper.makeFade = function(record) {
   return animationHelper.makeFadeRaw(record.image, record);
+}
+
+animationHelper.makeFadeOut = function(record) {
+  return animationHelper.makeFadeOutRaw(record.image, record);
 }
 
 animationHelper.makeWalkabout = function(record) {
@@ -127,6 +153,11 @@ animationHelper.makeSmallBounceRaw = function(object, stateToUpdate) {
 
 animationHelper.makeFadeRaw = function(object, stateToUpdate) {
   const fades = setUpFades();
+  return animationHelper.setupAnimationChain(object, fades, stateToUpdate);
+}
+
+animationHelper.makeFadeOutRaw = function(object, stateToUpdate) {
+  const fades = setUpFadeOut();
   return animationHelper.setupAnimationChain(object, fades, stateToUpdate);
 }
 

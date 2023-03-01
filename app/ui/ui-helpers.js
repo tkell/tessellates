@@ -48,11 +48,20 @@ uiHelper.fadeRecord = function(record) {
   }
 }
 
+
 uiHelper.walkaboutRecord = function(record) {
   if (record.isAnimating === false) {
     animationHelper.makeWalkabout(record)();
     animationHelper.makeBounce(record)();
   }
+}
+
+uiHelper.fadeOutRecord = function(record) {
+  animationHelper.makeFadeOut(record)();
+}
+
+uiHelper.moveRecordTo = function(record, newX, newY) {
+  animationHelper.makeMove(record, newX, newY)();
 }
 
 uiHelper.ambientAnimate = function(record) {

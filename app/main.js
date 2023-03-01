@@ -20,14 +20,16 @@ function renderCanvas(canvas, tess, data, params) {
   }
   let end = params['offset'] + params['items'];
   let slicedData = filteredData.slice(params['offset'], end);
+  let previousData = filteredData.slice(params['offset'] - params['offsetDelta'], end - params['offsetDelta']);
 
-  tess.render(canvas, tess.prepare(slicedData))
+  tess.render(canvas, tess.prepare(slicedData), tess.prepare(previousData), params['offsetDelta']);
 }
 
 function addPagingClick(elementId, offsetDelta) {
   document.getElementById(elementId).addEventListener("click", function(e) {
     if (!uiState.bigImage.isShowing) {
-      params['offset'] = Math.max(0, params['offset'] +  offsetDelta);
+      params['offset'] = Math.max(0, params['offset'] + offsetDelta);
+      params['offsetDelta'] = offsetDelta;
       renderCanvas(canvas, tess, vinylData, params);
     }
   });

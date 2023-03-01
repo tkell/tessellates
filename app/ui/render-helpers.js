@@ -1,7 +1,7 @@
 let renderHelper = {};
 
 
-renderHelper.render = function(canvas, data, tessellation) {
+renderHelper.render = function(canvas, data, tessellation, previousData, paginationOffset) {
   if (!uiState.hasPreloaded) {
     renderHelper._preload(canvas, data, tessellation)
       .then(() => renderHelper._addStartingStates(data, tessellation))
@@ -12,6 +12,32 @@ renderHelper.render = function(canvas, data, tessellation) {
 
   uiState.hasPreloaded = true;
   } else {
+    console.log(data);
+    console.log(previousData);
+    console.log(paginationOffset);
+
+    // It's basically this - need to puzzle out the timing; 
+    // I could wrap these two loops in a promise, and then do the rest
+    // but I sort of think it is better to load things first,
+    // then move things around, and then I thiiiink I will have access to loading and fading in the new records?
+    //
+    const numRecordsToRemove = Math.abs(paginationOffset);
+    const numRecordsToKeep = data.length - Math.abs(paginationOffset);
+    for (let i = 0; i < numRecordsToRemove; i++) {
+      const index = paginationOffset > 0 ? i : data.length - 1 - i;
+      const oldRecordToFadeOut = previousData[index];
+      uiHelper.fadeOutRecord(oldRecordToFadeOut);
+    }
+
+    for (let i = 0; i < numRecordsToKeep; i++) {
+      const index = paginationOffset < 0 ? i : data.length - 1 - i;
+      const oldRecordToMove = previousData[index];
+      const newRecord = previousData[index - paginationOffset];
+      console.log(index, oldRecordToMove, newRecord);
+      uiHelper.moveRecordTo(oldRecordToMove, newRecord.clickX, newRecord.clickY);
+    }
+
+
     const canvasClearPromise = new Promise(function (resolve, reject) {
       canvas.clear();
       resolve();
