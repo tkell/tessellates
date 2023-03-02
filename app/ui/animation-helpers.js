@@ -83,6 +83,14 @@ function setUpFadeOut() {
   return fades;
 }
 
+function setUpFadeIn() {
+  const fadeDuration = getRandomInt(400, 600);
+  let fades = [
+    {target: 'opacity', change: '1', duration: fadeDuration},
+  ]
+  return fades;
+}
+
 function setUpWalkabout() {
   const walkOutDuration = getRandomInt(750, 1250);
   const walkBackDuration = getRandomInt(750, 1250);
@@ -137,6 +145,10 @@ animationHelper.makeFadeOut = function(record) {
   return animationHelper.makeFadeOutRaw(record.image, record);
 }
 
+animationHelper.makeFadeIn = function(record) {
+  return animationHelper.makeFadeInRaw(record.image, record);
+}
+
 animationHelper.makeWalkabout = function(record) {
   return animationHelper.makeWalkaboutRaw(record.image, record);
 }
@@ -158,6 +170,11 @@ animationHelper.makeFadeRaw = function(object, stateToUpdate) {
 
 animationHelper.makeFadeOutRaw = function(object, stateToUpdate) {
   const fades = setUpFadeOut();
+  return animationHelper.setupAnimationChain(object, fades, stateToUpdate);
+}
+
+animationHelper.makeFadeInRaw = function(object, stateToUpdate) {
+  const fades = setUpFadeIn();
   return animationHelper.setupAnimationChain(object, fades, stateToUpdate);
 }
 

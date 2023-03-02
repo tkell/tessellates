@@ -60,6 +60,10 @@ uiHelper.fadeOutRecord = function(record) {
   animationHelper.makeFadeOut(record)();
 }
 
+uiHelper.fadeInRecord = function(record) {
+  animationHelper.makeFadeIn(record)();
+}
+
 uiHelper.moveRecordTo = function(record, newX, newY) {
   animationHelper.makeMove(record, newX, newY)();
 }

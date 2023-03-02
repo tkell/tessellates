@@ -12,9 +12,6 @@ renderHelper.render = function(canvas, data, tessellation, previousData, paginat
 
   uiState.hasPreloaded = true;
   } else {
-    console.log(data);
-    console.log(previousData);
-    console.log(paginationOffset);
 
     // It's basically this - need to puzzle out the timing; 
     // I could wrap these two loops in a promise, and then do the rest
@@ -32,20 +29,37 @@ renderHelper.render = function(canvas, data, tessellation, previousData, paginat
     for (let i = 0; i < numRecordsToKeep; i++) {
       const index = paginationOffset < 0 ? i : data.length - 1 - i;
       const oldRecordToMove = previousData[index];
-      const newRecord = previousData[index - paginationOffset];
+      const newRecord = previousData[index];
       console.log(index, oldRecordToMove, newRecord);
       uiHelper.moveRecordTo(oldRecordToMove, newRecord.clickX, newRecord.clickY);
     }
 
 
-    const canvasClearPromise = new Promise(function (resolve, reject) {
-      canvas.clear();
-      resolve();
-    });
-    canvasClearPromise
-      .then(() => renderHelper._addStartingStates(data, tessellation))
-      .then(() => imageHelper.loadImages(data))
-      .then(() => renderHelper._createImagesWithNoTimeout(canvas, data, tessellation));
+    // let's keep ignoring the terrible timeout; can I get just the records I want to fade in
+    // Yes, mostly!  Let's leave this for here, I need to think a lot about time and promises before I do the next bit
+    // also need to get rid of canvasClear, and draw the new images over the old ones, while removing the old ones
+    // but this is very close!
+    setTimeout(() => {
+      const canvasClearPromise = new Promise(function (resolve, reject) {
+        canvas.clear();
+        resolve();
+      });
+      canvasClearPromise
+        .then(() => renderHelper._addStartingStates(data, tessellation))
+        .then(() => imageHelper.loadImages(data))
+        .then(() => renderHelper._createImagesWithNoTimeout(canvas, data, tessellation))
+        .then(() => {
+          for (let i = 0; i < numRecordsToRemove; i++) {
+            const index = paginationOffset < 0 ? i : data.length - 1 - i;
+            const newRecordToFadeIn = data[index];
+            newRecordToFadeIn.image.set('opacity', 0);
+            uiHelper.fadeInRecord(newRecordToFadeIn);
+          }
+        });
+      
+      
+    }, 1000);
+
   }
 }
 
@@ -197,10 +211,10 @@ renderHelper._createImagesWithNoTimeout = function(canvas, data, tessellation) {
 }
 
 renderHelper._createImageAndClickState = function(canvas, record, data, tessellation) {
-    canvas.remove(record.preloadObject);
-    record.image = renderHelper._createAndRenderImage(canvas, record);
-    record.clickable = renderHelper._createClickableMask(record, tessellation)
-    renderHelper._createDefaultClickState(canvas, record, data);
+  canvas.remove(record.preloadObject);
+  record.image = renderHelper._createAndRenderImage(canvas, record);
+  record.clickable = renderHelper._createClickableMask(record, tessellation)
+  renderHelper._createDefaultClickState(canvas, record, data);
 }
 
 renderHelper._createAndRenderImage = function(canvas, record) {

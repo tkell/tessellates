@@ -1,6 +1,7 @@
 function renderCanvas(canvas, tess, data, params) {
   let folder = params['folder'];
-  var filteredData = data;
+  let filteredData = data;
+
   if (folder) {
     filteredData = data.filter(record => record.folder.toLowerCase() === folder.toLowerCase());
   }
@@ -19,10 +20,12 @@ function renderCanvas(canvas, tess, data, params) {
     params['offset'] = Math.floor(Math.random() * filteredData.length);
   }
   let end = params['offset'] + params['items'];
-  let slicedData = filteredData.slice(params['offset'], end);
-  let previousData = filteredData.slice(params['offset'] - params['offsetDelta'], end - params['offsetDelta']);
-
-  tess.render(canvas, tess.prepare(slicedData), tess.prepare(previousData), params['offsetDelta']);
+  // because of the strange things that happen when we add Fabric info to the `record` object,
+  // we have to do tess.prepare in this order.  Better would be to deep-copy these subsets, but this does not work!
+  // A great first thing to do to get to V 0.1.1 will be to fix this
+  let previousData = tess.prepare(filteredData.slice(params['offset'] - params['offsetDelta'], end - params['offsetDelta']));
+  let currentData = tess.prepare(filteredData.slice(params['offset'], end));
+  tess.render(canvas, currentData, previousData, params['offsetDelta']);
 }
 
 function addPagingClick(elementId, offsetDelta) {
