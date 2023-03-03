@@ -45,6 +45,7 @@ function addFolderClick(elementId, folder) {
       t.textContent = "tessellates";
       params['folder'] = folder;
       params['offset'] = 0;
+      uiState.hasPreloaded = false;
       renderCanvas(canvas, tess, vinylData, params);
     }
   });

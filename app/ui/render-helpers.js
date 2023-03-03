@@ -3,7 +3,13 @@ let renderHelper = {};
 
 renderHelper.render = function(canvas, data, tessellation, previousData, paginationOffset) {
   if (!uiState.hasPreloaded) {
-    renderHelper._preload(canvas, data, tessellation)
+      const canvasClearPromise = new Promise(function (resolve, reject) {
+        canvas.clear();
+        resolve();
+      });
+
+    canvasClearPromise
+      .then(() => renderHelper._preload(canvas, data, tessellation))
       .then(() => renderHelper._addStartingStates(data, tessellation))
       .then(() => imageHelper.loadImages(data))
       .then(() => renderHelper._createImagesWithTimeout(canvas, data, tessellation))
@@ -30,23 +36,19 @@ renderHelper.render = function(canvas, data, tessellation, previousData, paginat
       const index = paginationOffset < 0 ? i : data.length - 1 - i;
       const oldRecordToMove = previousData[index];
       const newRecord = previousData[index];
-      console.log(index, oldRecordToMove, newRecord);
       uiHelper.moveRecordTo(oldRecordToMove, newRecord.clickX, newRecord.clickY);
     }
 
 
-    // let's keep ignoring the terrible timeout; can I get just the records I want to fade in
-    // Yes, mostly!  Let's leave this for here, I need to think a lot about time and promises before I do the next bit
-    // also need to get rid of canvasClear, and draw the new images over the old ones, while removing the old ones
-    // but this is very close!
+    // Yes, mostly, this is very close!
+    // I need to make uiHelper and functions below it return the time spent on the animation, alas
+    // and then maybe double it to set this timeout? 
+    // I don't think I can return promises from uiHelper, but it'd be nice?
     setTimeout(() => {
-      const canvasClearPromise = new Promise(function (resolve, reject) {
-        canvas.clear();
-        resolve();
-      });
-      canvasClearPromise
-        .then(() => renderHelper._addStartingStates(data, tessellation))
-        .then(() => imageHelper.loadImages(data))
+      renderHelper._addStartingStates(data, tessellation);
+
+      imageHelper.loadImages(data)
+        .then(() => canvas.clear())
         .then(() => renderHelper._createImagesWithNoTimeout(canvas, data, tessellation))
         .then(() => {
           for (let i = 0; i < numRecordsToRemove; i++) {
@@ -55,10 +57,16 @@ renderHelper.render = function(canvas, data, tessellation, previousData, paginat
             newRecordToFadeIn.image.set('opacity', 0);
             uiHelper.fadeInRecord(newRecordToFadeIn);
           }
+
+          for (let i = 0; i < numRecordsToRemove; i++) {
+            const index = paginationOffset > 0 ? i : data.length - 1 - i;
+            const oldRecordToFadeOut = previousData[index];
+            canvas.remove(oldRecordToFadeOut.image)
+          }
         });
       
       
-    }, 1000);
+    }, 1200);
 
   }
 }
