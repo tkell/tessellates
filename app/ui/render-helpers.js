@@ -59,7 +59,8 @@ renderHelper.render = function(canvas, data, tessellation, previousData, paginat
             const oldRecordToFadeOut = previousData[index];
             canvas.remove(oldRecordToFadeOut.image)
           }
-        });
+        })
+        .then(() => renderHelper._addAmbientAnimations(data, tessellation));
     }, 1500);
 
   }
