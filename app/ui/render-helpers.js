@@ -23,7 +23,6 @@ renderHelper.render = function(canvas, data, tessellation, previousData, paginat
     // I could wrap these two loops in a promise, and then do the rest
     // but I sort of think it is better to load things first,
     // then move things around, and then I thiiiink I will have access to loading and fading in the new records?
-    //
     const numRecordsToRemove = Math.abs(paginationOffset);
     const numRecordsToKeep = data.length - Math.abs(paginationOffset);
     for (let i = 0; i < numRecordsToRemove; i++) {
@@ -33,17 +32,14 @@ renderHelper.render = function(canvas, data, tessellation, previousData, paginat
     }
 
     for (let i = 0; i < numRecordsToKeep; i++) {
-      const index = paginationOffset < 0 ? i : data.length - 1 - i;
-      const oldRecordToMove = previousData[index];
-      const newRecord = previousData[index];
-      uiHelper.moveRecordTo(oldRecordToMove, newRecord.clickX, newRecord.clickY);
+        const index = paginationOffset < 0 ? i : data.length - 1 - i;
+        const oldRecordToMove = previousData[index];
+        const newRecord = data[index - paginationOffset];
+        const xTarget = newRecord.x + ((tess.xMoveOffset - newRecord.image.width) / 2);
+        const yTarget = newRecord.y + ((tess.yMoveOffset - newRecord.image.height) / 2);
+        uiHelper.moveRecordTo(oldRecordToMove, xTarget, yTarget);
     }
 
-
-    // Yes, mostly, this is very close!
-    // I need to make uiHelper and functions below it return the time spent on the animation, alas
-    // and then maybe double it to set this timeout? 
-    // I don't think I can return promises from uiHelper, but it'd be nice?
     setTimeout(() => {
       renderHelper._addStartingStates(data, tessellation);
 
@@ -64,9 +60,7 @@ renderHelper.render = function(canvas, data, tessellation, previousData, paginat
             canvas.remove(oldRecordToFadeOut.image)
           }
         });
-      
-      
-    }, 1200);
+    }, 1500);
 
   }
 }

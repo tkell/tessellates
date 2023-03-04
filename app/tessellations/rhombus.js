@@ -15,6 +15,8 @@ makeRhombus = function() {
   rhombus.xSize = 334;
   rhombus.sideLength = Math.floor((rhombus.xSize / 2) / Math.cos(Math.PI / 6));
   rhombus.ySize = rhombus.sideLength * 2;
+  rhombus.xMoveOffset = rhombus.xSize;
+  rhombus.yMoveOffset = rhombus.ySize / 2;
   rhombus.size = 1000;
   rhombus.defaultItems = 24;
   rhombus.closeUpIndexes = [2, 3, 4, 5, 6, 9, 10, 11, 12, 13, 14, 15, 19];
@@ -121,8 +123,8 @@ makeRhombus = function() {
     return data;
   }
 
-  rhombus.render = function(canvas, data) {
-    renderHelper.render(canvas, data, rhombus);
+  rhombus.render = function(canvas, data, previousData, paginationOffset) {
+    renderHelper.render(canvas, data, rhombus, previousData, paginationOffset);
   }
 
   return rhombus;

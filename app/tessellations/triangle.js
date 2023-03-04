@@ -2,6 +2,8 @@ makeTriangle = function () {
   triangle = {};
   triangle.xSize = 200;
   triangle.ySize = 200;
+  triangle.xMoveOffset = triangle.xSize;
+  triangle.yMoveOffset = triangle.ySize;
   triangle.size = 1000;
   triangle.defaultItems = 45;
   triangle.closeUpIndexes = [
@@ -91,8 +93,8 @@ makeTriangle = function () {
     return data;
   }
 
-  triangle.render = function(c, data) {
-    renderHelper.render(canvas, data, triangle);
+  triangle.render = function(c, data, previousData, paginationOffset) {
+    renderHelper.render(canvas, data, triangle, previousData, paginationOffset);
   }
 
   return triangle;
