@@ -1,6 +1,5 @@
 let renderHelper = {};
 
-
 renderHelper.render = function(canvas, data, tessellation, previousData, paginationOffset) {
   if (!uiState.hasPreloaded) {
       const canvasClearPromise = new Promise(function (resolve, reject) {
@@ -16,33 +15,15 @@ renderHelper.render = function(canvas, data, tessellation, previousData, paginat
       .then(() => renderHelper._addAmbientAnimations(data, tessellation))
       .then(() => renderHelper._bounceAfterLoad(data));
 
-  uiState.hasPreloaded = true;
+    uiState.hasPreloaded = true;
   } else {
-
-    // It's basically this - need to puzzle out the timing; 
-    // I could wrap these two loops in a promise, and then do the rest
-    // but I sort of think it is better to load things first,
-    // then move things around, and then I thiiiink I will have access to loading and fading in the new records?
     const numRecordsToRemove = Math.abs(paginationOffset);
     const numRecordsToKeep = data.length - Math.abs(paginationOffset);
-    for (let i = 0; i < numRecordsToRemove; i++) {
-      const index = paginationOffset > 0 ? i : data.length - 1 - i;
-      const oldRecordToFadeOut = previousData[index];
-      uiHelper.fadeOutRecord(oldRecordToFadeOut);
-    }
-
-    for (let i = 0; i < numRecordsToKeep; i++) {
-        const index = paginationOffset < 0 ? i : data.length - 1 - i;
-        const oldRecordToMove = previousData[index];
-        const newRecord = data[index - paginationOffset];
-        const xTarget = newRecord.x + ((tess.xMoveOffset - newRecord.image.width) / 2);
-        const yTarget = newRecord.y + ((tess.yMoveOffset - newRecord.image.height) / 2);
-        uiHelper.moveRecordTo(oldRecordToMove, xTarget, yTarget);
-    }
+    renderHelper._fadeOutOldRecords(data, previousData,paginationOffset, numRecordsToRemove)
+    renderHelper._moveRecordToKeep(data, previousData, paginationOffset, tessellation, numRecordsToKeep);
 
     setTimeout(() => {
       renderHelper._addStartingStates(data, tessellation);
-
       imageHelper.loadImages(data)
         .then(() => canvas.clear())
         .then(() => renderHelper._createImagesWithNoTimeout(canvas, data, tessellation))
@@ -61,16 +42,35 @@ renderHelper.render = function(canvas, data, tessellation, previousData, paginat
           }
         })
         .then(() => renderHelper._addAmbientAnimations(data, tessellation));
-    }, 1500);
-
+    }, 1200);
   }
 }
+
 
 // "Private" methods from here:
 renderHelper._bounceAfterLoad = function (data) {
   for (let i = 0; i < data.length; i++) {
       const record = data[i];
       uiHelper.bounceRecordSmall(record);
+  }
+}
+
+renderHelper._fadeOutOldRecords = function(data, previousData, paginationOffset, numRecordsToRemove) {
+    for (let i = 0; i < numRecordsToRemove; i++) {
+      const index = paginationOffset > 0 ? i : data.length - 1 - i;
+      const oldRecordToFadeOut = previousData[index];
+      uiHelper.fadeOutRecord(oldRecordToFadeOut);
+    }
+}
+
+renderHelper._moveRecordToKeep = function(data, previousData, paginationOffset, tessellation, numRecordsToKeep) {
+  for (let i = 0; i < numRecordsToKeep; i++) {
+      const index = paginationOffset < 0 ? i : data.length - 1 - i;
+      const oldRecordToMove = previousData[index];
+      const newRecord = data[index - paginationOffset];
+      const xTarget = newRecord.x + ((tessellation.xMoveOffset - newRecord.image.width) / 2);
+      const yTarget = newRecord.y + ((tessellation.yMoveOffset - newRecord.image.height) / 2);
+      uiHelper.moveRecordTo(oldRecordToMove, xTarget, yTarget);
   }
 }
 
