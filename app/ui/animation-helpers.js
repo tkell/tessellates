@@ -125,8 +125,12 @@ function setUpMove(record, newX, newY) {
 }
 
 animationHelper.makeMove = function(record, newX, newY) {
-  const moves = setUpMove(record, newX, newY);
-  return animationHelper.setupAnimationChain(record.image, moves, {});
+  return animationHelper.makeMoveRaw(record.image, newX, newY, record);
+}
+
+animationHelper.makeMoveRaw = function(object, newX, newY, stateToUpdate) {
+  const moves = setUpMove(object, newX, newY);
+  return animationHelper.setupAnimationChain(object, moves, stateToUpdate);
 }
 
 animationHelper.makeBounce = function(record) {
