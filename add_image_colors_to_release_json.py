@@ -46,7 +46,9 @@ if __name__ == "__main__":
             palette = paletted.getpalette()
             color_counts = sorted(paletted.getcolors(), reverse=True)
 
-            print(record_id)
+            print(
+                ".",
+            )
             color_1 = get_color_code(color_counts, palette, 0)
             color_2 = get_color_code(color_counts, palette, 1)
             release["colors"] = [color_1, color_2]
