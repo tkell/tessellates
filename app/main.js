@@ -150,7 +150,7 @@ window.addEventListener("load", (event) => {
 
 // To my surprise, this looks in folder it is importing to,
 // so this will load vinyl/ or digital/, which is what we want!
-fetch('release_source.json')
+fetch('http://localhost:3000/collections/1?serve_json=true')
   .then(response => response.json())
   .then(data => {
     vinylData = data;
@@ -167,9 +167,9 @@ fetch('release_source.json')
     addFilterInteraction("filter-submit", "click", "filter-input");
 
     // If we have folders, add some folder filters!
-    // This will be vinyl only for some time, I am sure.
+    // (and find a better conditional here)
     let testItem = vinylData[0];
-    if (testItem.folder !== undefined) {
+    if (testItem.folder !== '') {
       addFolderClick("balearic", '\"Balearic\"');
       addFolderClick("world", '\"World Music\" / Exotica');
       addFolderClick("seven-inches", '7\"');

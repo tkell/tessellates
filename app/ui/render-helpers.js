@@ -87,11 +87,11 @@ renderHelper._addStartingStateToRecord = function(record, index, tessellation) {
   record.index = index;
   record.nextTrackToShow = 0;
   record.isAnimating = false;
-  record.imagePath = "images/" + record.id + ".jpg";
-  record.smallImagePath = "images/" + record.id + "-small.jpg";
+  record.imagePath = "images/" + record.external_id + ".jpg";
+  record.smallImagePath = "images/" + record.external_id + "-small.jpg";
 
-  let directionId = Math.floor(record.id / 100) % 2;
-  let timeoutIndex = record.id % tessellation.timeoutFunctions.length;
+  let directionId = Math.floor(record.external_id / 100) % 2;
+  let timeoutIndex = record.external_id % tessellation.timeoutFunctions.length;
   if (directionId === 0) {
     record.timeoutFunction = tessellation.timeoutFunctions[timeoutIndex][0];
     record.reverseTimeoutFunction = tessellation.timeoutFunctions[timeoutIndex][1];
