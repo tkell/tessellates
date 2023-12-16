@@ -1,28 +1,10 @@
 function renderCanvas(canvas, tess, data, params) {
-  let folder = params['folder'];
   let filteredData = data;
-
-  if (folder) {
-    filteredData = data.filter(record => record.folder.toLowerCase() === folder.toLowerCase());
-  }
-
-  let searchString = params['filter'];
-  if (searchString) {
-    let s = searchString.toLowerCase();
-    filteredData = filteredData.filter(record =>
-      record.artist.toLowerCase().includes(s) ||
-      record.title.toLowerCase().includes(s) ||
-      record.label.toLowerCase().includes(s)
-    );
-  }
-
-  if (params['offset'] === null) {
-    params['offset'] = Math.floor(Math.random() * filteredData.length);
-  }
   let end = params['offset'] + params['items'];
   // because of the strange things that happen when we add Fabric info to the `record` object,
   // we have to do tess.prepare in this order.  Better would be to deep-copy these subsets, but this does not work!
   // A great first thing to do to get to V 0.1.1 will be to fix this
+  
   let previousData = tess.prepare(filteredData.slice(params['offset'] - params['offsetDelta'], end - params['offsetDelta']));
   let currentData = tess.prepare(filteredData.slice(params['offset'], end));
   tess.render(canvas, currentData, previousData, params['offsetDelta']);
@@ -33,7 +15,21 @@ function addPagingClick(elementId, offsetDelta) {
     if (!uiState.bigImage.isShowing) {
       params['offset'] = Math.max(0, params['offset'] + offsetDelta);
       params['offsetDelta'] = offsetDelta;
-      renderCanvas(canvas, tess, vinylData, params);
+      renderCanvas(canvas, tess, releaseData, params);
+
+      // if we need new data, add it; we're totallly happy accumulating huge amounts of client-side data
+      if (offsetDelta > 0) {
+        const secretOffset = (tess.defaultItems * 2) + params['offset']
+        const queryUrl = buildUrl(collectionId, params['filter'], secretOffset, params['offsetDelta']);
+        fetch(queryUrl)
+          .then(response => response.json())
+          .then(newReleaseData => {
+            // So ... only the records that we _show_ get prepared and get images added to them, I think
+            // so the new data will, implicitly, be outside of that range,
+            // and thus it will be safe to "just" append it properly
+            releaseData = releaseData.concat(newReleaseData)
+          });
+      }
     }
   });
 }
@@ -46,9 +42,12 @@ function addFolderClick(elementId, folder) {
       params['folder'] = folder;
       params['offset'] = 0;
       uiState.hasPreloaded = false;
-      renderCanvas(canvas, tess, vinylData, params);
+      renderCanvas(canvas, tess, releaseData, params);
     }
   });
+}
+function buildUrl(collectionId, searchString, offset, limit) {
+  return `http://localhost:3000/collections/${collectionId}?serve_json=true&filter_string=${searchString}&limit=${limit}&offset=${offset}`
 }
 
 function addFilterInteraction(elementId, eventType, filterStringElementId) {
@@ -61,11 +60,20 @@ function addFilterInteraction(elementId, eventType, filterStringElementId) {
       if (searchString.length > 0) {
         params['filter'] = searchString;
         params['offset'] = 0;
+        delete params.offsetDelta;
       } else {
-        params['filter'] = undefined;
+        params['filter'] = "";
         params['offset'] = 0;
+        delete params.offsetDelta;
       }
-      renderCanvas(canvas, tess, vinylData, params);
+
+      const queryUrl = buildUrl(collectionId, params['filter'], params['offset'], tess.defaultItems * 2);
+      fetch(queryUrl)
+        .then(response => response.json())
+        .then(newReleaseData => {
+          releaseData = newReleaseData;
+          renderCanvas(canvas, tess, releaseData, params)
+        });
     }
   });
 }
@@ -92,10 +100,9 @@ function addLocalClearClick() {
   });
 }
 
-
 // ---- Entrypoint is here:
 
-var vinylData = [];
+var releaseData = [];
 var uiState = {
   hasPreloaded: false,
   preloadedObjects: [],
@@ -108,6 +115,7 @@ var uiState = {
   localPlayback: false
 };
 
+let collectionId = null;
 let params = getSearchParameters();
 // pick a tessellation, then ..
 let tess = null;
@@ -146,15 +154,19 @@ window.addEventListener("load", (event) => {
   }
 });
 
+// Load the collection
+if (window.location.href.includes("digital")) {
+  collectionId = 1;
+} else if (window.location.href.includes("vinyl")) {
+  collectionId = 2;
+}
+const queryUrl = buildUrl(collectionId, params['filter'] , params['offset'], tess.defaultItems * 2);
 
-
-// To my surprise, this looks in folder it is importing to,
-// so this will load vinyl/ or digital/, which is what we want!
-fetch('http://localhost:3000/collections/1?serve_json=true')
+fetch(queryUrl)
   .then(response => response.json())
   .then(data => {
-    vinylData = data;
-    renderCanvas(canvas, tess, vinylData, params)
+    releaseData = data;
+    renderCanvas(canvas, tess, releaseData, params)
 
     addPagingClick("back-small", tess.paging.small * -1);
     addPagingClick("back-medium", tess.paging.medium * -1);
@@ -168,7 +180,7 @@ fetch('http://localhost:3000/collections/1?serve_json=true')
 
     // If we have folders, add some folder filters!
     // (and find a better conditional here)
-    let testItem = vinylData[0];
+    let testItem = releaseData[0];
     if (testItem.folder !== '') {
       addFolderClick("balearic", '\"Balearic\"');
       addFolderClick("world", '\"World Music\" / Exotica');

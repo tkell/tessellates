@@ -20,9 +20,12 @@ function parseTessellatesParams(params, tess) {
         params['items'] = parseInt(params['items'])
     }
     if (!params['offset']) {
-        params['offset'] = null;
+        params['offset'] = 0;
     } else {
         params['offset'] = parseInt(params['offset'])
+    }
+    if (!params['filter']) {
+        params['filter'] = "";
     }
     return params;
 }
