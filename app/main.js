@@ -1,10 +1,9 @@
 function renderCanvas(canvas, tess, data, params) {
   let filteredData = data;
-  let end = params['offset'] + params['items'];
+  let end = params['offset'] + tess.defaultItems;
   // because of the strange things that happen when we add Fabric info to the `record` object,
   // we have to do tess.prepare in this order.  Better would be to deep-copy these subsets, but this does not work!
   // A great first thing to do to get to V 0.1.1 will be to fix this
-  
   let previousData = tess.prepare(filteredData.slice(params['offset'] - params['offsetDelta'], end - params['offsetDelta']));
   let currentData = tess.prepare(filteredData.slice(params['offset'], end));
   tess.render(canvas, currentData, previousData, params['offsetDelta']);
@@ -12,23 +11,41 @@ function renderCanvas(canvas, tess, data, params) {
 
 function addPagingClick(elementId, offsetDelta) {
   document.getElementById(elementId).addEventListener("click", function(e) {
-    if (!uiState.bigImage.isShowing) {
+    if (!uiState.bigImage.isShowing && params['offset'] + offsetDelta >= 0) {
+      // draw the canvas, as we have to always have enough to go in either direction
       params['offset'] = Math.max(0, params['offset'] + offsetDelta);
       params['offsetDelta'] = offsetDelta;
       renderCanvas(canvas, tess, releaseData, params);
 
-      // if we need new data, add it; we're totallly happy accumulating huge amounts of client-side data
       if (offsetDelta > 0) {
-        const secretOffset = (tess.defaultItems * 2) + params['offset']
-        const queryUrl = buildUrl(collectionId, params['filter'], secretOffset, params['offsetDelta']);
-        fetch(queryUrl)
-          .then(response => response.json())
-          .then(newReleaseData => {
-            // So ... only the records that we _show_ get prepared and get images added to them, I think
-            // so the new data will, implicitly, be outside of that range,
-            // and thus it will be safe to "just" append it properly
-            releaseData = releaseData.concat(newReleaseData)
-          });
+        const potentialNewMax = params['offset'] + (tess.defaultItems * 2);
+        if (potentialNewMax > params['maxOffset']) {
+          const weNeed = potentialNewMax - params['maxOffset'];
+          const secretOffset = params['maxOffset']
+          const queryUrl = buildUrl(collectionId, params['filter'], secretOffset, weNeed);
+          fetch(queryUrl)
+            .then(response => response.json())
+            .then(newReleaseData => {
+              // So ... only the records that we _show_ get prepared and get images added to them, I think
+              // so the new data will, implicitly, be outside of that range,
+              // and thus it will be safe to "just" append it properly
+              params['maxOffset'] = potentialNewMax;
+              releaseData = releaseData.concat(newReleaseData)
+            });
+        }
+      } else if (offsetDelta < 0) {
+        const potentialNewMin = Math.max(0, params['offset'] - (tess.defaultItems * 2));
+        if (potentialNewMin < params['minOffset']) {
+          const weNeed = params['minOffset'] - potentialNewMin;
+          const secretOffset = potentialNewMin;
+          const queryUrl = buildUrl(collectionId, params['filter'], secretOffset, weNeed);
+          fetch(queryUrl)
+            .then(response => response.json())
+            .then(newReleaseData => {
+              params['minOffset'] = potentialNewMin;
+              releaseData = newReleaseData.concat(releaseData);
+            });
+        }
       }
     }
   });
@@ -160,7 +177,7 @@ if (window.location.href.includes("digital")) {
 } else if (window.location.href.includes("vinyl")) {
   collectionId = 2;
 }
-const queryUrl = buildUrl(collectionId, params['filter'] , params['offset'], tess.defaultItems * 2);
+const queryUrl = buildUrl(collectionId, params['filter'] , params['minOffset'], params['maxOffset'] - params['minOffset']);
 
 fetch(queryUrl)
   .then(response => response.json())
@@ -179,9 +196,8 @@ fetch(queryUrl)
     addFilterInteraction("filter-submit", "click", "filter-input");
 
     // If we have folders, add some folder filters!
-    // (and find a better conditional here)
     let testItem = releaseData[0];
-    if (testItem.folder !== '') {
+    if (testItem.folder) {
       addFolderClick("balearic", '\"Balearic\"');
       addFolderClick("world", '\"World Music\" / Exotica');
       addFolderClick("seven-inches", '7\"');
