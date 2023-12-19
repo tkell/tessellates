@@ -26,9 +26,6 @@ function addPagingClick(elementId, offsetDelta) {
           fetch(queryUrl)
             .then(response => response.json())
             .then(newReleaseData => {
-              // So ... only the records that we _show_ get prepared and get images added to them, I think
-              // so the new data will, implicitly, be outside of that range,
-              // and thus it will be safe to "just" append it properly
               params['maxOffset'] = potentialNewMax;
               releaseData = releaseData.concat(newReleaseData)
             });
@@ -58,11 +55,15 @@ function addFolderClick(elementId, folder) {
       t.textContent = "tessellates";
       params['folder'] = folder;
       params['offset'] = 0;
+      params['minOffset'] = 0;
+      params['maxOffset'] = (tess.defaultItems * 2);
+      delete params.offsetDelta;
       uiState.hasPreloaded = false;
       renderCanvas(canvas, tess, releaseData, params);
     }
   });
 }
+
 function buildUrl(collectionId, searchString, offset, limit) {
   return `http://localhost:3000/collections/${collectionId}?serve_json=true&filter_string=${searchString}&limit=${limit}&offset=${offset}`
 }
@@ -77,14 +78,18 @@ function addFilterInteraction(elementId, eventType, filterStringElementId) {
       if (searchString.length > 0) {
         params['filter'] = searchString;
         params['offset'] = 0;
+        params['minOffset'] = 0;
+        params['maxOffset'] = (tess.defaultItems * 2);
         delete params.offsetDelta;
       } else {
         params['filter'] = "";
         params['offset'] = 0;
+        params['minOffset'] = 0;
+        params['maxOffset'] = (tess.defaultItems * 2);
         delete params.offsetDelta;
       }
 
-      const queryUrl = buildUrl(collectionId, params['filter'], params['offset'], tess.defaultItems * 2);
+      const queryUrl = buildUrl(collectionId, params['filter'] , params['minOffset'], params['maxOffset'] - params['minOffset']);
       fetch(queryUrl)
         .then(response => response.json())
         .then(newReleaseData => {
@@ -194,6 +199,7 @@ fetch(queryUrl)
 
     addFilterInteraction("filter-input", "keypress", "filter-input");
     addFilterInteraction("filter-submit", "click", "filter-input");
+    addFilterInteraction("filter-submit", "keypress", "filter-input");
 
     // If we have folders, add some folder filters!
     let testItem = releaseData[0];

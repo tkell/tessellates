@@ -59,7 +59,9 @@ renderHelper._fadeOutOldRecords = function(data, previousData, paginationOffset,
     for (let i = 0; i < numRecordsToRemove; i++) {
       const index = paginationOffset > 0 ? i : data.length - 1 - i;
       const oldRecordToFadeOut = previousData[index];
-      uiHelper.fadeOutRecord(oldRecordToFadeOut);
+      if (oldRecordToFadeOut) {
+        uiHelper.fadeOutRecord(oldRecordToFadeOut);
+      }
     }
 }
 
