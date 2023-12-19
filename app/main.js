@@ -1,11 +1,9 @@
 function renderCanvas(canvas, tess, data, params) {
   let filteredData = data;
-  let end = params['offset'] + tess.defaultItems;
-  // because of the strange things that happen when we add Fabric info to the `record` object,
-  // we have to do tess.prepare in this order.  Better would be to deep-copy these subsets, but this does not work!
-  // A great first thing to do to get to V 0.1.1 will be to fix this
-  let previousData = tess.prepare(filteredData.slice(params['offset'] - params['offsetDelta'], end - params['offsetDelta']));
-  let currentData = tess.prepare(filteredData.slice(params['offset'], end));
+  let start = params['offset'] - params['minOffset'];
+  let end = start + tess.defaultItems;
+  let previousData = tess.prepare(filteredData.slice(start - params['offsetDelta'], end - params['offsetDelta']));
+  let currentData = tess.prepare(filteredData.slice(start, end));
   tess.render(canvas, currentData, previousData, params['offsetDelta']);
 }
 
@@ -15,34 +13,28 @@ function addPagingClick(elementId, offsetDelta) {
       // draw the canvas, as we have to always have enough to go in either direction
       params['offset'] = Math.max(0, params['offset'] + offsetDelta);
       params['offsetDelta'] = offsetDelta;
+      const potentialNewMax = params['offset'] + (tess.defaultItems * 2);
+      const potentialNewMin = Math.max(0, params['offset'] - (tess.defaultItems * 2));
       renderCanvas(canvas, tess, releaseData, params);
 
-      if (offsetDelta > 0) {
-        const potentialNewMax = params['offset'] + (tess.defaultItems * 2);
-        if (potentialNewMax > params['maxOffset']) {
-          const weNeed = potentialNewMax - params['maxOffset'];
-          const secretOffset = params['maxOffset']
-          const queryUrl = buildUrl(collectionId, params['filter'], secretOffset, weNeed);
-          fetch(queryUrl)
-            .then(response => response.json())
-            .then(newReleaseData => {
-              params['maxOffset'] = potentialNewMax;
-              releaseData = releaseData.concat(newReleaseData)
-            });
-        }
-      } else if (offsetDelta < 0) {
-        const potentialNewMin = Math.max(0, params['offset'] - (tess.defaultItems * 2));
-        if (potentialNewMin < params['minOffset']) {
-          const weNeed = params['minOffset'] - potentialNewMin;
-          const secretOffset = potentialNewMin;
-          const queryUrl = buildUrl(collectionId, params['filter'], secretOffset, weNeed);
-          fetch(queryUrl)
-            .then(response => response.json())
-            .then(newReleaseData => {
-              params['minOffset'] = potentialNewMin;
-              releaseData = newReleaseData.concat(releaseData);
-            });
-        }
+      if (offsetDelta > 0 && potentialNewMax > params['maxOffset']) {
+        const limit = potentialNewMax - params['maxOffset'];
+        const queryUrl = buildUrl(collectionId, params['filter'], params['maxOffset'], limit);
+        fetch(queryUrl)
+          .then(response => response.json())
+          .then(newReleaseData => {
+            params['maxOffset'] = potentialNewMax;
+            releaseData = releaseData.concat(newReleaseData)
+          });
+      } else if (offsetDelta < 0 & potentialNewMin < params['minOffset']) {
+        const limit = params['minOffset'] - potentialNewMin;
+        const queryUrl = buildUrl(collectionId, params['filter'], potentialNewMin, limit);
+        fetch(queryUrl)
+          .then(response => response.json())
+          .then(newReleaseData => {
+            params['minOffset'] = potentialNewMin;
+            releaseData = newReleaseData.concat(releaseData);
+          });
       }
     }
   });
