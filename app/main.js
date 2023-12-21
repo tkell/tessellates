@@ -1,9 +1,8 @@
 function renderCanvas(canvas, tess, data, params) {
-  let filteredData = data;
-  let start = params['offset'] - params['minOffset'];
-  let end = start + tess.defaultItems;
-  let previousData = tess.prepare(filteredData.slice(start - params['offsetDelta'], end - params['offsetDelta']));
-  let currentData = tess.prepare(filteredData.slice(start, end));
+  const start = params['offset'] - params['minOffset'];
+  const end = start + tess.defaultItems;
+  const previousData = tess.prepare(data.slice(start - params['offsetDelta'], end - params['offsetDelta']));
+  const currentData = tess.prepare(data.slice(start, end));
   tess.render(canvas, currentData, previousData, params['offsetDelta']);
 }
 
@@ -179,7 +178,12 @@ if (window.location.href.includes("digital")) {
 } else if (window.location.href.includes("vinyl")) {
   collectionId = 2;
 }
-const queryUrl = buildUrl(collectionId, params['minOffset'], params['maxOffset'] - params['minOffset'], params['filter'], params['folder']);
+const queryUrl = buildUrl(collectionId,
+  params['minOffset'],
+  params['maxOffset'] - params['minOffset'],
+  params['filter'],
+  params['folder']
+);
 
 fetch(queryUrl)
   .then(response => response.json())
