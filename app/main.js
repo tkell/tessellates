@@ -19,7 +19,7 @@ function addPagingClick(elementId, offsetDelta) {
 
       if (offsetDelta > 0 && potentialNewMax > params['maxOffset']) {
         const limit = potentialNewMax - params['maxOffset'];
-        const queryUrl = buildUrl(collectionId, params['filter'], params['maxOffset'], limit);
+        const queryUrl = buildUrl(collectionId, params['maxOffset'], limit, params['filter'], params['folder']);
         fetch(queryUrl)
           .then(response => response.json())
           .then(newReleaseData => {
@@ -28,7 +28,7 @@ function addPagingClick(elementId, offsetDelta) {
           });
       } else if (offsetDelta < 0 & potentialNewMin < params['minOffset']) {
         const limit = params['minOffset'] - potentialNewMin;
-        const queryUrl = buildUrl(collectionId, params['filter'], potentialNewMin, limit);
+        const queryUrl = buildUrl(collectionId, potentialNewMin, limit, params['filter'], params['folder']);
         fetch(queryUrl)
           .then(response => response.json())
           .then(newReleaseData => {
@@ -51,13 +51,33 @@ function addFolderClick(elementId, folder) {
       params['maxOffset'] = (tess.defaultItems * 2);
       delete params.offsetDelta;
       uiState.hasPreloaded = false;
-      renderCanvas(canvas, tess, releaseData, params);
+
+      const queryUrl = buildUrl(collectionId,
+        params['minOffset'],
+        params['maxOffset'] - params['minOffset'],
+        params['filter'],
+        params['folder']
+      );
+      fetch(queryUrl)
+        .then(response => response.json())
+        .then(newReleaseData => {
+          releaseData = newReleaseData;
+          renderCanvas(canvas, tess, releaseData, params);
+        });
     }
   });
 }
 
-function buildUrl(collectionId, searchString, offset, limit) {
-  return `http://localhost:3000/collections/${collectionId}?serve_json=true&filter_string=${searchString}&limit=${limit}&offset=${offset}`
+function buildUrl(collectionId, offset, limit, filter, folder) {
+  let url = `http://localhost:3000/collections/${collectionId}?serve_json=true&limit=${limit}&offset=${offset}`;
+  if (folder) {
+    url = url + `&filter_string=${filter}`;
+  }
+  if (folder) {
+    url = url + `&folder=${folder}`;
+  }
+  console.log(url);
+  return url;
 }
 
 function addFilterInteraction(elementId, eventType, filterStringElementId) {
@@ -74,14 +94,18 @@ function addFilterInteraction(elementId, eventType, filterStringElementId) {
         params['maxOffset'] = (tess.defaultItems * 2);
         delete params.offsetDelta;
       } else {
-        params['filter'] = "";
         params['offset'] = 0;
         params['minOffset'] = 0;
         params['maxOffset'] = (tess.defaultItems * 2);
         delete params.offsetDelta;
       }
 
-      const queryUrl = buildUrl(collectionId, params['filter'] , params['minOffset'], params['maxOffset'] - params['minOffset']);
+      const queryUrl = buildUrl(collectionId,
+        params['minOffset'],
+        params['maxOffset'] - params['minOffset'],
+        params['filter'],
+        params['folder']
+      );
       fetch(queryUrl)
         .then(response => response.json())
         .then(newReleaseData => {
@@ -174,7 +198,7 @@ if (window.location.href.includes("digital")) {
 } else if (window.location.href.includes("vinyl")) {
   collectionId = 2;
 }
-const queryUrl = buildUrl(collectionId, params['filter'] , params['minOffset'], params['maxOffset'] - params['minOffset']);
+const queryUrl = buildUrl(collectionId, params['minOffset'], params['maxOffset'] - params['minOffset'], params['filter'], params['folder']);
 
 fetch(queryUrl)
   .then(response => response.json())
