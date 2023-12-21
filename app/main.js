@@ -170,26 +170,7 @@ var canvas = null;
 window.addEventListener("load", (event) => {
   canvas = new fabric.Canvas('vinylCanvas');
   canvas.hoverCursor = 'default';
-  var tempData = []
-  for (let i = 0; i < tess.defaultItems; i++) {
-    tempData.push({});
-  }
-  tempData = tess.prepare(tempData);
-
-  for (let i = 0; i < tempData.length; i++) {
-    const record = tempData[i];
-    const radius = tess.preloadRadius;
-    const hexPoints = uiHelper.getHexPoints(radius);
-    const hex = new fabric.Polygon(hexPoints, {left: record.imageX - radius, top: record.imageY - radius});
-    const gradient = uiHelper.getGradient("#000","#FFF", hex.height);
-    hex.set('fill', gradient)
-    const timeout = Math.floor(Math.random() * 3000) + 250;
-    canvas.add(hex);
-      setTimeout(() => {
-        animationHelper.makeSmallBounceRaw(hex, {})();
-      }, timeout);
-    uiState.preloadedObjects.push(hex); // I don't love the parallel lists here, but maybe it is OK?
-  }
+  uiHelper.drawPreloadHexagons(canvas, tess, uiState);
 });
 
 // Load the collection

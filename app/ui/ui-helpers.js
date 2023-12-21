@@ -1,5 +1,27 @@
 let uiHelper = {}
 
+uiHelper.drawPreloadHexagons = function(canvas, tess, uiState) {
+  let tempData = [];
+  for (let i = 0; i < tess.defaultItems; i++) {
+    tempData.push({});
+  }
+  tempData = tess.prepare(tempData);
+  for (let i = 0; i < tempData.length; i++) {
+    const fakeRecord = tempData[i];
+    const radius = tess.preloadRadius;
+    const hexPoints = uiHelper.getHexPoints(radius);
+    const hex = new fabric.Polygon(hexPoints, {left: fakeRecord.imageX - radius, top: fakeRecord.imageY - radius});
+    const gradient = uiHelper.getGradient("#000","#FFF", hex.height);
+    hex.set('fill', gradient)
+    const timeout = Math.floor(Math.random() * 3000) + 250;
+    canvas.add(hex);
+      setTimeout(() => {
+        animationHelper.makeSmallBounceRaw(hex, {})();
+      }, timeout);
+    uiState.preloadedObjects.push(hex); // I don't love the parallel lists here, but maybe it is OK?
+  }
+}
+
 uiHelper.waitFor = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 // Text updates
