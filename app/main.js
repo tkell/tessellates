@@ -75,7 +75,6 @@ function buildUrl(collectionId, offset, limit, filter, folder) {
   if (folder) {
     url = url + `&folder=${folder}`;
   }
-  console.log(url);
   return url;
 }
 
