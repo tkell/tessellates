@@ -14,6 +14,11 @@ vlcHelper.makePlayFunc = function(record) {
   }
 }
 
+vlcHelper.clearAllTracks = function() {
+  let vlcCommand = "pl_empty";
+  vlcHelper._runMetaCommand(vlcCommand);
+}
+
 vlcHelper._addTracks = function(tracks, vlcState) {
   for (let i = 0; i < tracks.length; i++) {
     let vlcCommand = "in_enqueue"
@@ -27,6 +32,12 @@ vlcHelper._addTracks = function(tracks, vlcState) {
 
 vlcHelper._addTrack = function(command, prefix, suffix) {
   const vlcUrl = `${vlcHelper._apiUrl}?command=${command}&input=${prefix}${suffix}`;
+  return fetch(vlcUrl, {headers: vlcHelper._headers})
+    .then(response => response.text());
+}
+
+vlcHelper._runMetaCommand = function(command) {
+  const vlcUrl = `${vlcHelper._apiUrl}?command=${command}`;
   return fetch(vlcUrl, {headers: vlcHelper._headers})
     .then(response => response.text());
 }

@@ -87,7 +87,7 @@ function addLocalPauseClick() {
 
 function addLocalClearClick() {
   document.getElementById("clear-local-playback").addEventListener("click", function(e) {
-    console.log("clear!");
+    vlcHelper.clearAllTracks();
   });
 }
 
