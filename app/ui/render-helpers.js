@@ -113,6 +113,7 @@ renderHelper._setMouseListeners = function(record, data, tessellation) {
 
     uiState.bigImage.isShowing = true;
     uiState.bigImage.isAnimating = true;
+    uiState.currentRecord = record;
     uiHelper.updateTextWithArtistAndTitle(record);
     uiHelper.replaceOtherRecords(record, data, tessellation.timeouts.slow)
       .then(() => {
