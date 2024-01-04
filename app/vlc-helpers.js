@@ -12,15 +12,20 @@ vlcHelper.makePlayFunc = function(record) {
           const fileSuffix = encodeURIComponent(tracks[i].filepath);
           const filePrefix = "/Volumes/Mimir/Music/Albums/"
 
-          let vlcCommand = "in_enqueue" 
-          if (vlcState === "stopped") {
-            vlcCommand = "in_play"
+          if (i == 0) {
+            let vlcCommand = "in_enqueue" 
+            if (vlcState === "stopped") {
+              vlcCommand = "in_play"
+            }
+            const vlcUrl = `http://127.0.0.1:8089/requests/status.xml?command=${vlcCommand}&input=${filePrefix}${fileSuffix}`;
+            fetch(vlcUrl, {headers: vlcHelper._headers})
+              .then(response => response.text())
+          } else {
+            let vlcCommand = "in_enqueue" 
+            const vlcUrl = `http://127.0.0.1:8089/requests/status.xml?command=${vlcCommand}&input=${filePrefix}${fileSuffix}`;
+            fetch(vlcUrl, {headers: vlcHelper._headers})
+              .then(response => response.text())
           }
-          const vlcUrl = `http://127.0.0.1:8089/requests/status.xml?command=${vlcCommand}&input=${filePrefix}${fileSuffix}`;
-          fetch(vlcUrl, {headers: vlcHelper._headers})
-            .then(response => response.text())
-
-          break;
         }
       })
 
