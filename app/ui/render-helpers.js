@@ -110,13 +110,11 @@ renderHelper._setMouseListeners = function(record, data, tessellation) {
   record.onMouseDown = function() {
     // See notes for commentary about the Weird Image Loading!
     const loadBigImageEarly = fabricImageLoad(record.imagePath);
-
     uiState.bigImage.isShowing = true;
     uiState.bigImage.isAnimating = true;
     uiState.currentRecord = record;
     uiHelper.updateTextWithArtistAndTitle(record);
 
-    // let's make the text do the play
     record.playFunc = vlcHelper.makePlayFunc(record);
     document.getElementById("text").addEventListener("click", record.playFunc);
 
@@ -142,8 +140,6 @@ renderHelper._setMouseListeners = function(record, data, tessellation) {
     record.onBigImageClose = function() {
       uiState.bigImage.isAnimating = true;
       uiHelper.showExistingImages(data);
-
-      // and, let's remove the event
       document.getElementById("text").removeEventListener("click", record.playFunc);
 
       uiHelper.waitFor(1)
