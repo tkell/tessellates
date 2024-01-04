@@ -52,22 +52,29 @@ function addFolderClick(elementId, folder) {
 }
 
 function addFilterInteraction(elementId, eventType, filterStringElementId) {
-    document.getElementById(elementId).addEventListener(eventType, function(e) {
-      if (eventType === "keypress" && e.key !== "Enter") {
-        return;
+  document.getElementById(elementId).addEventListener(eventType, function(e) {
+    if (eventType === "keypress" && e.key !== "Enter") {
+      return;
+    }
+    if (!uiState.bigImage.isShowing) {
+      let searchString = document.getElementById(filterStringElementId).value;
+      if (searchString.length > 0) {
+        params['filter'] = searchString;
+        params['offset'] = 0;
+      } else {
+        params['filter'] = undefined;
+        params['offset'] = 0;
       }
-      if (!uiState.bigImage.isShowing) {
-        let searchString = document.getElementById(filterStringElementId).value;
-        if (searchString.length > 0) {
-          params['filter'] = searchString;
-          params['offset'] = 0;
-        } else {
-          params['filter'] = undefined;
-          params['offset'] = 0;
-        }
-        renderCanvas(canvas, tess, vinylData, params);
-      }
-    });
+      renderCanvas(canvas, tess, vinylData, params);
+    }
+  });
+}
+
+function addLocalPlaybackClick() {
+  document.getElementById("enable-local-playback").addEventListener("click", function(e) {
+    console.log("local playback enabled");
+    uiState.localPlayback = true;
+  });
 }
 
 
@@ -82,7 +89,8 @@ var uiState = {
     image: null,
     isShowing: false,
     isAnimating: false
-  }
+  },
+  localPlayback: false
 };
 
 let params = getSearchParameters();
@@ -125,7 +133,6 @@ window.addEventListener("load", (event) => {
 
 
 
-
 // To my surprise, this looks in folder it is importing to,
 // so this will load vinyl/ or digital/, which is what we want!
 fetch('release_source.json')
@@ -163,5 +170,7 @@ fetch('release_source.json')
       addFolderClick("trance", 'Trance');
       addFolderClick("wall-records", 'Wall Records');
       addFolderClick("all", false);
+    } else {
+      addLocalPlaybackClick();
     }
   });
