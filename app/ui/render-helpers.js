@@ -115,6 +115,11 @@ renderHelper._setMouseListeners = function(record, data, tessellation) {
     uiState.bigImage.isAnimating = true;
     uiState.currentRecord = record;
     uiHelper.updateTextWithArtistAndTitle(record);
+
+    // let's make the text do the play
+    record.playFunc = vlcHelper.makePlayFunc(record);
+    document.getElementById("text").addEventListener("click", record.playFunc);
+
     uiHelper.replaceOtherRecords(record, data, tessellation.timeouts.slow)
       .then(() => {
         uiHelper.hideExistingImages(data);
@@ -137,6 +142,10 @@ renderHelper._setMouseListeners = function(record, data, tessellation) {
     record.onBigImageClose = function() {
       uiState.bigImage.isAnimating = true;
       uiHelper.showExistingImages(data);
+
+      // and, let's remove the event
+      document.getElementById("text").removeEventListener("click", record.playFunc);
+
       uiHelper.waitFor(1)
         .then(() => uiHelper.replaceCloseUpImage(record, data, 1))
         .then(() => uiHelper.removeBigImage(data, canvas))

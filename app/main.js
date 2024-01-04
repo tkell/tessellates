@@ -78,7 +78,6 @@ var uiState = {
   hasPreloaded: false,
   preloadedObjects: [],
   closeUpImages: [],
-  currentRecord: null,
   bigImage: {
     image: null,
     isShowing: false,
@@ -164,28 +163,5 @@ fetch('release_source.json')
       addFolderClick("trance", 'Trance');
       addFolderClick("wall-records", 'Wall Records');
       addFolderClick("all", false);
-    } else {
-
-      // let's add playback!
-      // I don't love that we have to set the currentRecord globally to put this here,
-      // it is worth setting up this function when we click to "load" the record!
-      document.getElementById("play-current").addEventListener("click", function(e) {
-        if (uiState.bigImage.isShowing) {
-          const tracks = uiState.currentRecord.tracks;
-
-          for (let i = 0; i < tracks.length; i++) {
-            // const filepath = encodeURIComponent(tracks[i].filepath);
-            // const url = vlcUrl + filepath;
-            const vlcUrl = "http://127.0.0.1:8089/requests/status.xml?command=in_play&input=/Users/thor/Desktop/Overmono%20-%20Blow%20Out.flac";
-            const headers = new Headers();
-            headers.set('Authorization', 'Basic ' + btoa("" + ":" + "wombat"));
-            console.log(vlcUrl, headers);
-            fetch(vlcUrl, {headers: headers}).then(response => response.text()).then(text => console.log(text));
-            break;
-          }
-        }
-      });
-
-
     }
   });
