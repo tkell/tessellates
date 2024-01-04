@@ -74,6 +74,20 @@ function addLocalPlaybackClick() {
   document.getElementById("enable-local-playback").addEventListener("click", function(e) {
     console.log("local playback enabled");
     uiState.localPlayback = true;
+    document.getElementById("pause-local-playback").disabled = false;
+    document.getElementById("clear-local-playback").disabled = false;
+  });
+}
+
+function addLocalPauseClick() {
+  document.getElementById("pause-local-playback").addEventListener("click", function(e) {
+    console.log("pause?");
+  });
+}
+
+function addLocalClearClick() {
+  document.getElementById("clear-local-playback").addEventListener("click", function(e) {
+    console.log("clear!");
   });
 }
 
@@ -172,5 +186,7 @@ fetch('release_source.json')
       addFolderClick("all", false);
     } else {
       addLocalPlaybackClick();
+      addLocalPauseClick();
+      addLocalClearClick();
     }
   });
