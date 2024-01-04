@@ -9,14 +9,14 @@ vlcHelper.makePlayFunc = function(record) {
       .then(vlcState => {
         const tracks = record.tracks;
         for (let i = 0; i < tracks.length; i++) {
-          // const filepath = encodeURIComponent(tracks[i].filepath);
-          // const url = vlcUrl + filepath;
+          const fileSuffix = encodeURIComponent(tracks[i].filepath);
+          const filePrefix = "/Volumes/Mimir/Music/Albums/"
 
           let vlcCommand = "in_enqueue" 
           if (vlcState === "stopped") {
             vlcCommand = "in_play"
           }
-          const vlcUrl = `http://127.0.0.1:8089/requests/status.xml?command=${vlcCommand}&input=/Users/thor/Desktop/Overmono%20-%20Blow%20Out.flac`;
+          const vlcUrl = `http://127.0.0.1:8089/requests/status.xml?command=${vlcCommand}&input=${filePrefix}${fileSuffix}`;
           fetch(vlcUrl, {headers: vlcHelper._headers})
             .then(response => response.text())
 
