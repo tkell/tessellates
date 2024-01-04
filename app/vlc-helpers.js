@@ -14,8 +14,13 @@ vlcHelper.makePlayFunc = function(record) {
   }
 }
 
+vlcHelper.pause = function() {
+  const vlcCommand = "pl_pause";
+  vlcHelper._runMetaCommand(vlcCommand);
+}
+
 vlcHelper.clearAllTracks = function() {
-  let vlcCommand = "pl_empty";
+  const vlcCommand = "pl_empty";
   vlcHelper._runMetaCommand(vlcCommand);
 }
 

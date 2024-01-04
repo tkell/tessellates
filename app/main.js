@@ -80,8 +80,9 @@ function addLocalPlaybackClick() {
 }
 
 function addLocalPauseClick() {
+  // This appears to work for both pausing and unpausing!
   document.getElementById("pause-local-playback").addEventListener("click", function(e) {
-    console.log("pause?");
+    vlcHelper.pause();
   });
 }
 
