@@ -17,19 +17,21 @@ vlcHelper.makePlayFunc = function(record) {
             if (vlcState === "stopped") {
               vlcCommand = "in_play"
             }
-            const vlcUrl = `http://127.0.0.1:8089/requests/status.xml?command=${vlcCommand}&input=${filePrefix}${fileSuffix}`;
-            fetch(vlcUrl, {headers: vlcHelper._headers})
-              .then(response => response.text())
+            vlcHelper._addTrack(vlcCommand, filePrefix, fileSuffix);
           } else {
             let vlcCommand = "in_enqueue" 
-            const vlcUrl = `http://127.0.0.1:8089/requests/status.xml?command=${vlcCommand}&input=${filePrefix}${fileSuffix}`;
-            fetch(vlcUrl, {headers: vlcHelper._headers})
-              .then(response => response.text())
+            vlcHelper._addTrack(vlcCommand, filePrefix, fileSuffix);
           }
         }
       })
 
   }
+}
+
+vlcHelper._addTrack = function(command, prefix, suffix) {
+  const vlcUrl = `http://127.0.0.1:8089/requests/status.xml?command=${command}&input=${prefix}${suffix}`;
+  return fetch(vlcUrl, {headers: vlcHelper._headers})
+    .then(response => response.text());
 }
 
 vlcHelper._checkState = function() {
