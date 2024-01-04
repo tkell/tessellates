@@ -187,8 +187,6 @@ animationHelper.makeWalkaboutRaw = function(object, stateToUpdate) {
   return animationHelper.setupAnimationChain(object, walkabout, stateToUpdate);
 }
 
-
-
 function getRandomInt(min, max) {
   min = Math.ceil(min);
   max = Math.floor(max);

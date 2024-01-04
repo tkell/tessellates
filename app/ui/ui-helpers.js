@@ -48,7 +48,6 @@ uiHelper.fadeRecord = function(record) {
   }
 }
 
-
 uiHelper.walkaboutRecord = function(record) {
   if (record.isAnimating === false) {
     animationHelper.makeWalkabout(record)();
@@ -69,7 +68,9 @@ uiHelper.moveRecordTo = function(record, newX, newY) {
 }
 
 uiHelper.ambientAnimate = function(record) {
-  if (uiState.bigImage.isShowing === true) return;
+  if (uiState.bigImage.isShowing === true || document.hidden || document.hasFocus() === false) {
+    return;
+  }
 
   const functionIndex = Math.floor(Math.random() * uiHelper._ambientAnimations.length);
   const animation = uiHelper._ambientAnimations[functionIndex];
