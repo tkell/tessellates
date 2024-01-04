@@ -112,7 +112,6 @@ renderHelper._setMouseListeners = function(record, data, tessellation) {
     const loadBigImageEarly = fabricImageLoad(record.imagePath);
     uiState.bigImage.isShowing = true;
     uiState.bigImage.isAnimating = true;
-    uiState.currentRecord = record;
     uiHelper.updateTextWithArtistAndTitle(record);
 
     record.playFunc = vlcHelper.makePlayFunc(record);
