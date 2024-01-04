@@ -2,40 +2,35 @@ let vlcHelper = {}
 
 vlcHelper._headers = new Headers();
 vlcHelper._headers.set('Authorization', 'Basic ' + btoa("" + ":" + "wombat"));
+vlcHelper._filePrefix = "/Volumes/Mimir/Music/Albums/";
+vlcHelper._apiUrl = "http://127.0.0.1:8089/requests/status.xml";
 
 vlcHelper.makePlayFunc = function(record) {
   return function() {
     vlcHelper._checkState()
-      .then(vlcState => {
-        const tracks = record.tracks;
-        for (let i = 0; i < tracks.length; i++) {
-          const fileSuffix = encodeURIComponent(tracks[i].filepath);
-          const filePrefix = "/Volumes/Mimir/Music/Albums/"
+      .then(vlcState => vlcHelper._addTracks(record.tracks, vlcState));
+  }
+}
 
-          if (i == 0) {
-            let vlcCommand = "in_enqueue" 
-            if (vlcState === "stopped") {
-              vlcCommand = "in_play"
-            }
-            vlcHelper._addTrack(vlcCommand, filePrefix, fileSuffix);
-          } else {
-            let vlcCommand = "in_enqueue" 
-            vlcHelper._addTrack(vlcCommand, filePrefix, fileSuffix);
-          }
-        }
-      })
-
+vlcHelper._addTracks = function(tracks, vlcState) {
+  for (let i = 0; i < tracks.length; i++) {
+    let vlcCommand = "in_enqueue"
+    const fileSuffix = encodeURIComponent(tracks[i].filepath);
+    if (i === 0 && vlcState === "stopped") {
+        vlcCommand = "in_play"
+      }
+    vlcHelper._addTrack(vlcCommand, vlcHelper._filePrefix, fileSuffix);
   }
 }
 
 vlcHelper._addTrack = function(command, prefix, suffix) {
-  const vlcUrl = `http://127.0.0.1:8089/requests/status.xml?command=${command}&input=${prefix}${suffix}`;
+  const vlcUrl = `${vlcHelper._apiUrl}?command=${command}&input=${prefix}${suffix}`;
   return fetch(vlcUrl, {headers: vlcHelper._headers})
     .then(response => response.text());
 }
 
 vlcHelper._checkState = function() {
-    const vlcStateUrl = "http://127.0.0.1:8089/requests/status.xml";
+    const vlcStateUrl = `${vlcHelper._apiUrl}`;
     return fetch(vlcStateUrl, {headers: vlcHelper._headers})
       .then(response => response.text())
       .then(text => {
