@@ -15,6 +15,52 @@ uiHelper.updateTextWithTitle = function(record) {
   }
 }
 
+uiHelper.updateTextForFocus = function(record) {
+  const textElement = document.getElementById("text");
+  const gradientString = `linear-gradient(90deg, ${record.colors[0]}, ${record.colors[1]})`
+  textElement.style.backgroundImage = gradientString;
+  textElement.style.color = "transparent";
+  textElement.style.backgroundClip = "text";
+  const colorFade = [
+    { color:  record.colors[0]},
+    { color: "transparent" },
+    { color:  record.colors[1]},
+    { color: "transparent" },
+    { color:  record.colors[0]},
+  ];
+  const colorFadeTiming = {
+    duration: 6000,
+    iterations: 6,
+  };
+  const textAnimation = textElement.animate(colorFade, colorFadeTiming);
+  record.textAnimation = textAnimation;
+}
+
+uiHelper.resetTextForFocus = function(record) {
+  const textElement = document.getElementById("text");
+  textElement.style.backgroundImage = "initial";
+  textElement.style.color = "black"
+  textElement.style.backgroundClip = "initial;";
+  record.textAnimation.cancel();
+  record.textAnimation = undefined;
+}
+
+uiHelper.updateTextForLocalPlayback = function(record) {
+  const textElement = document.getElementById("text");
+  const contents = textElement.innerHTML;
+  record.originalTitle = contents;
+  const contentsWithPlayButtons = "&#x25b6; " + contents + " &#x25b6;"
+  textElement.innerHTML = contentsWithPlayButtons;
+  textElement.style.cursor = "hand";
+}
+
+uiHelper.resetTextForLocalPlayback = function(record) {
+  const textElement = document.getElementById("text");
+  textElement.innerHTML = record.originalTitle;
+  record.originalTitle = undefined;
+  textElement.style.cursor = "default";
+}
+
 uiHelper.updateTextWithTrack = function(record) {
   let t = document.getElementById('track-text');
   let track = record.tracks[record.nextTrackToShow];

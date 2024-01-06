@@ -113,35 +113,10 @@ renderHelper._setMouseListeners = function(record, data, tessellation) {
     uiState.bigImage.isShowing = true;
     uiState.bigImage.isAnimating = true;
     uiHelper.updateTextWithArtistAndTitle(record);
-
-    // Here, let's change the css on text:
-    const gradientString = `linear-gradient(90deg, ${record.colors[0]}, ${record.colors[1]})`
-    const textElement = document.getElementById("text");
-
     if (uiState.localPlayback) {
-      const contents = textElement.innerHTML;
-      record.originalTitle = contents;
-      const contentsWithPlayButtons = "&#x25b6; " + contents + " &#x25b6;"
-      textElement.innerHTML = contentsWithPlayButtons;
-      textElement.style.cursor = "hand";
+      uiHelper.updateTextForLocalPlayback(record);
     }
-
-    textElement.style.backgroundImage = gradientString;
-    textElement.style.color = "transparent";
-    textElement.style.backgroundClip = "text";
-    const colorFade = [
-      { color:  record.colors[0]},
-      { color: "transparent" },
-      { color:  record.colors[1]},
-      { color: "transparent" },
-      { color:  record.colors[0]},
-    ];
-    const colorFadeTiming = {
-      duration: 6000,
-      iterations: 2,
-    };
-    const textAnimation = document.getElementById("text").animate(colorFade, colorFadeTiming);
-    record.textAnimation = textAnimation;
+    uiHelper.updateTextForFocus(record);
 
     record.playFunc = vlcHelper.makePlayFunc(record);
     document.getElementById("text").addEventListener("click", record.playFunc);
@@ -169,21 +144,10 @@ renderHelper._setMouseListeners = function(record, data, tessellation) {
       uiState.bigImage.isAnimating = true;
       uiHelper.showExistingImages(data);
       document.getElementById("text").removeEventListener("click", record.playFunc);
-
-
-      // ah, now we need to reset the css, heh
-      const textElement = document.getElementById("text");
-      textElement.style.backgroundImage = "initial";
-      textElement.style.color = "black"
-      textElement.style.backgroundClip = "initial;";
-      record.textAnimation.cancel();
-      record.textAnimation = undefined;
       if (uiState.localPlayback) {
-        console.log(record.originalTitle);
-        textElement.innerHTML = record.originalTitle;
-        record.originalTitle = undefined;
-        textElement.style.cursor = "default";
+        uiHelper.resetTextForLocalPlayback(record);
       }
+      uiHelper.resetTextForFocus(record);
 
       uiHelper.waitFor(1)
         .then(() => uiHelper.replaceCloseUpImage(record, data, 1))
