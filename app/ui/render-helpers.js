@@ -117,17 +117,17 @@ renderHelper._setMouseListeners = function(record, data, tessellation) {
       uiHelper.updateTextForLocalPlayback(record);
     }
     // let's muck with the background!
-    const gradientString = `linear-gradient(90deg, #FFF, #FFF, ${record.colors[0]}, ${record.colors[1]}, #FFF, #FFF)`
     const bodyElement = document.body;
+    bodyElement.style.animationPlayState = 'paused';
+    bodyElement.style.animationPlayState = 'revert';
+    const gradientString = `linear-gradient(90deg, #FFF, #FFF, ${record.colors[0]}, ${record.colors[1]}, #FFF, #FFF)`
     bodyElement.style.animationPlayState = 'running';
     bodyElement.style.backgroundImage = gradientString;
-    console.log("bloop");
-
-    /*
-    uiHelper.waitFor(10000).then(() => {
+    console.log("starting");
+    uiHelper.waitFor(9000).then(() => {
+      console.log("stopping");
       bodyElement.style.animationPlayState = 'paused';
     });
-    */
 
 
 

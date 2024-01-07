@@ -26,7 +26,7 @@ body {
 	animation-name: gradient;
     animation-duration: 9s;
     animation-timing-function: ease-in;
-    animation-iteration-count: 1;
+    animation-iteration-count: infinite;
 }
 
 @keyframes gradient {
