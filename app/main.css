@@ -24,7 +24,7 @@ div.centre {
 body {
     background-size: 600% 600%;
 	animation-name: gradient;
-    animation-duration: 15s;
+    animation-duration: 9s;
     animation-timing-function: ease-in;
     animation-iteration-count: 1;
 }

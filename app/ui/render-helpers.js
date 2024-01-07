@@ -117,7 +117,7 @@ renderHelper._setMouseListeners = function(record, data, tessellation) {
       uiHelper.updateTextForLocalPlayback(record);
     }
     // let's muck with the background!
-    const gradientString = `linear-gradient(90deg, #FFF, #FFF, #000, #000, #FFF, #FFF)`
+    const gradientString = `linear-gradient(90deg, #FFF, #FFF, ${record.colors[0]}, ${record.colors[1]}, #FFF, #FFF)`
     const bodyElement = document.body;
     bodyElement.style.animationPlayState = 'running';
     bodyElement.style.backgroundImage = gradientString;
