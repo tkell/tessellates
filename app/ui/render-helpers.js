@@ -116,8 +116,22 @@ renderHelper._setMouseListeners = function(record, data, tessellation) {
     if (uiState.localPlayback) {
       uiHelper.updateTextForLocalPlayback(record);
     }
-    uiHelper.updateTextForFocus(record);
+    // let's muck with the background!
+    const gradientString = `linear-gradient(90deg, #FFF, #FFF, #000, #000, #FFF, #FFF)`
+    const bodyElement = document.body;
+    bodyElement.style.animationPlayState = 'running';
+    bodyElement.style.backgroundImage = gradientString;
+    console.log("bloop");
 
+    /*
+    uiHelper.waitFor(10000).then(() => {
+      bodyElement.style.animationPlayState = 'paused';
+    });
+    */
+
+
+
+    uiHelper.updateTextForFocus(record);
     record.playFunc = vlcHelper.makePlayFunc(record);
     document.getElementById("text").addEventListener("click", record.playFunc);
 

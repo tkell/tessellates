@@ -22,11 +22,11 @@ uiHelper.updateTextForFocus = function(record) {
   textElement.style.color = "transparent";
   textElement.style.backgroundClip = "text";
   const colorFade = [
-    { color:  record.colors[0]},
-    { color: "transparent" },
-    { color:  record.colors[1]},
-    { color: "transparent" },
-    { color:  record.colors[0]},
+    {color:  record.colors[0]},
+    {color: "transparent"},
+    {color:  record.colors[1]},
+    {color: "transparent"},
+    {color:  record.colors[0]},
   ];
   const colorFadeTiming = {
     duration: 6000,
