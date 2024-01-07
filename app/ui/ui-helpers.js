@@ -74,6 +74,27 @@ uiHelper.clearTrack = function() {
   t.textContent = "-";
 }
 
+uiHelper.runBackgroundGradient = function(record) {
+  const bodyElement = document.body;
+  const index = record.id % 4;
+  const angles = [0, 90, 180, 270];
+  const starts = ["0% 0%", "0% 0%", "0% 100%", "100% 0%"];
+  const ends = ["0% 100%", "100% 0%", "0% 0%", "0% 0%"];
+  // This depends on the body having size 600%, 600%!
+  // the size needs to match the number of gradient points in the queue
+  const gradientString = `linear-gradient(${angles[index]}deg, #FFF, #FFF, ${record.colors[0]}, ${record.colors[1]}, #FFF, #FFF)`
+  bodyElement.style.backgroundImage = gradientString;
+  const keyFrames = [
+    { backgroundPosition: starts[index] },
+    { backgroundPosition: ends[index] }
+  ]
+  const timing = {
+    duration: 4000,
+    iterations: 1,
+  };
+  bodyElement.animate(keyFrames, timing)
+}
+
 
 // Animations
 uiHelper.bounceRecord = function(record) {

@@ -101,6 +101,7 @@ renderHelper._addStartingStateToRecord = function(record, index, tessellation) {
   }
 }
 
+
 renderHelper._setMouseListeners = function(record, data, tessellation) {
   record.onMouseOver = function() {
     uiHelper.bounceRecord(record);
@@ -116,22 +117,13 @@ renderHelper._setMouseListeners = function(record, data, tessellation) {
     if (uiState.localPlayback) {
       uiHelper.updateTextForLocalPlayback(record);
     }
-    // let's muck with the background!
-    const bodyElement = document.body;
-    const gradientString = `linear-gradient(90deg, #FFF, #FFF, ${record.colors[0]}, ${record.colors[1]}, #FFF, #FFF)`
-    bodyElement.style.backgroundImage = gradientString;
-    const keyFrames = [
-      { backgroundPosition: "0% 0%" },
-      { backgroundPosition: "100% 0%" }
-    ]
-    const timing = {
-      duration: 8000,
-      iterations: 1,
-    };
-    bodyElement.animate(keyFrames, timing)
 
     uiHelper.updateTextForFocus(record);
-    record.playFunc = vlcHelper.makePlayFunc(record);
+    const play = vlcHelper.makePlayFunc(record);
+    record.playFunc = function() {
+      play();
+      uiHelper.runBackgroundGradient(record);
+    }
     document.getElementById("text").addEventListener("click", record.playFunc);
 
     uiHelper.replaceOtherRecords(record, data, tessellation.timeouts.slow)
