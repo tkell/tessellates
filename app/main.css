@@ -23,19 +23,6 @@ div.centre {
 
 body {
     background-size: 600% 600%;
-	animation-name: gradient;
-    animation-duration: 9s;
-    animation-timing-function: ease-in;
-    animation-iteration-count: infinite;
-}
-
-@keyframes gradient {
-	0% {
-		background-position: 0% 0%;
-	}
-	100% {
-		background-position: 100% 0%;
-	}
 }
 
 div#text {

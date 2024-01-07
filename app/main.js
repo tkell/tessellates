@@ -122,8 +122,6 @@ params = parseTessellatesParams(params, tess)
 var canvas = null;
 
 window.addEventListener("load", (event) => {
-  const bodyElement = document.body;
-  bodyElement.style.animationPlayState = 'paused';
   canvas = new fabric.Canvas('vinylCanvas');
   canvas.hoverCursor = 'default';
   var tempData = []

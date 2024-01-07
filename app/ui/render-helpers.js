@@ -118,18 +118,17 @@ renderHelper._setMouseListeners = function(record, data, tessellation) {
     }
     // let's muck with the background!
     const bodyElement = document.body;
-    bodyElement.style.animationPlayState = 'paused';
-    bodyElement.style.animationPlayState = 'revert';
     const gradientString = `linear-gradient(90deg, #FFF, #FFF, ${record.colors[0]}, ${record.colors[1]}, #FFF, #FFF)`
-    bodyElement.style.animationPlayState = 'running';
     bodyElement.style.backgroundImage = gradientString;
-    console.log("starting");
-    uiHelper.waitFor(9000).then(() => {
-      console.log("stopping");
-      bodyElement.style.animationPlayState = 'paused';
-    });
-
-
+    const keyFrames = [
+      { backgroundPosition: "0% 0%" },
+      { backgroundPosition: "100% 0%" }
+    ]
+    const timing = {
+      duration: 8000,
+      iterations: 1,
+    };
+    bodyElement.animate(keyFrames, timing)
 
     uiHelper.updateTextForFocus(record);
     record.playFunc = vlcHelper.makePlayFunc(record);
