@@ -69,7 +69,7 @@ function addFolderClick(elementId, folder) {
 
 function buildUrl(collectionId, offset, limit, filter, folder) {
   let url = `http://localhost:3000/collections/${collectionId}?serve_json=true&limit=${limit}&offset=${offset}`;
-  if (folder) {
+  if (filter) {
     url = url + `&filter_string=${filter}`;
   }
   if (folder) {
@@ -92,6 +92,7 @@ function addFilterInteraction(elementId, eventType, filterStringElementId) {
         params['maxOffset'] = (tess.defaultItems * 2);
         delete params.offsetDelta;
       } else {
+        params['filter'] = undefined;
         params['offset'] = 0;
         params['minOffset'] = 0;
         params['maxOffset'] = (tess.defaultItems * 2);
