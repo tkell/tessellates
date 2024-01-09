@@ -27,7 +27,7 @@ vlcHelper.clearAllTracks = function() {
 vlcHelper._addTracks = function(tracks, vlcState) {
   for (let i = 0; i < tracks.length; i++) {
     let vlcCommand = "in_enqueue"
-    const fileSuffix = encodeURIComponent(tracks[i].filepath);
+    const fileSuffix = encodeURIComponent(tracks[i].media_link);
     if (i === 0 && vlcState === "stopped") {
         vlcCommand = "in_play"
       }
@@ -48,13 +48,13 @@ vlcHelper._runMetaCommand = function(command) {
 }
 
 vlcHelper._checkState = function() {
-    const vlcStateUrl = `${vlcHelper._apiUrl}`;
-    return fetch(vlcStateUrl, {headers: vlcHelper._headers})
-      .then(response => response.text())
-      .then(text => {
-        const parser = new DOMParser();
-        const xmlResponse = parser.parseFromString(text, "application/xml");
-        const vlcState = xmlResponse.children[0].children[11].textContent
-        return vlcState;
-      })
+  const vlcStateUrl = `${vlcHelper._apiUrl}`;
+  return fetch(vlcStateUrl, {headers: vlcHelper._headers})
+    .then(response => response.text())
+    .then(text => {
+      const parser = new DOMParser();
+      const xmlResponse = parser.parseFromString(text, "application/xml");
+      const vlcState = xmlResponse.children[0].children[11].textContent
+      return vlcState;
+    })
 }
