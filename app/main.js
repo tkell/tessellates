@@ -68,7 +68,8 @@ function addFolderClick(elementId, folder) {
 }
 
 function buildUrl(collectionId, offset, limit, filter, folder) {
-  let url = `http://localhost:3000/collections/${collectionId}?serve_json=true&limit=${limit}&offset=${offset}`;
+  const host = "45.55.199.123"
+  let url = `http://${host}/collections/${collectionId}?serve_json=true&limit=${limit}&offset=${offset}`;
   if (filter) {
     url = url + `&filter_string=${filter}`;
   }
