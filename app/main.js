@@ -174,14 +174,14 @@ window.addEventListener("load", (event) => {
 
 // Load the collection
 if (window.location.href.includes("digital")) {
-  collectionId = 1;
+  collectionId = 3;
   const approxReleases = 2925;
   const offset = Math.floor(Math.random() * approxReleases);
   params['offset'] = offset;
   params['minOffset'] = offset - tess.defaultItems;
   params['maxOffset'] = offset + tess.defaultItems;
 } else if (window.location.href.includes("vinyl")) {
-  collectionId = 2;
+  collectionId = 4;
   const approxReleases = 525;
   const offset = Math.floor(Math.random() * approxReleases);
   params['offset'] = offset;
