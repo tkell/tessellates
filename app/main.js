@@ -180,14 +180,14 @@ if (window.location.href.includes("digital")) {
   const offset = Math.floor(Math.random() * approxReleases);
   params['offset'] = offset;
   params['minOffset'] = offset - tess.defaultItems;
-  params['maxOffset'] = offset + tess.defaultItems;
+  params['maxOffset'] = offset + (tess.defaultItems * 2);
 } else if (window.location.href.includes("vinyl")) {
   collectionId = 4;
   const approxReleases = 525;
   const offset = Math.floor(Math.random() * approxReleases);
   params['offset'] = offset;
   params['minOffset'] = offset - tess.defaultItems;
-  params['maxOffset'] = offset + tess.defaultItems;
+  params['maxOffset'] = offset + (tess.defaultItems * 2);
 }
 const queryUrl = buildUrl(collectionId,
   params['minOffset'],
