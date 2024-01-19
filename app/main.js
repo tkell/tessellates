@@ -18,7 +18,7 @@ function addPagingClick(elementId, offsetDelta) {
 
       if (offsetDelta > 0 && potentialNewMax > params['maxOffset']) {
         const limit = potentialNewMax - params['maxOffset'];
-        const queryUrl = buildUrl(collectionId, params['maxOffset'], limit, params['filter'], params['folder']);
+        const queryUrl = buildUrl(apiState, params['maxOffset'], limit, params['filter'], params['folder']);
         fetch(queryUrl)
           .then(response => response.json())
           .then(newReleaseData => {
@@ -27,7 +27,7 @@ function addPagingClick(elementId, offsetDelta) {
           });
       } else if (offsetDelta < 0 & potentialNewMin < params['minOffset']) {
         const limit = params['minOffset'] - potentialNewMin;
-        const queryUrl = buildUrl(collectionId, potentialNewMin, limit, params['filter'], params['folder']);
+        const queryUrl = buildUrl(apiState, potentialNewMin, limit, params['filter'], params['folder']);
         fetch(queryUrl)
           .then(response => response.json())
           .then(newReleaseData => {
@@ -51,7 +51,7 @@ function addFolderClick(elementId, folder) {
       delete params.offsetDelta;
       uiState.hasPreloaded = false;
 
-      const queryUrl = buildUrl(collectionId,
+      const queryUrl = buildUrl(apiState,
         params['minOffset'],
         params['maxOffset'] - params['minOffset'],
         params['filter'],
@@ -67,9 +67,8 @@ function addFolderClick(elementId, folder) {
   });
 }
 
-function buildUrl(collectionId, offset, limit, filter, folder) {
-  const host = "collects.tide-pool.ca"
-  let url = `https://${host}/collections/${collectionId}?serve_json=true&limit=${limit}&offset=${offset}`;
+function buildUrl(apiState, offset, limit, filter, folder) {
+  let url = `${apiState.protocol}://${apiState.host}/collections/${apiState.collectionName}?serve_json=true&limit=${limit}&offset=${offset}`;
   if (filter) {
     url = url + `&filter_string=${filter}`;
   }
@@ -100,7 +99,7 @@ function addFilterInteraction(elementId, eventType, filterStringElementId) {
         delete params.offsetDelta;
       }
 
-      const queryUrl = buildUrl(collectionId,
+      const queryUrl = buildUrl(apiState,
         params['minOffset'],
         params['maxOffset'] - params['minOffset'],
         params['filter'],
@@ -152,9 +151,14 @@ var uiState = {
   },
   localPlayback: false
 };
-
-let collectionId = null;
+var apiState = {
+  host: null,
+  protocol: null,
+  collectionName: null,
+  approxReleases: null
+}
 let params = getSearchParameters();
+
 // pick a tessellation, then ..
 let tess = null;
 if (params['t'] == 'square') {
@@ -173,23 +177,31 @@ window.addEventListener("load", (event) => {
   uiHelper.drawPreloadHexagons(canvas, tess, uiState);
 });
 
-// Load the collection
-if (window.location.href.includes("digital")) {
-  collectionId = 3;
-  const approxReleases = 2925;
-  const offset = Math.floor(Math.random() * approxReleases);
-  params['offset'] = offset;
-  params['minOffset'] = offset - tess.defaultItems;
-  params['maxOffset'] = offset + (tess.defaultItems * 2);
-} else if (window.location.href.includes("vinyl")) {
-  collectionId = 4;
-  const approxReleases = 525;
-  const offset = Math.floor(Math.random() * approxReleases);
-  params['offset'] = offset;
-  params['minOffset'] = offset - tess.defaultItems;
-  params['maxOffset'] = offset + (tess.defaultItems * 2);
+// Get the host name
+if (window.location.href.includes("localhost")) {
+  apiState.host = "localhost:3000"
+  apiState.protocol = "http"
+} else {
+  apiState.host = "collects.tide-pool.ca"
+  apiState.protocol = "https"
 }
-const queryUrl = buildUrl(collectionId,
+
+// Pick the collection
+if (window.location.href.includes("digital")) {
+  apiState.collectionName = "digital";
+  apiState.approxReleases = 2925;
+} else if (window.location.href.includes("vinyl")) {
+  apiState.collectionName = "vinyl";
+  apiState.approxReleases = 525;
+}
+
+// Load the collection
+const offset = Math.floor(Math.random() * apiState.approxReleases);
+params['offset'] = offset;
+params['minOffset'] = offset - tess.defaultItems;
+params['maxOffset'] = offset + (tess.defaultItems * 2);
+
+const queryUrl = buildUrl(apiState,
   params['minOffset'],
   params['maxOffset'] - params['minOffset'],
   params['filter'],
