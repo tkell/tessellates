@@ -78,6 +78,34 @@ function buildUrl(apiState, offset, limit, filter, folder) {
   return url;
 }
 
+function addRandomInteraction(elementId) {
+  document.getElementById(elementId).addEventListener("click", function(e) {
+    if (uiState.bigImage.isShowing) {
+      return
+    }
+    const offset = Math.floor(Math.random() * apiState.approxReleases);
+    console.log(offset);
+    params['filter'] = undefined;
+    params['offset'] = offset;
+    params['minOffset'] = offset - tess.defaultItems;
+    params['maxOffset'] = offset + (tess.defaultItems * 2);
+    delete params.offsetDelta;
+
+    const queryUrl = buildUrl(apiState,
+      params['minOffset'],
+      params['maxOffset'] - params['minOffset'],
+      params['filter'],
+      params['folder']
+    );
+    fetch(queryUrl)
+      .then(response => response.json())
+      .then(newReleaseData => {
+        releaseData = newReleaseData;
+        renderCanvas(canvas, tess, releaseData, params)
+      });
+  });
+}
+
 function addFilterInteraction(elementId, eventType, filterStringElementId) {
   document.getElementById(elementId).addEventListener(eventType, function(e) {
     if (eventType === "keypress" && e.key !== "Enter") {
@@ -179,8 +207,8 @@ window.addEventListener("load", (event) => {
 
 // Get the host name
 if (window.location.href.includes("localhost")) {
-  apiState.host = "localhost:3000"
-  apiState.protocol = "http"
+  apiState.host = "collects.tide-pool.ca"
+  apiState.protocol = "https"
 } else {
   apiState.host = "collects.tide-pool.ca"
   apiState.protocol = "https"
@@ -224,6 +252,7 @@ fetch(queryUrl)
     addFilterInteraction("filter-input", "keypress", "filter-input");
     addFilterInteraction("filter-submit", "click", "filter-input");
     addFilterInteraction("filter-submit", "keypress", "filter-input");
+    addRandomInteraction("random", "click");
 
     // If we have folders, add some folder filters!
     let testItem = releaseData[0];
