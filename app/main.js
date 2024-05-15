@@ -78,18 +78,23 @@ function buildUrl(apiState, offset, limit, filter, folder) {
   return url;
 }
 
+function setRandomView(params) {
+  const offset = Math.floor(Math.random() * apiState.approxReleases);
+  params['filter'] = undefined;
+  params['offset'] = offset;
+  params['minOffset'] = offset - tess.defaultItems;
+  params['maxOffset'] = offset + (tess.defaultItems * 2);
+  delete params.offsetDelta;
+  return params;
+}
+
+
 function addRandomInteraction(elementId) {
   document.getElementById(elementId).addEventListener("click", function(e) {
     if (uiState.bigImage.isShowing) {
       return
     }
-    const offset = Math.floor(Math.random() * apiState.approxReleases);
-    console.log(offset);
-    params['filter'] = undefined;
-    params['offset'] = offset;
-    params['minOffset'] = offset - tess.defaultItems;
-    params['maxOffset'] = offset + (tess.defaultItems * 2);
-    delete params.offsetDelta;
+    params = setRandomView(params);
 
     const queryUrl = buildUrl(apiState,
       params['minOffset'],
@@ -223,12 +228,8 @@ if (window.location.href.includes("digital")) {
   apiState.approxReleases = 525;
 }
 
-// Load the collection
-const offset = Math.floor(Math.random() * apiState.approxReleases);
-params['offset'] = offset;
-params['minOffset'] = offset - tess.defaultItems;
-params['maxOffset'] = offset + (tess.defaultItems * 2);
-
+// Load a random view ofthe collection
+params = setRandomView(params);
 const queryUrl = buildUrl(apiState,
   params['minOffset'],
   params['maxOffset'] - params['minOffset'],
