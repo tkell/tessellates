@@ -49,7 +49,7 @@ function addFolderClick(elementId, folder) {
       params['minOffset'] = 0;
       params['maxOffset'] = (tess.defaultItems * 2);
       delete params.offsetDelta;
-      uiState.hasPreloaded = false;
+      uiState.needsRefresh = true;
 
       const queryUrl = buildUrl(apiState,
         params['minOffset'],
@@ -95,6 +95,8 @@ function addRandomInteraction(elementId) {
       return
     }
     params = setRandomView(params);
+    document.getElementById("filter-input").value = "";
+    uiState.needsRefresh = true;
 
     const queryUrl = buildUrl(apiState,
       params['minOffset'],
@@ -132,6 +134,7 @@ function addFilterInteraction(elementId, eventType, filterStringElementId) {
         delete params.offsetDelta;
       }
 
+      uiState.needsRefresh = true;
       const queryUrl = buildUrl(apiState,
         params['minOffset'],
         params['maxOffset'] - params['minOffset'],
@@ -175,6 +178,7 @@ function addLocalClearClick() {
 var releaseData = [];
 var uiState = {
   hasPreloaded: false,
+  needRefresh: false,
   preloadedObjects: [],
   closeUpImages: [],
   bigImage: {
@@ -211,7 +215,11 @@ window.addEventListener("load", (event) => {
 });
 
 // Get the host name
+// Leaving this unideal thing in,
+// as a reminder for when I am hacking on collects
 if (window.location.href.includes("localhost")) {
+  // apiState.host = "localhost:3000"
+  // apiState.protocol = "http"
   apiState.host = "collects.tide-pool.ca"
   apiState.protocol = "https"
 } else {

@@ -1,11 +1,10 @@
 let renderHelper = {};
 
-renderHelper.render = function(canvas, data, tessellation, previousData, paginationOffset) {
-  if (!uiState.hasPreloaded) {
-      const canvasClearPromise = new Promise(function (resolve, reject) {
-        canvas.clear();
-        resolve();
-      });
+renderHelper._newLoad = function(canvas, data, tessellation) {
+    const canvasClearPromise = new Promise(function (resolve, reject) {
+      canvas.clear();
+      resolve();
+    });
 
     canvasClearPromise
       .then(() => renderHelper._preload(canvas, data, tessellation))
@@ -16,6 +15,13 @@ renderHelper.render = function(canvas, data, tessellation, previousData, paginat
       .then(() => renderHelper._bounceAfterLoad(data));
 
     uiState.hasPreloaded = true;
+    uiState.needsRefresh = false;
+}
+
+
+renderHelper.render = function(canvas, data, tessellation, previousData, paginationOffset) {
+  if (!uiState.hasPreloaded || uiState.needsRefresh) {
+    renderHelper._newLoad(canvas, data, tessellation);
   } else {
     const numRecordsToRemove = Math.abs(paginationOffset);
     const numRecordsToKeep = data.length - Math.abs(paginationOffset);
