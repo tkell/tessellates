@@ -36,7 +36,7 @@ button.emoji-button {
 }
 
 button.emoji-button-selected {
-    font-size: 25px;
+    font-size: 20px;
     color: transparent;
     text-shadow: 0 0 0 #778899;
 }

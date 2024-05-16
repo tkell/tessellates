@@ -59,14 +59,18 @@ function addFolderClick(elementId, folder) {
       if (uiState.currentFolderElement) {
         uiState.currentFolderElement.classList.remove("emoji-button-selected");
         uiState.currentFolderElement.classList.add("emoji-button");
+        uiState.currentFolderElement.disabled = false;
       }
       element.classList.remove("emoji-button");
       element.classList.add("emoji-button-selected");
+      element.disabled = true;
       uiState.currentFolderElement = element;
     } else {
       uiState.currentFolderElement.classList.remove("emoji-button-selected");
       uiState.currentFolderElement.classList.add("emoji-button");
+      uiState.currentFolderElement.disabled = false;
       uiState.currentFolderElement = null;
+      params = setRandomView(params);
     }
 
     const queryUrl = buildUrl(apiState,
