@@ -40,31 +40,48 @@ function addPagingClick(elementId, offsetDelta) {
 }
 
 function addFolderClick(elementId, folder) {
-  document.getElementById(elementId).addEventListener("click", function(e) {
-    if (!uiState.bigImage.isShowing) {
-      let t = document.getElementById('text');
-      t.textContent = "tessellates";
-      params['folder'] = folder;
-      params['offset'] = 0;
-      params['minOffset'] = 0;
-      params['maxOffset'] = (tess.defaultItems * 2);
-      delete params.offsetDelta;
-      uiState.needsRefresh = true;
-
-      const queryUrl = buildUrl(apiState,
-        params['minOffset'],
-        params['maxOffset'] - params['minOffset'],
-        params['filter'],
-        params['folder']
-      );
-      fetch(queryUrl)
-        .then(response => response.json())
-        .then(newReleaseData => {
-          releaseData = newReleaseData;
-          uiHelper.clearText();
-          renderCanvas(canvas, tess, releaseData, params);
-        });
+  const element = document.getElementById(elementId);
+  element.addEventListener("click", function(e) {
+    if (element === uiState.currentFolderElement || uiState.bigImage.isShowing) {
+      return;
     }
+
+    let t = document.getElementById('text');
+    t.textContent = "tessellates";
+    params['folder'] = folder;
+    params['offset'] = 0;
+    params['minOffset'] = 0;
+    params['maxOffset'] = (tess.defaultItems * 2);
+    delete params.offsetDelta;
+    uiState.needsRefresh = true;
+
+    if (folder !== false) {
+      if (uiState.currentFolderElement) {
+        uiState.currentFolderElement.classList.remove("emoji-button-selected");
+        uiState.currentFolderElement.classList.add("emoji-button");
+      }
+      element.classList.remove("emoji-button");
+      element.classList.add("emoji-button-selected");
+      uiState.currentFolderElement = element;
+    } else {
+      uiState.currentFolderElement.classList.remove("emoji-button-selected");
+      uiState.currentFolderElement.classList.add("emoji-button");
+      uiState.currentFolderElement = null;
+    }
+
+    const queryUrl = buildUrl(apiState,
+      params['minOffset'],
+      params['maxOffset'] - params['minOffset'],
+      params['filter'],
+      params['folder']
+    );
+    fetch(queryUrl)
+      .then(response => response.json())
+      .then(newReleaseData => {
+        releaseData = newReleaseData;
+        uiHelper.clearText();
+        renderCanvas(canvas, tess, releaseData, params);
+      });
   });
 }
 
@@ -185,7 +202,8 @@ var uiState = {
     isShowing: false,
     isAnimating: false
   },
-  localPlayback: false
+  localPlayback: false,
+  currentFolderElement: null
 };
 var apiState = {
   host: null,

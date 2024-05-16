@@ -34,3 +34,9 @@ div#text {
 button.emoji-button {
     font-size: 20px;
 }
+
+button.emoji-button-selected {
+    font-size: 25px;
+    color: transparent;
+    text-shadow: 0 0 0 #778899;
+}
