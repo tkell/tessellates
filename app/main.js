@@ -61,6 +61,7 @@ function addFolderClick(elementId, folder) {
         .then(response => response.json())
         .then(newReleaseData => {
           releaseData = newReleaseData;
+          uiHelper.clearText();
           renderCanvas(canvas, tess, releaseData, params);
         });
     }
@@ -108,6 +109,7 @@ function addRandomInteraction(elementId) {
       .then(response => response.json())
       .then(newReleaseData => {
         releaseData = newReleaseData;
+        uiHelper.clearText();
         renderCanvas(canvas, tess, releaseData, params)
       });
   });
@@ -145,6 +147,7 @@ function addFilterInteraction(elementId, eventType, filterStringElementId) {
         .then(response => response.json())
         .then(newReleaseData => {
           releaseData = newReleaseData;
+          uiHelper.clearText();
           renderCanvas(canvas, tess, releaseData, params)
         });
     }

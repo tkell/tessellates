@@ -25,6 +25,11 @@ uiHelper.drawPreloadHexagons = function(canvas, tess, uiState) {
 uiHelper.waitFor = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 // Text updates
+uiHelper.clearText = function(record) {
+  var t = document.getElementById('text');
+  t.textContent = '_';
+}
+
 uiHelper.updateTextWithArtistAndTitle = function(record) {
   var t = document.getElementById('text');
   t.textContent = `${record.artist} - ${record.title} [${record.label}]`;

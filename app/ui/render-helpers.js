@@ -2,6 +2,7 @@ let renderHelper = {};
 
 renderHelper._newLoad = function(canvas, data, tessellation) {
     const canvasClearPromise = new Promise(function (resolve, reject) {
+      uiHelper.clearTrack();
       canvas.clear();
       resolve();
     });
