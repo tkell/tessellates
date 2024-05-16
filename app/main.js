@@ -129,11 +129,7 @@ function addFilterInteraction(elementId, eventType, filterStringElementId) {
         params['maxOffset'] = (tess.defaultItems * 2);
         delete params.offsetDelta;
       } else {
-        params['filter'] = undefined;
-        params['offset'] = 0;
-        params['minOffset'] = 0;
-        params['maxOffset'] = (tess.defaultItems * 2);
-        delete params.offsetDelta;
+        params = setRandomView(params);
       }
 
       uiState.needsRefresh = true;
