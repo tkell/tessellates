@@ -6,6 +6,7 @@ function renderCanvas(canvas, tess, data, params) {
   tess.render(canvas, currentData, previousData, params['offsetDelta']);
 }
 
+
 function addPagingClick(elementId, offsetDelta) {
   document.getElementById(elementId).addEventListener("click", function(e) {
     if (!uiState.bigImage.isShowing && params['offset'] + offsetDelta >= 0) {
@@ -18,7 +19,7 @@ function addPagingClick(elementId, offsetDelta) {
 
       if (offsetDelta > 0 && potentialNewMax > params['maxOffset']) {
         const limit = potentialNewMax - params['maxOffset'];
-        const queryUrl = buildUrl(apiState, params['maxOffset'], limit, params['filter'], params['folder']);
+        const queryUrl = buildUrl(apiState, params['maxOffset'], limit, params);
         fetch(queryUrl)
           .then(response => response.json())
           .then(newReleaseData => {
@@ -27,7 +28,7 @@ function addPagingClick(elementId, offsetDelta) {
           });
       } else if (offsetDelta < 0 & potentialNewMin < params['minOffset']) {
         const limit = params['minOffset'] - potentialNewMin;
-        const queryUrl = buildUrl(apiState, potentialNewMin, limit, params['filter'], params['folder']);
+        const queryUrl = buildUrl(apiState, potentialNewMin, limit, params);
         fetch(queryUrl)
           .then(response => response.json())
           .then(newReleaseData => {
@@ -76,8 +77,7 @@ function addFolderClick(elementId, folder) {
     const queryUrl = buildUrl(apiState,
       params['minOffset'],
       params['maxOffset'] - params['minOffset'],
-      params['filter'],
-      params['folder']
+      params
     );
     fetch(queryUrl)
       .then(response => response.json())
@@ -89,7 +89,11 @@ function addFolderClick(elementId, folder) {
   });
 }
 
-function buildUrl(apiState, offset, limit, filter, folder) {
+function buildUrl(apiState, offset, limit, params) {
+  const filter = params['filter'] || undefined;
+  const folder = params['folder'] || undefined;
+  const releaseYear = params['releaseYear'] || undefined;
+
   let url = `${apiState.protocol}://${apiState.host}/collections/${apiState.collectionName}?serve_json=true&limit=${limit}&offset=${offset}`;
   if (filter) {
     url = url + `&filter_string=${filter}`;
@@ -97,12 +101,16 @@ function buildUrl(apiState, offset, limit, filter, folder) {
   if (folder) {
     url = url + `&folder=${folder}`;
   }
+  if (releaseYear) {
+    url = url + `&release_year=${releaseYear}`;
+  }
   return url;
 }
 
 function setRandomView(params) {
   const offset = Math.floor(Math.random() * apiState.approxReleases);
   params['filter'] = undefined;
+  params['releaseYear'] = undefined;
   params['offset'] = offset;
   params['minOffset'] = offset - tess.defaultItems;
   params['maxOffset'] = offset + (tess.defaultItems * 2);
@@ -123,8 +131,7 @@ function addRandomInteraction(elementId) {
     const queryUrl = buildUrl(apiState,
       params['minOffset'],
       params['maxOffset'] - params['minOffset'],
-      params['filter'],
-      params['folder']
+      params
     );
     fetch(queryUrl)
       .then(response => response.json())
@@ -136,15 +143,19 @@ function addRandomInteraction(elementId) {
   });
 }
 
-function addFilterInteraction(elementId, eventType, filterStringElementId) {
+function updateParamsOnKeypress(elementId, paramsField) {
+  document.getElementById(elementId).addEventListener("keyup", function(e) {
+    params[paramsField] = e.target.value;
+  });
+}
+
+function addFilterInteraction(elementId, eventType) {
   document.getElementById(elementId).addEventListener(eventType, function(e) {
     if (eventType === "keypress" && e.key !== "Enter") {
       return;
     }
     if (!uiState.bigImage.isShowing) {
-      let searchString = document.getElementById(filterStringElementId).value;
-      if (searchString.length > 0) {
-        params['filter'] = searchString;
+      if ((params['filter'] && params['filter'].length > 0) || (params['releaseYear'] && params['releaseYear'].length > 0)) {
         params['offset'] = 0;
         params['minOffset'] = 0;
         params['maxOffset'] = (tess.defaultItems * 2);
@@ -157,8 +168,7 @@ function addFilterInteraction(elementId, eventType, filterStringElementId) {
       const queryUrl = buildUrl(apiState,
         params['minOffset'],
         params['maxOffset'] - params['minOffset'],
-        params['filter'],
-        params['folder']
+        params
       );
       fetch(queryUrl)
         .then(response => response.json())
@@ -251,7 +261,7 @@ if (window.location.href.includes("localhost")) {
 // Pick the collection
 if (window.location.href.includes("digital")) {
   apiState.collectionName = "digital";
-  apiState.approxReleases = 2925;
+  apiState.approxReleases = 3001;
 } else if (window.location.href.includes("vinyl")) {
   apiState.collectionName = "vinyl";
   apiState.approxReleases = 525;
@@ -262,8 +272,7 @@ params = setRandomView(params);
 const queryUrl = buildUrl(apiState,
   params['minOffset'],
   params['maxOffset'] - params['minOffset'],
-  params['filter'],
-  params['folder']
+  params
 );
 
 fetch(queryUrl)
@@ -279,9 +288,13 @@ fetch(queryUrl)
     addPagingClick("forward-medium", tess.paging.medium);
     addPagingClick("forward-big", tess.paging.big);
 
-    addFilterInteraction("filter-input", "keypress", "filter-input");
-    addFilterInteraction("filter-submit", "click", "filter-input");
-    addFilterInteraction("filter-submit", "keypress", "filter-input");
+    updateParamsOnKeypress('release-year-input', 'releaseYear');
+    updateParamsOnKeypress('filter-input', 'filter');
+
+    addFilterInteraction("filter-input", "keypress");
+    addFilterInteraction("release-year-input", "keypress");
+    addFilterInteraction("filter-submit", "click");
+    addFilterInteraction("filter-submit", "keypress");
     addRandomInteraction("random", "click");
 
     // If we have folders, add some folder filters!
