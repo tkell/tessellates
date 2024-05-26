@@ -145,7 +145,14 @@ function addRandomInteraction(elementId) {
 
 function updateParamsOnKeypress(elementId, paramsField) {
   document.getElementById(elementId).addEventListener("keyup", function(e) {
-    params[paramsField] = e.target.value;
+    if (paramsField === "releaseYear") {
+      const re = /^\d{4}(?:\s*-\s*\d{4})?$/
+      if (re.test(e.target.value)) {
+        params[paramsField] = e.target.value;
+      }
+    } else {
+      params[paramsField] = e.target.value;
+    }
   });
 }
 
