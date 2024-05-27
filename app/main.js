@@ -93,6 +93,7 @@ function buildUrl(apiState, offset, limit, params) {
   const filter = params['filter'] || undefined;
   const folder = params['folder'] || undefined;
   const releaseYear = params['releaseYear'] || undefined;
+  const sort = params['sort'] || undefined;
 
   let url = `${apiState.protocol}://${apiState.host}/collections/${apiState.collectionName}?serve_json=true&limit=${limit}&offset=${offset}`;
   if (filter) {
@@ -103,6 +104,9 @@ function buildUrl(apiState, offset, limit, params) {
   }
   if (releaseYear) {
     url = url + `&release_year=${releaseYear}`;
+  }
+  if (sort) {
+    url = url + `&sort=${sort}`;
   }
   return url;
 }
@@ -150,7 +154,13 @@ function updateParamsOnKeypress(elementId, paramsField) {
       if (re.test(e.target.value)) {
         params[paramsField] = e.target.value;
       }
-    } else {
+    } else if (paramsField === "sort") {
+      const re = /^[atyl]{0,4}$/
+      if (re.test(e.target.value)) {
+        params[paramsField] = e.target.value;
+      }
+    }
+    else {
       params[paramsField] = e.target.value;
     }
   });
@@ -297,6 +307,7 @@ fetch(queryUrl)
 
     updateParamsOnKeypress('release-year-input', 'releaseYear');
     updateParamsOnKeypress('filter-input', 'filter');
+    updateParamsOnKeypress('sort-input', 'sort');
 
     addFilterInteraction("filter-input", "keypress");
     addFilterInteraction("release-year-input", "keypress");
