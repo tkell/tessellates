@@ -149,6 +149,9 @@ function addRandomInteraction(elementId) {
 
 function updateParamsOnKeypress(elementId, paramsField) {
   document.getElementById(elementId).addEventListener("keyup", function(e) {
+    if (e.target.value === "") {
+      delete params[paramsField];
+    } else
     if (paramsField === "releaseYear") {
       const re = /^\d{4}(?:\s*-\s*\d{4})?$/
       if (re.test(e.target.value)) {
