@@ -169,13 +169,21 @@ function updateParamsOnKeypress(elementId, paramsField) {
   });
 }
 
+function filterParamsAreSet(params) {
+  const hasFilter = params['filter'] && params['filter'].length > 0;
+  const hasReleaseYear = params['releaseYear'] && params['releaseYear'].length > 0;
+  const hasSort = params['sort'] && params['sort'].length > 0;
+
+  return (hasFilter || hasReleaseYear || hasSort);
+}
+
 function addFilterInteraction(elementId, eventType) {
   document.getElementById(elementId).addEventListener(eventType, function(e) {
     if (eventType === "keypress" && e.key !== "Enter") {
       return;
     }
     if (!uiState.bigImage.isShowing) {
-      if ((params['filter'] && params['filter'].length > 0) || (params['releaseYear'] && params['releaseYear'].length > 0)) {
+      if (filterParamsAreSet(params)) {
         params['offset'] = 0;
         params['minOffset'] = 0;
         params['maxOffset'] = (tess.defaultItems * 2);
