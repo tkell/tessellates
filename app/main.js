@@ -158,7 +158,7 @@ function updateParamsOnKeypress(elementId, paramsField) {
         params[paramsField] = e.target.value;
       }
     } else if (paramsField === "sort") {
-      const re = /^[atyl]{0,4}$/
+      const re = /^[atylp]{0,4}$/
       if (re.test(e.target.value)) {
         params[paramsField] = e.target.value;
       }
