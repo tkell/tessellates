@@ -322,6 +322,7 @@ fetch(queryUrl)
 
     addFilterInteraction("filter-input", "keypress");
     addFilterInteraction("release-year-input", "keypress");
+    addFilterInteraction("sort-input", "keypress");
     addFilterInteraction("filter-submit", "click");
     addFilterInteraction("filter-submit", "keypress");
     addRandomInteraction("random", "click");
