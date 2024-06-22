@@ -129,7 +129,9 @@ function addRandomInteraction(elementId) {
       return
     }
     params = setRandomView(params);
+    document.getElementById("release-year-input").value = "";
     document.getElementById("filter-input").value = "";
+    document.getElementById("sort-input").value = "";
     uiState.needsRefresh = true;
 
     const queryUrl = buildUrl(apiState,
