@@ -233,6 +233,35 @@ function addLocalClearClick() {
   });
 }
 
+function addLoginClick() {
+  document.getElementById('login-submit').addEventListener('click', async (e) => {
+    const email = document.getElementById('login-input').value;
+    const password = document.getElementById('password-input').value;
+
+    try {
+      const url= `${apiState.protocol}://${apiState.host}/login`;
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+        credentials: 'include' // need this for cookies
+      });
+
+      if (!response.ok) {
+        throw new Error('Login failed');
+      }
+
+      const data = await response.json();
+      console.log('Login successful!');
+    } catch (error) {
+      console.error('Login error:', error);
+    }
+  });
+}
+
+
 // ---- Entrypoint is here:
 
 var releaseData = [];
@@ -279,10 +308,10 @@ window.addEventListener("load", (event) => {
 // Leaving this unideal thing in,
 // as a reminder for when I am hacking on collects
 if (window.location.href.includes("localhost")) {
-  // apiState.host = "localhost:3000"
-  // apiState.protocol = "http"
-  apiState.host = "collects.tide-pool.ca"
-  apiState.protocol = "https"
+  apiState.host = "localhost:3000"
+  apiState.protocol = "http"
+  // apiState.host = "collects.tide-pool.ca"
+  // apiState.protocol = "https"
 } else {
   apiState.host = "collects.tide-pool.ca"
   apiState.protocol = "https"
@@ -310,6 +339,8 @@ fetch(queryUrl)
   .then(data => {
     releaseData = data;
     renderCanvas(canvas, tess, releaseData, params)
+
+    addLoginClick();
 
     addPagingClick("back-small", tess.paging.small * -1);
     addPagingClick("back-medium", tess.paging.medium * -1);
