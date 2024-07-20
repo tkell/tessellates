@@ -130,29 +130,12 @@ renderHelper._setMouseListeners = function(record, data, tessellation) {
     uiHelper.updateTextForFocus(record);
     const play = vlcHelper.makePlayFunc(record);
     record.playFunc = function() {
-      // call new playbacks API
-      const url= `${apiState.protocol}://${apiState.host}/playbacks`;
-      fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({"release_id": record.id}),
-        credentials: 'include'
-      }).then(response => {
-        console.log('response:', response);
-      }).catch(error => {
-        console.error('error:', error);
-      });
-
+      apiHelper.logPlayback(record);
       play();
       uiHelper.runBackgroundGradient(record);
-
     }
 
-
     document.getElementById("text").addEventListener("click", record.playFunc);
-
     uiHelper.replaceOtherRecords(record, data, tessellation.timeouts.slow)
       .then(() => {
         uiHelper.hideExistingImages(data);
