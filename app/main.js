@@ -254,16 +254,36 @@ function addLoginClick() {
       }
 
       const data = await response.json();
-      console.log('Login successful!');
+      const expires_at = new Date(data.expires_at);
+      const username = data.username;
+      document.cookie = `loggedInUser=${username}; expires=${expires_at.toUTCString()}; path=/`;
+      displayLogin();
     } catch (error) {
       console.error('Login error:', error);
     }
   });
 }
 
+function displayLogin() {
+  if (checkCookieExistence('loggedInUser')) {
+    document.getElementById('playback-div').style.visibility = 'visible';
+  }
+}
+
+function checkCookieExistence(cookie_name) {
+  let decodedCookie = decodeURIComponent(document.cookie);
+  let cookies = decodedCookie.split(';');
+  for (let i = 0; i < cookies.length; i++) {
+    const name = cookies[i].split('=')[0].trim();
+    if (name === cookie_name) {
+      return true;
+    }
+  }
+  return false;
+}
+
 
 // ---- Entrypoint is here:
-
 var releaseData = [];
 var uiState = {
   hasPreloaded: false,
@@ -301,6 +321,7 @@ var canvas = null;
 window.addEventListener("load", (event) => {
   canvas = new fabric.Canvas('vinylCanvas');
   canvas.hoverCursor = 'default';
+  displayLogin();
   uiHelper.drawPreloadHexagons(canvas, tess, uiState);
 });
 
