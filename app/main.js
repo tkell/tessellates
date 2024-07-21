@@ -312,6 +312,8 @@ if (params['t'] == 'square') {
   tess = makeSquare();
 } else if (params['t']== 'triangle') {
   tess = makeTriangle();
+} else if (params['t']== 'circle') {
+  tess = makeCircle();
 } else {
   tess = makeRhombus();
 }
