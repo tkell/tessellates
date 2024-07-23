@@ -266,6 +266,7 @@ renderHelper._createClickableMask = function(record, tessellation) {
   let width = tessellation.xSize;
   let height = tessellation.ySize;
   let polygonPoints = tessellation.polygonPoints;
+  let radius = tessellation.itemRadius
 
   let params = {
       left: record.clickX,
@@ -273,10 +274,16 @@ renderHelper._createClickableMask = function(record, tessellation) {
       angle: record.angle,
       perPixelTargetFind: true,
       fill: 'white',
-      opacity: 0.001,
+      opacity: 0.0001,
       width: width,
       height: height,
+      radius: radius,
       selectable: false
+  }
+
+  if (fabricKlass === fabric.Circle) {
+    delete params.width;
+    delete params.height;
   }
 
   if (!polygonPoints) {

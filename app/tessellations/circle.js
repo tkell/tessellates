@@ -1,6 +1,6 @@
 makeCircle = function() {
   circle = {};
-  circle.itemRadius = 150;
+  circle.itemRadius = 50;
   circle.radius = 350;
   circle.size = 1000;
   circle.defaultItems = 12;
@@ -14,15 +14,12 @@ makeCircle = function() {
 
   // Create a circle clip path for each item
   let circleClipPath = new fabric.Circle({
-    originX: 'center',
-    originY: 'center',
     radius: circle.itemRadius,
     selectable: false
   });
 
   // Create a larger circle for the close-up view
   let clipPathBig = new fabric.Circle({
-    radius: circle.itemRadius * 2,
     originX: 'center',
     originY: 'center',
     radius: circle.itemRadius * 2,
@@ -31,13 +28,14 @@ makeCircle = function() {
 
   circle.prepare = function(data) {
     for (let i = 0; i < data.length; i++) {
-      let angle = i * circle.angleIncrement; // Calculate angle for each item
-      let radians = angle * Math.PI / 180; // Convert angle to radians
+      let angle = 0;
+      let radians = i * circle.angleIncrement * Math.PI / 180; // Convert angle to radians
       let record = data[i];
 
       // Calculate position on the circle
       record.x = circle.size / 2 + circle.radius * Math.cos(radians);
       record.y = circle.size / 2 + circle.radius * Math.sin(radians);
+      record.itemRadius = circle.itemRadius;
 
       // Additional properties for each item
       record.angle = angle;
