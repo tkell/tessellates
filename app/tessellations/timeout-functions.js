@@ -217,6 +217,11 @@ let timeoutFunctions = [
   [getLinearTimeout, getLinearReversedTimeout]
 ];
 
+// add more here, the square ones are close, but need to be 12 and not 9
+let circleTimeoutFunctions = [
+  [getGroupedTimeout, getGroupedReversedTimeout],
+]
+
 let squareTimeoutFunctions = [
   [getGroupedTimeout, getGroupedReversedTimeout],
   [getLeftToRightSquareTimeout, getLeftToRightSquareReversedTimeout],

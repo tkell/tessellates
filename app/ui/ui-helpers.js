@@ -225,11 +225,9 @@ function promiseToLoadCloseUpImage(record, otherRecord, timeoutMs) {
 
 uiHelper.loadCloseUpReplacementImage = function(record, otherRecord) {
   return fabricImageLoad(record.imagePath).then(tempImage => {
-    tempImage.clipPath = otherRecord.clipPath;
     tempImage.clipPath = fabric.util.object.clone(otherRecord.clipPath);
     tempImage.clipPath.left = otherRecord.tempClipPathX;
     tempImage.clipPath.top = otherRecord.tempClipPathY;
-
     addAndClipImage(
       tempImage,
       tempImage.clipPath,

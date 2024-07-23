@@ -7,7 +7,7 @@ makeCircle = function() {
   circle.angleIncrement = 360 / circle.defaultItems;
   circle.closeUpIndexes = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
   circle.paging = {"small": 1, "medium": 3, "big": 12};
-  circle.timeoutFunctions = timeoutFunctions.concat(squareTimeoutFunctions); // change!
+  circle.timeoutFunctions = timeoutFunctions.concat(circleTimeoutFunctions);
   circle.timeouts = {"slow": 725, "fast": 350};
   circle.fabricKlass = fabric.Circle;
   circle.preloadRadius = 110;
@@ -22,7 +22,7 @@ makeCircle = function() {
   let clipPathBig = new fabric.Circle({
     originX: 'center',
     originY: 'center',
-    radius: circle.radius * 0.85,
+    radius: circle.radius * 0.9,
     selectable: false
   });
 
@@ -45,9 +45,9 @@ makeCircle = function() {
       record.bigClipPath = clipPathBig;
       record.bigImageX = circle.size / 2;
       record.bigImageY = circle.size / 2;
-      record.tempClipPathX = record.x - circle.radius;
-      record.tempClipPathY = record.y - (circle.radius * 0.75)
 
+      record.tempClipPathX = record.x - circle.radius - circle.itemRadius;
+      record.tempClipPathY = record.y - circle.radius - circle.itemRadius;
       record.isCloseUp = true;
     }
 

@@ -126,7 +126,6 @@ renderHelper._setMouseListeners = function(record, data, tessellation) {
     if (uiState.localPlayback) {
       uiHelper.updateTextForLocalPlayback(record);
     }
-
     uiHelper.updateTextForFocus(record);
     const play = vlcHelper.makePlayFunc(record);
     record.playFunc = function() {
@@ -134,11 +133,10 @@ renderHelper._setMouseListeners = function(record, data, tessellation) {
       play();
       uiHelper.runBackgroundGradient(record);
     }
-
     document.getElementById("text").addEventListener("click", record.playFunc);
-
     const annotationUrl = `${apiState.protocol}://${apiState.host}/releases/${record.id}/annotations`;
     document.getElementById("annotation-link").setAttribute("href", annotationUrl);
+
     uiHelper.replaceOtherRecords(record, data, tessellation.timeouts.slow)
       .then(() => {
         uiHelper.hideExistingImages(data);
