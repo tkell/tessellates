@@ -10,7 +10,7 @@ makeCircle = function() {
   circle.closeUpIndexes = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
   circle.paging = {"small": 1, "medium": 6, "big": 12};
   circle.timeoutFunctions = timeoutFunctions.concat(circleTimeoutFunctions);
-  circle.timeouts = {"slow": 725, "fast": 350};
+  circle.timeouts = {"slow": 600, "fast": 275};
   circle.fabricKlass = fabric.Circle;
   circle.preloadRadius = 100;
 
@@ -24,7 +24,7 @@ makeCircle = function() {
   let clipPathBig = new fabric.Circle({
     originX: 'center',
     originY: 'center',
-    radius: circle.radius * 0.9,
+    radius: circle.radius * 1.25,
     selectable: false
   });
 
