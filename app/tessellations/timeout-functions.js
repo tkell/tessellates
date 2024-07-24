@@ -27,6 +27,16 @@ function getModReversedTimeout(index, maxIndex, maxTimeMs) {
   return maxTimeMs - getModTimeout(index, maxIndex, maxTimeMs);
 }
 
+function getModCircleTimeout(index, maxIndex, maxTimeMs) {
+  let numSteps = maxIndex / 3;
+  let step = Math.floor(maxTimeMs / numSteps);
+  return step * Math.floor(index % 3);
+}
+
+function getModReversedCircleTimeout(index, maxIndex, maxTimeMs) {
+  return maxTimeMs - getModTimeout(index, maxIndex, maxTimeMs);
+}
+
 function getTopTimeout(index, maxIndex, maxTimeMs) {
   let numSteps = 6;
   let step = Math.floor(maxTimeMs / numSteps);
@@ -217,9 +227,9 @@ let timeoutFunctions = [
   [getLinearTimeout, getLinearReversedTimeout]
 ];
 
-// add more here, the square ones are close, but need to be 12 and not 9
 let circleTimeoutFunctions = [
   [getGroupedTimeout, getGroupedReversedTimeout],
+  [getModCircleTimeout, getModReversedCircleTimeout],
 ]
 
 let squareTimeoutFunctions = [
