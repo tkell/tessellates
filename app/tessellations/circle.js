@@ -7,6 +7,7 @@ makeCircle = function() {
   circle.yMoveOffset = 0;
   circle.defaultItems = 12;
   circle.angleIncrement = 360 / circle.defaultItems;
+  circle.angleOffset = Math.floor(Math.random() * circle.defaultItems);
   circle.closeUpIndexes = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
   circle.paging = {"small": 1, "medium": 6, "big": 12};
   circle.timeoutFunctions = timeoutFunctions.concat(circleTimeoutFunctions);
@@ -30,15 +31,13 @@ makeCircle = function() {
 
   circle.prepare = function(data) {
     for (let i = 0; i < data.length; i++) {
-      let angle = 0;
-      let radians = i * circle.angleIncrement * Math.PI / 180;
       let record = data[i];
 
+      const radians = (i + circle.angleOffset) * circle.angleIncrement * Math.PI / 180;
       record.x = circle.size / 2 + circle.radius * Math.cos(radians);
       record.y = circle.size / 2 + circle.radius * Math.sin(radians);
       record.itemRadius = circle.itemRadius;
-
-      record.angle = angle;
+      record.angle = 0;
       record.imageX = record.x;
       record.imageY = record.y;
       record.clickX = record.x - circle.itemRadius;
