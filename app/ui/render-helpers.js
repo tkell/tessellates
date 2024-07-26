@@ -1,5 +1,15 @@
 let renderHelper = {};
 
+renderHelper.render = function(canvas, data, tessellation, previousData, paginationOffset) {
+  if (!uiState.hasPreloaded || uiState.needsRefresh) {
+    renderHelper._newLoad(canvas, data, tessellation);
+  } else {
+    renderHelper._moveLoad(canvas, data, tessellation, previousData, paginationOffset);
+  }
+}
+
+// "Private" methods from here:
+
 renderHelper._newLoad = function(canvas, data, tessellation) {
     const canvasClearPromise = new Promise(function (resolve, reject) {
       uiHelper.clearTrack();
@@ -21,19 +31,7 @@ renderHelper._newLoad = function(canvas, data, tessellation) {
     uiState.needsRefresh = false;
 }
 
-renderHelper._applyTimeouts = function(data, tessellation) {
-  const timeoutFunction = renderHelper._pickTimeout(tessellation);
-  for (let i = 0; i < data.length; i++) {
-    let record = data[i];
-    record.timeout = timeoutFunction(i, data.length, tessellation.timeouts["slow"])
-  }
-}
-
-
-renderHelper.render = function(canvas, data, tessellation, previousData, paginationOffset) {
-  if (!uiState.hasPreloaded || uiState.needsRefresh) {
-    renderHelper._newLoad(canvas, data, tessellation);
-  } else {
+renderHelper._moveLoad = function(canvas, data, tessellation, previousData, paginationOffset) {
     // refactor all this to be `moveLoad`, too
     const numRecordsToRemove = Math.abs(paginationOffset);
     const numRecordsToKeep = data.length - Math.abs(paginationOffset);
@@ -62,11 +60,17 @@ renderHelper.render = function(canvas, data, tessellation, previousData, paginat
         .then(() => renderHelper._addClickState(canvas, data, tessellation))
         .then(() => renderHelper._addAmbientAnimations(data, tessellation));
     }, 1200);
+}
+
+renderHelper._applyTimeouts = function(data, tessellation) {
+  const timeoutFunction = renderHelper._pickTimeout(tessellation);
+  for (let i = 0; i < data.length; i++) {
+    let record = data[i];
+    record.timeout = timeoutFunction(i, data.length, tessellation.timeouts["slow"])
   }
 }
 
 
-// "Private" methods from here:
 renderHelper._bounceAfterLoad = function (data) {
   for (let i = 0; i < data.length; i++) {
       const record = data[i];
