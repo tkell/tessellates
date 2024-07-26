@@ -11,7 +11,9 @@ renderHelper._newLoad = function(canvas, data, tessellation) {
       .then(() => renderHelper._preload(canvas, data, tessellation))
       .then(() => renderHelper._addStartingStates(data, tessellation))
       .then(() => imageHelper.loadImages(data))
+      .then(() => renderHelper._applyTimeouts(data, tessellation))
       .then(() => renderHelper._createImagesWithTimeout(canvas, data, tessellation))
+      .then(() => renderHelper._addClickState(canvas, data, tessellation))
       .then(() => renderHelper._addAmbientAnimations(data, tessellation))
       .then(() => renderHelper._bounceAfterLoad(data));
 
@@ -19,11 +21,20 @@ renderHelper._newLoad = function(canvas, data, tessellation) {
     uiState.needsRefresh = false;
 }
 
+renderHelper._applyTimeouts = function(data, tessellation) {
+  const timeoutFunction = renderHelper._pickTimeout(tessellation);
+  for (let i = 0; i < data.length; i++) {
+    let record = data[i];
+    record.timeout = timeoutFunction(i, data.length, tessellation.timeouts["slow"])
+  }
+}
+
 
 renderHelper.render = function(canvas, data, tessellation, previousData, paginationOffset) {
   if (!uiState.hasPreloaded || uiState.needsRefresh) {
     renderHelper._newLoad(canvas, data, tessellation);
   } else {
+    // refactor all this to be `moveLoad`, too
     const numRecordsToRemove = Math.abs(paginationOffset);
     const numRecordsToKeep = data.length - Math.abs(paginationOffset);
     renderHelper._fadeOutOldRecords(data, previousData,paginationOffset, numRecordsToRemove)
@@ -48,6 +59,7 @@ renderHelper.render = function(canvas, data, tessellation, previousData, paginat
             canvas.remove(oldRecordToFadeOut.image)
           }
         })
+        .then(() => renderHelper._addClickState(canvas, data, tessellation))
         .then(() => renderHelper._addAmbientAnimations(data, tessellation));
     }, 1200);
   }
@@ -219,16 +231,13 @@ renderHelper._preload = function(canvas, data, tessellation) {
 
 renderHelper._createImagesWithTimeout = function(canvas, data, tessellation) {
   let imageLoadPromises = [];
-  const timeoutFunction = renderHelper._pickTimeout(tessellation);
   for (var i = 0; i < data.length; i++) {
     const record = data[i];
-    const timeout = timeoutFunction(i, data.length, tessellation.timeouts["slow"])
-
     let p = new Promise(function (resolve, reject) {
       setTimeout(() => {
         renderHelper._createImageAndClickState(canvas, record, data, tessellation);
         resolve();
-      }, timeout);
+      }, record.timeout);
     })
     imageLoadPromises.push(p);
   }
@@ -236,17 +245,26 @@ renderHelper._createImagesWithTimeout = function(canvas, data, tessellation) {
 }
 
 renderHelper._createImagesWithNoTimeout = function(canvas, data, tessellation) {
-  for (var i = 0; i < data.length; i++) {
+  const dataSortedByTimeout = data.sort((a, b) => a.timeout - b.timeout);
+  for (var i = 0; i < dataSortedByTimeout.length; i++) {
     let record = data[i];
     renderHelper._createImageAndClickState(canvas, record, data, tessellation);
   }
 }
 
+renderHelper._addClickState= function(canvas, data, tessellation) {
+  const dataSortedByTimeout = data.sort((a, b) => a.timeout - b.timeout);
+  for (var i = 0; i < dataSortedByTimeout.length; i++) {
+    const record = data[i];
+    record.clickable = renderHelper._createClickableMask(record, tessellation)
+    renderHelper._createDefaultClickState(canvas, record, data);
+  }
+}
+
+
 renderHelper._createImageAndClickState = function(canvas, record, data, tessellation) {
   canvas.remove(record.preloadObject);
   record.image = renderHelper._createAndRenderImage(canvas, record);
-  record.clickable = renderHelper._createClickableMask(record, tessellation)
-  renderHelper._createDefaultClickState(canvas, record, data);
 }
 
 renderHelper._createAndRenderImage = function(canvas, record) {
@@ -255,7 +273,7 @@ renderHelper._createAndRenderImage = function(canvas, record) {
   record.image.selectable = false;
   record.image.clipPath = record.clipPath;
   canvas.add(record.image);
-  canvas.sendToBack(record.image);
+  canvas.bringToFront(record.image);
   return record.image;
 }
 
