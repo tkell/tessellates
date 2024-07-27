@@ -266,7 +266,11 @@ function addLoginClick() {
 
 function displayLogin() {
   if (checkCookieExistence('loggedInUser')) {
-    document.getElementById('playback-div').style.visibility = 'visible';
+    document.getElementById('annotation-span').style.visibility = 'visible';
+    const playbackDiv = document.getElementById('playback-div')
+    if (playbackDiv) {
+      playbackDiv.style.visibility = 'visible';
+    }
   }
 }
 
