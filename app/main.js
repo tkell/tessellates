@@ -270,6 +270,9 @@ function addLoginInteraction(elementId, eventType) {
 function displayLogin() {
   if (checkCookieExistence('loggedInUser')) {
     document.getElementById('annotation-span').style.visibility = 'visible';
+    document.getElementById('login-input').disabled = true;
+    document.getElementById('password-input').disabled = true;
+    document.getElementById('login-submit').disabled = true;
     const playbackDiv = document.getElementById('playback-div')
     if (playbackDiv) {
       playbackDiv.style.visibility = 'visible';
