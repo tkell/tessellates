@@ -233,8 +233,11 @@ function addLocalClearClick() {
   });
 }
 
-function addLoginClick() {
-  document.getElementById('login-submit').addEventListener('click', async (e) => {
+function addLoginInteraction(elementId, eventType) {
+  document.getElementById(elementId).addEventListener(eventType, async (e) => {
+    if (eventType === "keypress" && e.key !== "Enter") {
+      return;
+    }
     const email = document.getElementById('login-input').value;
     const password = document.getElementById('password-input').value;
 
@@ -367,7 +370,9 @@ fetch(queryUrl)
     releaseData = data;
     renderCanvas(canvas, tess, releaseData, params)
 
-    addLoginClick();
+    addLoginInteraction("password-input", "keypress");
+    addLoginInteraction("login-submit", "keypress");
+    addLoginInteraction("login-submit", "click");
 
     addPagingClick("back-small", tess.paging.small * -1);
     addPagingClick("back-medium", tess.paging.medium * -1);
