@@ -113,7 +113,9 @@ renderHelper._addStartingStateToRecord = function(record, index, tessellation) {
   record.nextTrackToShow = 0;
   record.isAnimating = false;
 
-  record.currentVariant = record.variants.find(variant => variant.id === record.current_variant_id);
+  if (record.currentVariant === undefined) {
+    record.currentVariant = record.variants.find(variant => variant.id === record.current_variant_id);
+  }
   record.imagePath = record.currentVariant.image_path + ".jpg";
   record.smallImagePath = record.currentVariant.image_path + "-small.jpg";
 
@@ -209,6 +211,7 @@ renderHelper._preload = function(canvas, data, tessellation) {
   const timeoutFunction = renderHelper._pickTimeout(tessellation);
   for (var i = 0; i < data.length; i++) {
     let record = data[i];
+    record.currentVariant = record.variants.find(variant => variant.id === record.current_variant_id);
     let preloadCircle = uiState.preloadedObjects[i];
     const timeoutMs = timeoutFunction(i, data.length, tessellation.timeouts["slow"])
 
@@ -218,7 +221,7 @@ renderHelper._preload = function(canvas, data, tessellation) {
         const radius = tessellation.preloadRadius;
         let hexPoints = uiHelper.getHexPoints(radius);
         let hex = new fabric.Polygon(hexPoints, {left: record.imageX - radius, top: record.imageY - radius});
-        let gradient = uiHelper.getGradient(record.colors[0], record.colors[1], hex.height);
+        let gradient = uiHelper.getGradient(record.currentVariant.colors[0], record.currentVariant.colors[1], hex.height);
         hex.set('fill', gradient)
         canvas.add(hex);
         record.preloadObject = hex;

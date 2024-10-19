@@ -320,12 +320,23 @@ let params = getSearchParameters();
 let tess = null;
 if (params['t'] == 'square') {
   tess = makeSquare();
+} else if (params['t']== 'rhombus') {
+  tess = makeRhombus();
 } else if (params['t']== 'triangle') {
   tess = makeTriangle();
 } else if (params['t']== 'circle') {
   tess = makeCircle();
 } else {
-  tess = makeRhombus();
+  let random = Math.floor(Math.random() * 4);
+  if (random == 0) {
+    tess = makeSquare();
+  } else if (random == 1) {
+    tess = makeRhombus();
+  } else if (random == 2) {
+    tess = makeTriangle();
+  } else {
+    tess = makeCircle();
+  }
 }
 params = parseTessellatesParams(params, tess)
 var canvas = null;

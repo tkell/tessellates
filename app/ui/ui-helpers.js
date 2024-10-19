@@ -44,16 +44,16 @@ uiHelper.updateTextWithTitle = function(record) {
 
 uiHelper.updateTextForFocus = function(record) {
   const textElement = document.getElementById("text");
-  const gradientString = `linear-gradient(90deg, ${record.colors[0]}, ${record.colors[1]})`
+  const gradientString = `linear-gradient(90deg, ${record.currentVariant.colors[0]}, ${record.currentVariant.colors[1]})`
   textElement.style.backgroundImage = gradientString;
   textElement.style.color = "transparent";
   textElement.style.backgroundClip = "text";
   const colorFade = [
-    {color:  record.colors[0]},
+    {color:  record.currentVariant.colors[0]},
     {color: "transparent"},
-    {color:  record.colors[1]},
+    {color:  record.currentVariant.colors[1]},
     {color: "transparent"},
-    {color:  record.colors[0]},
+    {color:  record.currentVariant.colors[0]},
   ];
   const colorFadeTiming = {
     duration: 6000,
@@ -109,7 +109,7 @@ uiHelper.runBackgroundGradient = function(record) {
   const ends = ["0% 100%", "100% 0%", "0% 0%", "0% 0%"];
   // This depends on the body having size 600%, 600%!
   // the size needs to match the number of gradient points in the queue
-  const gradientString = `linear-gradient(${angles[index]}deg, #FFF, #FFF, ${record.colors[0]}, ${record.colors[1]}, #FFF, #FFF)`
+  const gradientString = `linear-gradient(${angles[index]}deg, #FFF, #FFF, ${record.currentVariant.colors[0]}, ${record.currentVariant.colors[1]}, #FFF, #FFF)`
   bodyElement.style.backgroundImage = gradientString;
   const keyFrames = [
     { backgroundPosition: starts[index] },
