@@ -157,6 +157,8 @@ renderHelper._setMouseListeners = function(record, data, tessellation) {
     document.getElementById("text").addEventListener("click", record.playFunc);
     const annotationUrl = `${apiState.protocol}://${apiState.host}/releases/${record.id}/annotations`;
     document.getElementById("annotation-link").setAttribute("href", annotationUrl);
+    const variantsUrl = `${apiState.protocol}://${apiState.host}/releases/${record.id}/variants`;
+    document.getElementById("variants-link").setAttribute("href", variantsUrl);
 
     uiHelper.replaceOtherRecords(record, data, tessellation.timeouts.slow)
       .then(() => {
