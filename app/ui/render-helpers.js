@@ -118,7 +118,7 @@ renderHelper._addStartingStateToRecord = function(record, index, tessellation) {
   }
   record.imagePath = record.currentVariant.image_path
   let imageFileName = record.currentVariant.image_path.slice(0, -4);
-  record.smallImagePath = imageFile + "-small.jpg";
+  record.smallImagePath = imageFileName + "-small.jpg";
 
   let directionId = Math.floor(record.external_id / 100) % 2;
   let timeoutIndex = record.external_id % tessellation.timeoutFunctions.length;
