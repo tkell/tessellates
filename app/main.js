@@ -93,6 +93,7 @@ function buildUrl(apiState, offset, limit, params) {
   const filter = params['filter'] || undefined;
   const folder = params['folder'] || undefined;
   const releaseYear = params['releaseYear'] || undefined;
+  const purchaseDate = params['purchaseDate'] || undefined;
   const sort = params['sort'] || undefined;
 
   let url = `${apiState.protocol}://${apiState.host}/collections/${apiState.collectionName}?serve_json=true&limit=${limit}&offset=${offset}`;
@@ -104,6 +105,9 @@ function buildUrl(apiState, offset, limit, params) {
   }
   if (releaseYear) {
     url = url + `&release_year=${releaseYear}`;
+  }
+  if (purchaseDate) {
+    url = url + `&purchase_date=${purchaseDate}`;
   }
   if (sort) {
     url = url + `&sort=${sort}`;
@@ -130,6 +134,7 @@ function addRandomInteraction(elementId) {
     }
     params = setRandomView(params);
     document.getElementById("release-year-input").value = "";
+    document.getElementById("purchase-date-input").value = "";
     document.getElementById("filter-input").value = "";
     document.getElementById("sort-input").value = "";
     uiState.needsRefresh = true;
@@ -154,7 +159,7 @@ function updateParamsOnKeypress(elementId, paramsField) {
     if (e.target.value === "") {
       delete params[paramsField];
     } else
-    if (paramsField === "releaseYear") {
+    if (paramsField === "releaseYear" || paramsField === "purchaseDate") {
       const re = /^\d{4}(?:\s*-\s*\d{4})?$/
       if (re.test(e.target.value)) {
         params[paramsField] = e.target.value;
@@ -174,9 +179,10 @@ function updateParamsOnKeypress(elementId, paramsField) {
 function filterParamsAreSet(params) {
   const hasFilter = params['filter'] && params['filter'].length > 0;
   const hasReleaseYear = params['releaseYear'] && params['releaseYear'].length > 0;
+  const hasPurchaseDate = params['purchaseDate'] && params['purchaseDate'].length > 0;
   const hasSort = params['sort'] && params['sort'].length > 0;
 
-  return (hasFilter || hasReleaseYear || hasSort);
+  return (hasFilter || hasReleaseYear || hasPurchaseDate || hasSort);
 }
 
 function addFilterInteraction(elementId, eventType) {
@@ -396,11 +402,13 @@ fetch(queryUrl)
     addPagingClick("forward-big", tess.paging.big);
 
     updateParamsOnKeypress('release-year-input', 'releaseYear');
+    updateParamsOnKeypress('purchase-date-input', 'purchaseDate');
     updateParamsOnKeypress('filter-input', 'filter');
     updateParamsOnKeypress('sort-input', 'sort');
 
-    addFilterInteraction("filter-input", "keypress");
     addFilterInteraction("release-year-input", "keypress");
+    addFilterInteraction("purchase-date-input", "keypress");
+    addFilterInteraction("filter-input", "keypress");
     addFilterInteraction("sort-input", "keypress");
     addFilterInteraction("filter-submit", "click");
     addFilterInteraction("filter-submit", "keypress");
