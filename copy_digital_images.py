@@ -1,8 +1,5 @@
 import json
-import requests
-import shutil
 import os
-import time
 
 from PIL import Image
 
