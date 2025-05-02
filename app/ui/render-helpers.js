@@ -333,7 +333,7 @@ renderHelper._createDefaultClickState = function(canvas, record, data) {
 
 renderHelper._addAmbientAnimations = function(data, tessellation) {
   const timeoutOffsetMs = 8000;
-  const maxTimeoutMs = tessellation.defaultItems * 1000 * 16;
+  const maxTimeoutMs = tessellation.defaultItems * 1000 * 48;
   for (let i = 0; i < data.length; i++) {
     const record = data[i];
     const interval = Math.ceil(Math.random() * maxTimeoutMs) + timeoutOffsetMs;
