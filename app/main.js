@@ -126,6 +126,20 @@ function setRandomView(params) {
   return params;
 }
 
+function addCollectionFlip(elementId) {
+  document.getElementById(elementId).addEventListener("click", function(e) {
+    if (uiState.bigImage.isShowing) {
+      return
+    }
+
+    let nextName = "vinyl"
+    if (apiState.collectionName === "vinyl") {
+      nextName = "digital"
+    }
+    const url = `https://tide-pool.ca/tessellates/${nextName}?t=${params['t']}`
+    window.location.href = url;
+  });
+}
 
 function addRandomInteraction(elementId) {
   document.getElementById(elementId).addEventListener("click", function(e) {
@@ -336,12 +350,16 @@ if (params['t'] == 'square') {
   let random = Math.floor(Math.random() * 4);
   if (random == 0) {
     tess = makeSquare();
+    params['t'] = 'square';
   } else if (random == 1) {
     tess = makeRhombus();
+    params['t'] = 'rhombus';
   } else if (random == 2) {
     tess = makeTriangle();
+    params['t'] = 'triangle';
   } else {
     tess = makeCircle();
+    params['t'] = 'circle';
   }
 }
 params = parseTessellatesParams(params, tess)
@@ -412,7 +430,8 @@ fetch(queryUrl)
     addFilterInteraction("sort-input", "keypress");
     addFilterInteraction("filter-submit", "click");
     addFilterInteraction("filter-submit", "keypress");
-    addRandomInteraction("random", "click");
+    addRandomInteraction("random");
+    addCollectionFlip("collection-flip");
 
     // If we have folders, add some folder filters!
     let testItem = releaseData[0];
