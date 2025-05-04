@@ -368,7 +368,13 @@ var canvas = null;
 window.addEventListener("load", (event) => {
   canvas = new fabric.Canvas('vinylCanvas');
   canvas.hoverCursor = 'default';
+
+  // We need to be able to login, even if we can't load anything
+  addLoginInteraction("password-input", "keypress");
+  addLoginInteraction("login-submit", "keypress");
+  addLoginInteraction("login-submit", "click");
   displayLogin();
+
   uiHelper.drawPreloadHexagons(canvas, tess, uiState);
 });
 
@@ -384,6 +390,7 @@ if (window.location.href.includes("localhost")) {
   apiState.host = "collects.tide-pool.ca"
   apiState.protocol = "https"
 }
+
 
 // Pick the collection
 if (window.location.href.includes("digital")) {
@@ -408,9 +415,6 @@ fetch(queryUrl)
     releaseData = data;
     renderCanvas(canvas, tess, releaseData, params)
 
-    addLoginInteraction("password-input", "keypress");
-    addLoginInteraction("login-submit", "keypress");
-    addLoginInteraction("login-submit", "click");
 
     addPagingClick("back-small", tess.paging.small * -1);
     addPagingClick("back-medium", tess.paging.medium * -1);
