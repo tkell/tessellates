@@ -1,0 +1,269 @@
+/* Core styling */
+:root {
+  --grid-size: 1000px;
+  --grid-rows: 3;
+  --grid-columns: 3;
+  --item-size: calc(var(--grid-size) / var(--grid-columns));
+  --animation-duration-slow: 725ms;
+  --animation-duration-fast: 350ms;
+}
+
+body {
+  background-size: 600% 600%;
+  font-family: 'Inconsolata', "Courier New", Courier, monospace;
+}
+
+/* Layout and controls */
+.centre {
+  text-align: center;
+  padding-left: 0;
+  padding-right: 0;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  font-size: 22px;
+}
+
+#text {
+  white-space: nowrap;
+  margin-top: 30px;
+  font-size: 33px;
+}
+
+#playback-div {
+  visibility: hidden;
+}
+
+#annotation-span {
+  visibility: hidden;
+}
+
+.emoji-button {
+  font-size: 20px;
+}
+
+.emoji-button-selected {
+  font-size: 20px;
+  color: transparent;
+  text-shadow: 0 0 0 #778899;
+}
+
+/* Image grid layout */
+.tessellation-container {
+  position: relative;
+  width: var(--grid-size);
+  height: var(--grid-size);
+  margin: 0 auto;
+}
+
+.image-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--grid-columns), 1fr);
+  grid-template-rows: repeat(var(--grid-rows), 1fr);
+  width: 100%;
+  height: 100%;
+}
+
+/* Image items */
+.image-item {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  cursor: pointer;
+  opacity: 0; /* Start with opacity 0, will be animated in */
+}
+
+.image-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Square shape */
+.shape-square {
+  clip-path: inset(0);
+}
+
+/* Circle shape */
+.shape-circle {
+  clip-path: circle(50% at center);
+}
+
+/* Triangle shape */
+.shape-triangle {
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+}
+
+/* Rhombus shape */
+.shape-rhombus {
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+}
+
+/* Animation states - base hover state */
+.image-item:hover {
+  z-index: 10;
+}
+
+/* Apply specific animations on hover */
+.bounce-up:hover {
+  animation: bounce-up var(--animation-duration-slow) ease-in-out !important;
+}
+
+.bounce-right:hover {
+  animation: bounce-right var(--animation-duration-slow) ease-in-out !important;
+}
+
+.bounce-down:hover {
+  animation: bounce-down var(--animation-duration-slow) ease-in-out !important;
+}
+
+.bounce-left:hover {
+  animation: bounce-left var(--animation-duration-slow) ease-in-out !important;
+}
+
+/* Fade in animation */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.fade-in {
+  animation: fadeIn var(--animation-duration-slow) forwards;
+}
+
+/* Fade out animation */
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+.fade-out {
+  animation: fadeOut var(--animation-duration-slow) forwards;
+}
+
+/* Bounce animations with different directions */
+@keyframes bounce-up {
+  0% { transform: translateY(0); opacity: 1; }
+  25% { transform: translateY(-10px); opacity: 1; }
+  50% { transform: translateY(5px); opacity: 1; }
+  75% { transform: translateY(-3px); opacity: 1; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes bounce-down {
+  0% { transform: translateY(0); opacity: 1; }
+  25% { transform: translateY(10px); opacity: 1; }
+  50% { transform: translateY(-5px); opacity: 1; }
+  75% { transform: translateY(3px); opacity: 1; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes bounce-left {
+  0% { transform: translateX(0); opacity: 1; }
+  25% { transform: translateX(-10px); opacity: 1; }
+  50% { transform: translateX(5px); opacity: 1; }
+  75% { transform: translateX(-3px); opacity: 1; }
+  100% { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes bounce-right {
+  0% { transform: translateX(0); opacity: 1; }
+  25% { transform: translateX(10px); opacity: 1; }
+  50% { transform: translateX(-5px); opacity: 1; }
+  75% { transform: translateX(3px); opacity: 1; }
+  100% { transform: translateX(0); opacity: 1; }
+}
+
+/* Generic bounce class that will be assigned a specific direction animation */
+.bounce {
+  animation-duration: var(--animation-duration-slow);
+  animation-timing-function: ease-in-out;
+  opacity: 1 !important;
+}
+
+/* Direction-specific bounce classes */
+.bounce-up {
+  animation-name: bounce-up;
+}
+
+.bounce-down {
+  animation-name: bounce-down;
+}
+
+.bounce-left {
+  animation-name: bounce-left;
+}
+
+.bounce-right {
+  animation-name: bounce-right;
+}
+
+/* Small bounce animation */
+@keyframes smallBounce {
+  0% { transform: translateY(0); }
+  25% { transform: translateY(-4px); }
+  50% { transform: translateY(2px); }
+  75% { transform: translateY(-1px); }
+  100% { transform: translateY(0); }
+}
+
+.small-bounce {
+  animation: smallBounce var(--animation-duration-fast) ease-in-out;
+}
+
+/* Big image view */
+.big-image-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--animation-duration-slow);
+}
+
+.big-image-container.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.big-image-wrapper {
+  position: relative;
+  width: calc(var(--item-size) * 2.5);
+  height: calc(var(--item-size) * 2.5);
+  overflow: hidden;
+}
+
+.big-image-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Loading placeholder */
+.image-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(45deg, #f3f3f3, #e0e0e0);
+}
+
+/* Hex loading indicator */
+.hex-loader {
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  width: 60%;
+  height: 60%;
+  background: linear-gradient(135deg, var(--color1, #ccc), var(--color2, #fff));
+}
