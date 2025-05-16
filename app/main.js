@@ -381,8 +381,8 @@ window.addEventListener("load", (event) => {
 // Get the host name
 // Leaving this unideal thing in,
 // as a reminder for when I am hacking on collects
-if (window.location.href.includes("localhost")) {
-  apiState.host = "localhost:3000"
+if (window.location.href.includes("localhost") || window.location.href.includes("127.0.0.1")) {
+  apiState.host = "127.0.0.1:3000"
   apiState.protocol = "http"
   // apiState.host = "collects.tide-pool.ca"
   // apiState.protocol = "https"
