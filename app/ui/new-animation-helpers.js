@@ -88,7 +88,7 @@ animationHelper.makeSmallBounce = function(record) {
  */
 animationHelper.makeFadeOut = function(record) {
   const element = animationHelper.getRecordElement(record);
-  return animationHelper.animate(element, 'fade-out', 600);
+  return animationHelper.animate(element, 'fade-out', 725);
 };
 
 /**
@@ -98,7 +98,7 @@ animationHelper.makeFadeOut = function(record) {
  */
 animationHelper.makeFadeIn = function(record) {
   const element = animationHelper.getRecordElement(record);
-  return animationHelper.animate(element, 'fade-in', 600);
+  return animationHelper.animate(element, 'fade-in', 725);
 };
 
 /**

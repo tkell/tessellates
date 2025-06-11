@@ -1,6 +1,5 @@
 /**
- * Main application file for the CSS-based tessellates app
- * Replaces fabric.js canvas version with HTML and CSS
+ * Main application file
  */
 
 /**

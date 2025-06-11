@@ -52,7 +52,7 @@ imageHelper.createImageItem = function(record, shapeClass) {
   const directions = ['bounce-up', 'bounce-right', 'bounce-down', 'bounce-left'];
   const randomDirection = directions[(record.id || Math.floor(Math.random() * 4)) % directions.length];
   
-  imageItem.className = `image-item ${shapeClass} ${randomDirection}`;
+  imageItem.className = `image-item ${shapeClass} hover-${randomDirection}`;
   imageItem.id = `image-item-${record.id}`;
   imageItem.dataset.recordId = record.id;
   
@@ -137,8 +137,6 @@ imageHelper.renderImageGrid = function(data, tessellation, gridContainerId = 'im
       
       // Make sure the image stays permanently visible after the animation completes
       setTimeout(() => {
-        imageItem.style.opacity = '1';
-        
         // Remove the fade-in class to avoid conflicts with hover
         imageItem.classList.remove('fade-in');
       }, 1000);

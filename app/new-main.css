@@ -74,7 +74,6 @@ body {
   height: 100%;
   overflow: hidden;
   cursor: pointer;
-  opacity: 0; /* Start with opacity 0, will be animated in */
 }
 
 .image-item img {
@@ -109,20 +108,28 @@ body {
 }
 
 /* Apply specific animations on hover */
-.bounce-up:hover {
-  animation: bounce-up var(--animation-duration-slow) ease-in-out !important;
+.hover-bounce-up:hover {
+  animation-name: bounce-up;
+  animation-duration: var(--animation-duration-slow);
+  animation-timing-function: ease-in-out;
 }
 
-.bounce-right:hover {
-  animation: bounce-right var(--animation-duration-slow) ease-in-out !important;
+.hover-bounce-right:hover {
+  animation-name: bounce-right;
+  animation-duration: var(--animation-duration-slow);
+  animation-timing-function: ease-in-out;
 }
 
-.bounce-down:hover {
-  animation: bounce-down var(--animation-duration-slow) ease-in-out !important;
+.hover-bounce-down:hover {
+  animation-name: bounce-down;
+  animation-duration: var(--animation-duration-slow);
+  animation-timing-function: ease-in-out;
 }
 
-.bounce-left:hover {
-  animation: bounce-left var(--animation-duration-slow) ease-in-out !important;
+.hover-bounce-left:hover {
+  animation-name: bounce-left;
+  animation-duration: var(--animation-duration-slow);
+  animation-timing-function: ease-in-out;
 }
 
 /* Fade in animation */
@@ -147,42 +154,41 @@ body {
 
 /* Bounce animations with different directions */
 @keyframes bounce-up {
-  0% { transform: translateY(0); opacity: 1; }
-  25% { transform: translateY(-10px); opacity: 1; }
-  50% { transform: translateY(5px); opacity: 1; }
-  75% { transform: translateY(-3px); opacity: 1; }
-  100% { transform: translateY(0); opacity: 1; }
+  0% { transform: translateY(0); }
+  25% { transform: translateY(-10px); }
+  50% { transform: translateY(5px); }
+  75% { transform: translateY(-3px); }
+  100% { transform: translateY(0); }
 }
 
 @keyframes bounce-down {
-  0% { transform: translateY(0); opacity: 1; }
-  25% { transform: translateY(10px); opacity: 1; }
-  50% { transform: translateY(-5px); opacity: 1; }
-  75% { transform: translateY(3px); opacity: 1; }
-  100% { transform: translateY(0); opacity: 1; }
+  0% { transform: translateY(0); }
+  25% { transform: translateY(10px); }
+  50% { transform: translateY(-5px); }
+  75% { transform: translateY(3px); }
+  100% { transform: translateY(0); }
 }
 
 @keyframes bounce-left {
-  0% { transform: translateX(0); opacity: 1; }
-  25% { transform: translateX(-10px); opacity: 1; }
-  50% { transform: translateX(5px); opacity: 1; }
-  75% { transform: translateX(-3px); opacity: 1; }
-  100% { transform: translateX(0); opacity: 1; }
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-10px); }
+  50% { transform: translateX(5px); }
+  75% { transform: translateX(-3px); }
+  100% { transform: translateX(0); }
 }
 
 @keyframes bounce-right {
-  0% { transform: translateX(0); opacity: 1; }
-  25% { transform: translateX(10px); opacity: 1; }
-  50% { transform: translateX(-5px); opacity: 1; }
-  75% { transform: translateX(3px); opacity: 1; }
-  100% { transform: translateX(0); opacity: 1; }
+  0% { transform: translateX(0); }
+  25% { transform: translateX(10px); }
+  50% { transform: translateX(-5px); }
+  75% { transform: translateX(3px); }
+  100% { transform: translateX(0); }
 }
 
 /* Generic bounce class that will be assigned a specific direction animation */
 .bounce {
   animation-duration: var(--animation-duration-slow);
   animation-timing-function: ease-in-out;
-  opacity: 1 !important;
 }
 
 /* Direction-specific bounce classes */
