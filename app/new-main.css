@@ -107,31 +107,6 @@ body {
   z-index: 10;
 }
 
-/* Apply specific animations on hover */
-.hover-bounce-up:hover {
-  animation-name: bounce-up;
-  animation-duration: var(--animation-duration-slow);
-  animation-timing-function: ease-in-out;
-}
-
-.hover-bounce-right:hover {
-  animation-name: bounce-right;
-  animation-duration: var(--animation-duration-slow);
-  animation-timing-function: ease-in-out;
-}
-
-.hover-bounce-down:hover {
-  animation-name: bounce-down;
-  animation-duration: var(--animation-duration-slow);
-  animation-timing-function: ease-in-out;
-}
-
-.hover-bounce-left:hover {
-  animation-name: bounce-left;
-  animation-duration: var(--animation-duration-slow);
-  animation-timing-function: ease-in-out;
-}
-
 /* Fade in animation */
 @keyframes fadeIn {
   from { opacity: 0; }
@@ -185,27 +160,29 @@ body {
   100% { transform: translateX(0); }
 }
 
-/* Generic bounce class that will be assigned a specific direction animation */
-.bounce {
+/* Direction-specific bounce classes */
+.bounce-up {
+  animation-name: bounce-up;
   animation-duration: var(--animation-duration-slow);
   animation-timing-function: ease-in-out;
 }
 
-/* Direction-specific bounce classes */
-.bounce-up {
-  animation-name: bounce-up;
-}
-
 .bounce-down {
   animation-name: bounce-down;
+  animation-duration: var(--animation-duration-slow);
+  animation-timing-function: ease-in-out;
 }
 
 .bounce-left {
   animation-name: bounce-left;
+  animation-duration: var(--animation-duration-slow);
+  animation-timing-function: ease-in-out;
 }
 
 .bounce-right {
   animation-name: bounce-right;
+  animation-duration: var(--animation-duration-slow);
+  animation-timing-function: ease-in-out;
 }
 
 /* Small bounce animation */

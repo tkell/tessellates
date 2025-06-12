@@ -47,12 +47,7 @@ imageHelper.loadImage = function(imagePath) {
 imageHelper.createImageItem = function(record, shapeClass) {
   // Create container div
   const imageItem = document.createElement('div');
-  
-  // Assign a random bounce direction for hover effect
-  const directions = ['bounce-up', 'bounce-right', 'bounce-down', 'bounce-left'];
-  const randomDirection = directions[(record.id || Math.floor(Math.random() * 4)) % directions.length];
-  
-  imageItem.className = `image-item ${shapeClass} hover-${randomDirection}`;
+  imageItem.className = `image-item ${shapeClass}`;
   imageItem.id = `image-item-${record.id}`;
   imageItem.dataset.recordId = record.id;
   

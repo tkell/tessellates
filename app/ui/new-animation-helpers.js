@@ -2,6 +2,7 @@
  * New animation helpers to replace fabric.js animations with CSS animations
  */
 let animationHelper = {};
+animationHelper.bouncePicker = {0: 'bounce-up', 1: 'bounce-left', 2: 'bounce-down', 3: 'bounce-right'}
 
 /**
  * Get the HTML element for a record
@@ -68,7 +69,8 @@ animationHelper.animate = function(element, animationClass, duration) {
  */
 animationHelper.makeBounce = function(record) {
   const element = animationHelper.getRecordElement(record);
-  return animationHelper.animate(element, 'bounce', 725);
+  const bounceDirection = animationHelper.bouncePicker[record.id % 4]
+  return animationHelper.animate(element, bounceDirection, 725);
 };
 
 /**

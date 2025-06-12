@@ -351,8 +351,8 @@ uiHelper.setupEventListeners = function(record, data) {
   if (!element) return;
   
   element.onmouseover = function() {
-    // Just update text - bounce handled by CSS
     uiHelper.updateTextWithTitle(record);
+    uiHelper.bounceRecord(record)
   };
   
   element.onclick = function() {
