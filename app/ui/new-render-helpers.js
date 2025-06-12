@@ -43,6 +43,8 @@ renderHelper._newLoad = function(data, tessellation) {
         shapeClass = 'shape-rhombus';
       }
       
+      // so this needs to be:  load hex previews - wait - load images - wait - bounce 
+      // then do everything else!
       imageHelper.renderImageGrid(data, tessellation);
       
       // Set up event handlers for each item

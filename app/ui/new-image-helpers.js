@@ -39,51 +39,40 @@ imageHelper.loadImage = function(imagePath) {
 };
 
 /**
+ * Create the preliminary image item DOM element for a record
+ * @param {Object} record - Record object containing image data
+ * @returns {HTMLElement} - The created image item element
+ */
+imageHelper.createDivAndPlaceholder = function(record) {
+  // Create container div
+  const imageItem = document.createElement('div');
+  // imageItem.className = `image-item ${shapeClass}`;
+  imageItem.id = `image-item-${record.id}`;
+  imageItem.dataset.recordId = record.id;
+  
+  // Add gradient based on record colors
+  const hexLoader = document.createElement('div');
+  hexLoader.className = 'hex-loader';
+  hexLoader.style.setProperty('--color1', record.currentVariant.colors[0]);
+  hexLoader.style.setProperty('--color2', record.currentVariant.colors[1]);
+  
+  imageItem.appendChild(hexLoader);
+  
+  return imageItem;
+};
+
+/**
  * Create an image item DOM element for a record
  * @param {Object} record - Record object containing image data
  * @param {string} shapeClass - CSS class for the shape (square, circle, triangle, rhombus)
  * @returns {HTMLElement} - The created image item element
  */
-imageHelper.createImageItem = function(record, shapeClass) {
-  // Create container div
-  const imageItem = document.createElement('div');
+imageHelper.loadImageItem = function(record, shapeClass) {
+  const imageItem = record.imageItem;
+  const imgClone = record.imageElement.cloneNode(true);
+  const hexLoader = imageItem.children[0];
+  imageItem.replaceChild(imgClone, hexLoader);
   imageItem.className = `image-item ${shapeClass}`;
-  imageItem.id = `image-item-${record.id}`;
-  imageItem.dataset.recordId = record.id;
-  
-  // Create placeholder while image loads
-  const placeholder = document.createElement('div');
-  placeholder.className = 'image-placeholder';
-  
-  // Create hex loader with gradient based on record colors
-  const hexLoader = document.createElement('div');
-  hexLoader.className = 'hex-loader';
-  
-  // Apply record colors if available
-  if (record.currentVariant && record.currentVariant.colors) {
-    hexLoader.style.setProperty('--color1', record.currentVariant.colors[0]);
-    hexLoader.style.setProperty('--color2', record.currentVariant.colors[1]);
-  }
-  
-  placeholder.appendChild(hexLoader);
-  imageItem.appendChild(placeholder);
-  
-  // If image is already loaded, add it to the container
-  if (record.imageElement) {
-    const imgClone = record.imageElement.cloneNode(true);
-    imageItem.replaceChild(imgClone, placeholder);
-  } 
-  // Otherwise, load the image and replace the placeholder
-  else {
-    imageHelper.loadImage(record.smallImagePath)
-      .then(img => {
-        record.imageElement = img;
-        imageItem.replaceChild(img, placeholder);
-      })
-      .catch(error => {
-        console.error(error);
-      });
-  }
   
   return imageItem;
 };
@@ -119,24 +108,31 @@ imageHelper.renderImageGrid = function(data, tessellation, gridContainerId = 'im
     shapeClass = 'shape-rhombus';
   }
   
-  // Create and append image items
+  // Create and append hex things - this needs delays, ugh!
   for (let i = 0; i < data.length; i++) {
     const record = data[i];
-    const imageItem = imageHelper.createImageItem(record, shapeClass);
+    const imageItem = imageHelper.createDivAndPlaceholder(record)
+    record.imageItem = imageItem;
     gridContainer.appendChild(imageItem);
-    
+  }
+  
+  // sleep a bit for vibes
+
+  // add the images, hmmm
+  for (let i = 0; i < data.length; i++) {
+    const record = data[i];
+    const imageItem = imageHelper.loadImageItem(record, shapeClass);
+  
     // Add fade-in animation with delay based on record timeout
     setTimeout(() => {
-      // Apply fade-in animation
       imageItem.classList.add('fade-in');
       
-      // Make sure the image stays permanently visible after the animation completes
       setTimeout(() => {
-        // Remove the fade-in class to avoid conflicts with hover
         imageItem.classList.remove('fade-in');
       }, 1000);
-    }, record.timeout || 0);
+    }, record.timeout);
   }
+
 };
 
 /**
