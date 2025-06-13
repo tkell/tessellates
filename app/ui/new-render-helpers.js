@@ -30,7 +30,6 @@ renderHelper._newLoad = function(data, tessellation) {
   // Chain of tasks for loading
   Promise.resolve()
     .then(() => renderHelper._addStartingStates(data, tessellation))
-    .then(() => renderHelper._applyTimeouts(data, tessellation))
     .then(() => imageHelper.loadImages(data))
     .then(() => uiHelper.waitFor(100))
     .then(() => imageHelper.renderImageGridAndPreview(data, tessellation))
@@ -94,19 +93,6 @@ renderHelper._moveLoad = function(data, tessellation, previousData, paginationOf
         renderHelper._addAmbientAnimations(data, tessellation);
       });
   }, 1200);
-};
-
-/**
- * Apply timeouts to records for staggered animation
- * @param {Array} data - Array of record objects
- * @param {Object} tessellation - Tessellation configuration
- */
-renderHelper._applyTimeouts = function(data, tessellation) {
-  const timeoutFunction = renderHelper._pickTimeout(tessellation);
-  for (let i = 0; i < data.length; i++) {
-    let record = data[i];
-    record.timeout = timeoutFunction(i, data.length, tessellation.timeouts.slow);
-  }
 };
 
 /**

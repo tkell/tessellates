@@ -97,17 +97,18 @@ imageHelper.renderImageGridAndPreview = function(data, tessellation, gridContain
   document.documentElement.style.setProperty('--grid-columns', gridColumns);
   document.documentElement.style.setProperty('--grid-rows', gridRows);
 
-  // Create and append hex things - this needs the per-record delays and promises
+  const timeoutFunction = renderHelper._pickTimeout(tessellation);
   const promises = []
   for (let i = 0; i < data.length; i++) {
     const record = data[i];
+    timeout = timeoutFunction(i, data.length, tessellation.timeouts["slow"])
     const p = new Promise(function (resolve, reject) {
       setTimeout(() => {
         const imageItem = imageHelper.createDivAndPlaceholder(record)
         record.imageItem = imageItem;
         gridContainer.appendChild(imageItem);
         resolve();
-      }, record.timeout);
+      }, timeout);
     });
     promises.push(p);
   }
@@ -115,17 +116,18 @@ imageHelper.renderImageGridAndPreview = function(data, tessellation, gridContain
   return Promise.all(promises);
 }
 
-// also need the per-record delays here, with a different order
 imageHelper.addImages = function(data, tessellation, gridContainerId = 'image-grid') {
   const shapeClass = `shape-{tessellation.type}`
+  const timeoutFunction = renderHelper._pickTimeout(tessellation);
   const promises = [];
   for (let i = 0; i < data.length; i++) {
     const record = data[i];
+    timeout = timeoutFunction(i, data.length, tessellation.timeouts["slow"])
     const p = new Promise(function (resolve, reject) {
       setTimeout(() => {
         const imageItem = imageHelper.loadImageItem(record, shapeClass);
         resolve();
-      }, record.timeout);
+      }, timeout);
     });
     promises.push(p);
   }
