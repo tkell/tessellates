@@ -46,7 +46,6 @@ imageHelper.loadImage = function(imagePath) {
 imageHelper.createDivAndPlaceholder = function(record) {
   // Create container div
   const imageItem = document.createElement('div');
-  // imageItem.className = `image-item ${shapeClass}`;
   imageItem.id = `image-item-${record.id}`;
   imageItem.dataset.recordId = record.id;
   
@@ -56,6 +55,10 @@ imageHelper.createDivAndPlaceholder = function(record) {
   hexLoader.style.setProperty('--color1', record.currentVariant.colors[0]);
   hexLoader.style.setProperty('--color2', record.currentVariant.colors[1]);
   
+  const timeout = Math.floor(Math.random() * 1000) + 250;
+  setTimeout(() => {
+    animationHelper.makeSmallBounceRaw(hexLoader);
+  }, timeout);
   imageItem.appendChild(hexLoader);
   
   return imageItem;

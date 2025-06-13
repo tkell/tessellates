@@ -74,6 +74,17 @@ animationHelper.makeBounce = function(record) {
 };
 
 /**
+ * Make any element bounce, in a random direction
+ * @param {Object} element - any element, e.g. preload Hexes
+ * @returns {Promise} - Promise that resolves when the animation is complete
+ */
+animationHelper.makeSmallBounceRaw = function(element) {
+  const num = Math.floor(Math.random() * 4);
+  const bounceDirection = animationHelper.bouncePicker[num]
+  return animationHelper.animate(element, bounceDirection, 350);
+};
+
+/**
  * Make a record bounce with a smaller movement
  * @param {Object} record - Record object
  * @returns {Promise} - Promise that resolves when the animation is complete
