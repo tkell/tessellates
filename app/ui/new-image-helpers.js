@@ -96,24 +96,40 @@ imageHelper.renderImageGridAndPreview = function(data, tessellation, gridContain
   document.documentElement.style.setProperty('--grid-size', `${gridSize}px`);
   document.documentElement.style.setProperty('--grid-columns', gridColumns);
   document.documentElement.style.setProperty('--grid-rows', gridRows);
-  
-  
-  // Create and append hex things - this needs the per-record delays, ugh!
+
+  // Create and append hex things - this needs the per-record delays and promises
+  const promises = []
   for (let i = 0; i < data.length; i++) {
     const record = data[i];
-    const imageItem = imageHelper.createDivAndPlaceholder(record)
-    record.imageItem = imageItem;
-    gridContainer.appendChild(imageItem);
+    const p = new Promise(function (resolve, reject) {
+      setTimeout(() => {
+        const imageItem = imageHelper.createDivAndPlaceholder(record)
+        record.imageItem = imageItem;
+        gridContainer.appendChild(imageItem);
+        resolve();
+      }, record.timeout);
+    });
+    promises.push(p);
   }
+
+  return Promise.all(promises);
 }
 
 // also need the per-record delays here, with a different order
 imageHelper.addImages = function(data, tessellation, gridContainerId = 'image-grid') {
   const shapeClass = `shape-{tessellation.type}`
+  const promises = [];
   for (let i = 0; i < data.length; i++) {
     const record = data[i];
-    const imageItem = imageHelper.loadImageItem(record, shapeClass);
+    const p = new Promise(function (resolve, reject) {
+      setTimeout(() => {
+        const imageItem = imageHelper.loadImageItem(record, shapeClass);
+        resolve();
+      }, record.timeout);
+    });
+    promises.push(p);
   }
+  return Promise.all(promises);
 };
 
 /**
