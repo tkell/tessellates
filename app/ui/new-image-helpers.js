@@ -83,9 +83,8 @@ imageHelper.loadImageItem = function(record, shapeClass) {
  * @param {Object} tessellation - Tessellation configuration
  * @param {string} gridContainerId - ID of the grid container element
  */
-imageHelper.renderImageGrid = function(data, tessellation, gridContainerId = 'image-grid') {
+imageHelper.renderImageGridAndPreview = function(data, tessellation, gridContainerId = 'image-grid') {
   const gridContainer = document.getElementById(gridContainerId);
-  
   // Clear existing content
   gridContainer.innerHTML = '';
   
@@ -98,41 +97,23 @@ imageHelper.renderImageGrid = function(data, tessellation, gridContainerId = 'im
   document.documentElement.style.setProperty('--grid-columns', gridColumns);
   document.documentElement.style.setProperty('--grid-rows', gridRows);
   
-  // Determine shape class based on tessellation type
-  let shapeClass = 'shape-square'; // default
-  if (tessellation.type === 'circle') {
-    shapeClass = 'shape-circle';
-  } else if (tessellation.type === 'triangle') {
-    shapeClass = 'shape-triangle';
-  } else if (tessellation.type === 'rhombus') {
-    shapeClass = 'shape-rhombus';
-  }
   
-  // Create and append hex things - this needs delays, ugh!
+  // Create and append hex things - this needs the per-record delays, ugh!
   for (let i = 0; i < data.length; i++) {
     const record = data[i];
     const imageItem = imageHelper.createDivAndPlaceholder(record)
     record.imageItem = imageItem;
     gridContainer.appendChild(imageItem);
   }
-  
-  // sleep a bit for vibes
+}
 
-  // add the images, hmmm
+// also need the per-record delays here, with a different order
+imageHelper.addImages = function(data, tessellation, gridContainerId = 'image-grid') {
+  const shapeClass = `shape-{tessellation.type}`
   for (let i = 0; i < data.length; i++) {
     const record = data[i];
     const imageItem = imageHelper.loadImageItem(record, shapeClass);
-  
-    // Add fade-in animation with delay based on record timeout
-    setTimeout(() => {
-      imageItem.classList.add('fade-in');
-      
-      setTimeout(() => {
-        imageItem.classList.remove('fade-in');
-      }, 1000);
-    }, record.timeout);
   }
-
 };
 
 /**

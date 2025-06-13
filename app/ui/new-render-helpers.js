@@ -32,26 +32,15 @@ renderHelper._newLoad = function(data, tessellation) {
     .then(() => renderHelper._addStartingStates(data, tessellation))
     .then(() => renderHelper._applyTimeouts(data, tessellation))
     .then(() => imageHelper.loadImages(data))
+    .then(() => uiHelper.waitFor(100))
+    .then(() => imageHelper.renderImageGridAndPreview(data, tessellation))
+    .then(() => uiHelper.waitFor(1000))
+    .then(() => imageHelper.addImages(data, tessellation))
     .then(() => {
-      // Render image grid with the shape matching the tessellation
-      let shapeClass = 'shape-square'; // default
-      if (tessellation.type === 'circle') {
-        shapeClass = 'shape-circle';
-      } else if (tessellation.type === 'triangle') {
-        shapeClass = 'shape-triangle';
-      } else if (tessellation.type === 'rhombus') {
-        shapeClass = 'shape-rhombus';
-      }
-      
-      // so this needs to be:  load hex previews - wait - load images - wait - bounce 
-      // then do everything else!
-      imageHelper.renderImageGrid(data, tessellation);
-      
       // Set up event handlers for each item
       for (let i = 0; i < data.length; i++) {
         uiHelper.setupEventListeners(data[i], data);
       }
-      
       // Add ambient animations
       renderHelper._addAmbientAnimations(data, tessellation);
       
