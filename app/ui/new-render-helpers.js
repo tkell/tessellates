@@ -216,13 +216,14 @@ renderHelper._setMouseListeners = function(record, data, tessellation) {
     // Transition to big image view with animation sequence
     uiHelper.replaceOtherRecords(record, data, tessellation.timeouts.slow)
       .then(() => {
-        uiHelper.hideExistingImages(data);
-        return uiHelper.replaceCloseUpImage(record, data, tessellation.timeouts.slow);
+        return "";
+        //uiHelper.hideExistingImages(data);
+        // return uiHelper.replaceCloseUpImage(record, data, tessellation.timeouts.slow);
       })
       .then(() => uiHelper.waitFor(tessellation.timeouts.slow))
       .then(() => uiHelper.displayBigImage(record))
       .then(() => {
-        uiHelper.removeCloseUpImages(record, data, 1);
+        // uiHelper.removeCloseUpImages(record, data, 1);
         uiState.bigImage.isAnimating = false;
       });
   };
@@ -242,9 +243,9 @@ renderHelper._setMouseListeners = function(record, data, tessellation) {
 
     // Animation sequence to close big image
     uiHelper.waitFor(1)
-      .then(() => uiHelper.replaceCloseUpImage(record, data, 1))
+      //.then(() => uiHelper.replaceCloseUpImage(record, data, 1))
       .then(() => uiHelper.removeBigImage())
-      .then(() => uiHelper.removeCloseUpImages(record, data, tessellation.timeouts.fast))
+      // .then(() => uiHelper.removeCloseUpImages(record, data, tessellation.timeouts.fast))
       .then(() => uiHelper.restoreOtherRecords(record, data, tessellation.timeouts.slow))
       .then(() => {
         uiState.bigImage.isShowing = false;

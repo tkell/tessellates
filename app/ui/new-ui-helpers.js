@@ -270,17 +270,14 @@ uiHelper.displayBigImage = function(record) {
   return imageHelper.displayBigImage(record)
     .then(imgElement => {
       // Set up event handlers for the big image
-      const bigImageContainer = document.getElementById('big-image-container');
+      const bigImageElement = document.getElementById('big-image-wrapper');
       
-      // Add close handler
-      bigImageContainer.onclick = function(e) {
-        if (e.target === bigImageContainer) {
-          record.onBigImageClose();
-        }
+      bigImageElement.onclick = function(e) {
+        console.log('click click click');
+        record.onBigImageClose();
       };
       
-      // Add hover handler for track info
-      bigImageContainer.onmouseover = function() {
+      bigImageElement.onmouseover = function() {
         uiHelper.updateTextWithTrack(record);
         uiHelper.bounceBigImage();
       };
@@ -393,9 +390,39 @@ uiHelper.removeCloseUpImages = function(record, data, maxTimeMs) {
  * @returns {Promise} - Promise that resolves when replacement is complete
  */
 uiHelper.replaceOtherRecords = function(record, data, maxTimeMs) {
-  // With CSS-based solution, we simply hide other images
-  uiHelper.hideExistingImages(data);
-  return Promise.resolve();
+  const promises = [];
+  
+  for (let i = 0; i < data.length; i++) {
+    const otherRecord = data[i];
+    const timeoutMs = record.timeoutFunction(i, data.length, maxTimeMs);
+    const p = new Promise((resolve) => {
+      setTimeout(() => {
+        const otherElement = animationHelper.getRecordElement(otherRecord);
+        if (otherElement) {
+          // Create overlay element with the selected record's image
+          const overlay = document.createElement('div');
+          overlay.className = 'temp-image-overlay';
+          overlay.style.backgroundImage = `url(${record.smallImagePath})`;
+          overlay.style.backgroundSize = 'cover';
+          overlay.style.backgroundPosition = 'center';
+          overlay.style.position = 'absolute';
+          overlay.style.top = '0';
+          overlay.style.left = '0';
+          overlay.style.width = '100%';
+          overlay.style.height = '100%';
+          overlay.style.zIndex = '10';
+          
+          otherElement.style.position = 'relative';
+          otherElement.appendChild(overlay);
+          otherRecord.tempImageOverlay = overlay;
+        }
+        resolve();
+      }, timeoutMs);
+    });
+    promises.push(p);
+  }
+  
+  return Promise.all(promises);
 };
 
 /**
@@ -406,7 +433,22 @@ uiHelper.replaceOtherRecords = function(record, data, maxTimeMs) {
  * @returns {Promise} - Promise that resolves when restoration is complete
  */
 uiHelper.restoreOtherRecords = function(record, data, maxTimeMs) {
-  // With CSS-based solution, we simply show the hidden images
-  uiHelper.showExistingImages(data);
-  return Promise.resolve();
+  const promises = [];
+  
+  for (let i = 0; i < data.length; i++) {
+    const otherRecord = data[i];
+    const timeoutMs = record.reverseTimeoutFunction(i, data.length, maxTimeMs);
+    const p = new Promise((resolve) => {
+      setTimeout(() => {
+        if (otherRecord.tempImageOverlay) {
+          otherRecord.tempImageOverlay.remove();
+          otherRecord.tempImageOverlay = undefined;
+        }
+        resolve();
+      }, timeoutMs);
+    });
+    promises.push(p);
+  }
+  
+  return Promise.all(promises);
 };
