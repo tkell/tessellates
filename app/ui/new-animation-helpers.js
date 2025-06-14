@@ -194,7 +194,11 @@ animationHelper.makeWalkabout = function(record) {
  */
 animationHelper.bounceBigImage = function() {
   const element = document.getElementById('big-image-wrapper');
-  return animationHelper.animate(element, 'bounce', 725);
+  const num = Math.floor(Math.random() * 4);
+  const bounceDirection = animationHelper.bouncePicker[num]
+  uiState.bigImage.isAnimating = true;
+  return animationHelper.animate(element, bounceDirection, 725)
+    .then(() => uiState.bigImage.isAnimating = false)
 };
 
 /**
