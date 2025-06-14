@@ -44,14 +44,15 @@ uiHelper.updateTextWithTitle = function(record) {
  * @param {Object} record - Record object
  */
 uiHelper.updateTextForFocus = function(record) {
+  // A note for my future self that "transparent" here is needed
+  // for the gradient to show through.
+  // So the `colorFade` steps that returnt to "transparent" actually show the gradient!
   const textElement = document.getElementById("text");
   const gradientString = `linear-gradient(90deg, ${record.currentVariant.colors[0]}, ${record.currentVariant.colors[1]})`;
   textElement.style.backgroundImage = gradientString;
   textElement.style.color = "transparent";
   textElement.style.backgroundClip = "text";
-  textElement.style.webkitBackgroundClip = "text"; // For Safari
   
-  // Create animation
   const colorFade = [
     {color: record.currentVariant.colors[0]},
     {color: "transparent"},
@@ -59,12 +60,11 @@ uiHelper.updateTextForFocus = function(record) {
     {color: "transparent"},
     {color: record.currentVariant.colors[0]},
   ];
-  
-  const textAnimation = textElement.animate(colorFade, {
+  const colorFadeTiming = {
     duration: 6000,
     iterations: 6,
-  });
-  
+  };
+  const textAnimation = textElement.animate(colorFade, colorFadeTiming);
   record.textAnimation = textAnimation;
 };
 
