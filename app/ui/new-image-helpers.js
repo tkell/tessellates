@@ -142,7 +142,7 @@ imageHelper.addImages = function(data, tessellation, gridContainerId = 'image-gr
  * @param {Object} record - Record object containing image data
  * @returns {Promise} - Promise that resolves when the image is displayed
  */
-imageHelper.displayBigImage = function(record) {
+imageHelper.loadBigImage = function(record) {
   return new Promise((resolve, reject) => {
     const bigImageContainer = document.getElementById('big-image-container');
     const bigImageWrapper = document.getElementById('big-image-wrapper');
@@ -150,23 +150,14 @@ imageHelper.displayBigImage = function(record) {
     // Clear existing content
     bigImageWrapper.innerHTML = '';
     
-    // Create new image element
     imageHelper.loadImage(record.imagePath)
       .then(img => {
-        // Store reference to big image
         record.bigImageElement = img;
+        record.bigImage = img;
+        bigImageWrapper.className = `big-image-wrapper ${record.bigClipPathClass}`;
         
-        // Apply shape class if needed
-        if (record.bigClipPathClass) {
-          bigImageWrapper.className = `big-image-wrapper ${record.bigClipPathClass}`;
-        }
-        
-        // Add image to container
+        // Add image to container, but don't show it yet
         bigImageWrapper.appendChild(img);
-        
-        // Show container
-        bigImageContainer.classList.add('active');
-        
         resolve(img);
       })
       .catch(error => {

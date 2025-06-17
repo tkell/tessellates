@@ -215,14 +215,12 @@ renderHelper._setMouseListeners = function(record, data, tessellation) {
     
     // Transition to big image view with animation sequence
     uiHelper.replaceOtherRecords(record, data, tessellation.timeouts.slow)
-      .then(() => {
-        return "";
-        //uiHelper.hideExistingImages(data);
-        // return uiHelper.replaceCloseUpImage(record, data, tessellation.timeouts.slow);
-      })
+      .then(() => uiHelper.loadBigImage(record))
+      .then(() => uiHelper.replaceCloseUpImage(record, data, tessellation.timeouts.slow))
       .then(() => uiHelper.waitFor(tessellation.timeouts.slow))
-      .then(() => uiHelper.displayBigImage(record))
       .then(() => {
+        const bigImageContainer = document.getElementById('big-image-container');
+        bigImageContainer.classList.add('active');
         // uiHelper.removeCloseUpImages(record, data, 1);
         uiState.bigImage.isAnimating = false;
       });

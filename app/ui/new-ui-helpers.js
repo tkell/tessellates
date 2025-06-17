@@ -266,14 +266,13 @@ uiHelper.showExistingImages = function(data) {
  * @param {Array} data - All records data
  * @returns {Promise} - Promise that resolves when image is displayed
  */
-uiHelper.displayBigImage = function(record) {
-  return imageHelper.displayBigImage(record)
+uiHelper.loadBigImage = function(record) {
+  return imageHelper.loadBigImage(record)
     .then(imgElement => {
       // Set up event handlers for the big image
       const bigImageElement = document.getElementById('big-image-wrapper');
       
       bigImageElement.onclick = function(e) {
-        console.log('click click click');
         record.onBigImageClose();
       };
       
@@ -365,9 +364,74 @@ uiHelper.setupEventListeners = function(record, data) {
  * @returns {Promise} - Promise that resolves when all replacements are done
  */
 uiHelper.replaceCloseUpImage = function(record, data, maxTimeMs) {
-  // This functionality is now handled with CSS transitions
-  // instead of generating individual image replacements
-  return Promise.resolve();
+  const promises = [];
+  
+  for (let i = 0; i < data.length; i++) {
+    const otherRecord = data[i];
+    if (!otherRecord.isCloseUp) continue;
+    
+    const timeoutMs = record.timeoutFunction(i, data.length, maxTimeMs);
+    const p = promiseToLoadCloseUpImage(record, otherRecord, timeoutMs, data.length);
+    promises.push(p);
+  }
+  
+  return Promise.all(promises);
+};
+
+function promiseToLoadCloseUpImage(record, otherRecord, timeoutMs, dataLength) {
+  return new Promise(function(resolve, reject) {
+    setTimeout(() => {
+      return uiHelper.loadCloseUpReplacementImage(record, otherRecord, dataLength).then(() => resolve());
+    }, timeoutMs);
+  });
+}
+
+uiHelper.loadCloseUpReplacementImage = function(record, otherRecord, dataLength) {
+  return new Promise((resolve) => {
+    const closeUpElement = document.createElement('div');
+    closeUpElement.className = 'close-up-image';
+    closeUpElement.style.position = 'absolute';
+    closeUpElement.style.backgroundImage = `url(${record.imagePath})`;
+    closeUpElement.style.zIndex = '15';
+    
+    // Get the position of the grid item we're replacing
+    const otherElement = animationHelper.getRecordElement(otherRecord);
+    const rect = otherElement.getBoundingClientRect();
+    const gridContainer = document.getElementById('image-grid');
+    const gridRect = gridContainer.getBoundingClientRect();
+    
+    // Position at the grid item location
+    closeUpElement.style.left = `${rect.left - gridRect.left}px`;
+    closeUpElement.style.top = `${rect.top - gridRect.top}px`;
+    closeUpElement.style.width = `${rect.width}px`;
+    closeUpElement.style.height = `${rect.height}px`;
+    
+    // Calculate where this big image should be positioned relative to this grid item,
+    // and position the background image so it appears correctly when clipped
+    const itemLeftX = rect.left - gridRect.left;
+    const itemTopY = rect.top - gridRect.top;
+    const offsetX = record.bigImageX - (record.bigImage.naturalWidth / 2) - itemLeftX;
+    const offsetY = record.bigImageY - (record.bigImage.naturalHeight / 2) - itemTopY
+    closeUpElement.style.backgroundSize = 'auto';
+    closeUpElement.style.backgroundPosition = `${offsetX}px ${offsetY}px`;
+    closeUpElement.style.backgroundRepeat = 'no-repeat';
+    closeUpElement.style.clipPath = otherRecord.clipPath;
+    
+    // Add to grid container
+    const container = document.getElementById('image-grid');
+    container.appendChild(closeUpElement);
+    
+    // Store reference for cleanup
+    if (!uiState.closeUpImages) {
+      uiState.closeUpImages = [];
+    }
+    uiState.closeUpImages.push({
+      element: closeUpElement,
+      index: otherRecord.index
+    });
+    
+    resolve(closeUpElement);
+  });
 };
 
 /**
@@ -378,9 +442,30 @@ uiHelper.replaceCloseUpImage = function(record, data, maxTimeMs) {
  * @returns {Promise} - Promise that resolves when all images are removed
  */
 uiHelper.removeCloseUpImages = function(record, data, maxTimeMs) {
-  // This functionality is now handled with CSS transitions
-  return Promise.resolve();
+  const promises = [];
+  
+  if (uiState.closeUpImages) {
+    for (let tempImage of uiState.closeUpImages) {
+      const timeoutMs = record.reverseTimeoutFunction(tempImage.index, data.length, maxTimeMs);
+      const p = promiseToRemoveCloseUpImage(tempImage.element, timeoutMs);
+      promises.push(p);
+    }
+    uiState.closeUpImages = [];
+  }
+  
+  return Promise.all(promises);
 };
+
+function promiseToRemoveCloseUpImage(element, timeoutMs) {
+  return new Promise(function(resolve, reject) {
+    setTimeout(() => {
+      if (element && element.parentNode) {
+        element.parentNode.removeChild(element);
+      }
+      resolve();
+    }, timeoutMs);
+  });
+}
 
 /**
  * Handle replacing other records during big image view

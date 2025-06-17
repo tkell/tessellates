@@ -24,6 +24,8 @@ makeSquare = function() {
       record.y = y;
       record.angle = 0;
       record.isCloseUp = true;
+      record.bigImageX = square.xSize * 1.5;
+      record.bigImageY = square.ySize * 1.5;
       
       // Move to next position
       x = x + this.xSize;
