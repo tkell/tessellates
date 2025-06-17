@@ -217,21 +217,15 @@ renderHelper._setMouseListeners = function(record, data, tessellation) {
     uiHelper.replaceOtherRecords(record, data, tessellation.timeouts.slow)
       .then(() => uiHelper.loadBigImage(record))
       .then(() => uiHelper.replaceCloseUpImage(record, data, tessellation.timeouts.slow))
-      .then(() => uiHelper.waitFor(tessellation.timeouts.slow))
+      .then(() => uiHelper.waitFor(tessellation.timeouts.fast))
       .then(() => {
         const bigImageContainer = document.getElementById('big-image-container');
         bigImageContainer.classList.add('active');
-        // uiHelper.removeCloseUpImages(record, data, 1);
         uiState.bigImage.isAnimating = false;
-      });
+      })
   };
 
   record.onBigImageClose = function() {
-    uiState.bigImage.isAnimating = true;
-    
-    // Show original images
-    uiHelper.showExistingImages(data);
-    
     // Clean up event listeners and text formatting
     document.getElementById("text").removeEventListener("click", record.playFunc);
     if (uiState.localPlayback) {
@@ -239,11 +233,12 @@ renderHelper._setMouseListeners = function(record, data, tessellation) {
     }
     uiHelper.resetTextForFocus(record);
 
-    // Animation sequence to close big image
+    // Show original images and animate
+    uiState.bigImage.isAnimating = true;
+    uiHelper.showExistingImages(data);
     uiHelper.waitFor(1)
-      //.then(() => uiHelper.replaceCloseUpImage(record, data, 1))
       .then(() => uiHelper.removeBigImage())
-      // .then(() => uiHelper.removeCloseUpImages(record, data, tessellation.timeouts.fast))
+      .then(() => uiHelper.removeCloseUpImages(record, data, tessellation.timeouts.fast))
       .then(() => uiHelper.restoreOtherRecords(record, data, tessellation.timeouts.slow))
       .then(() => {
         uiState.bigImage.isShowing = false;
