@@ -402,16 +402,26 @@ uiHelper.loadCloseUpReplacementImage = function(record, otherRecord, dataLength)
     
     // Position at the grid item location
     closeUpElement.style.left = `${rect.left - gridRect.left}px`;
-    closeUpElement.style.top = `${rect.top - gridRect.top - 3}px`; // why on earth is it 3 px??
+    closeUpElement.style.top = `${rect.top - gridRect.top}px`;
     closeUpElement.style.width = `${rect.width}px`;
     closeUpElement.style.height = `${rect.height}px`;
-    
+
     // Calculate where this image should be positioned relative to this grid item,
     // and position the background image so it appears correctly when clipped
     const itemLeftX = rect.left - gridRect.left;
     const itemTopY = rect.top - gridRect.top;
-    const offsetX = record.bigImageX - (record.bigImage.naturalWidth / 2) - itemLeftX;
-    const offsetY = record.bigImageY - (record.bigImage.naturalHeight / 2) - itemTopY
+    const bigImageWrapper = document.getElementById('big-image-wrapper');
+    const bigImgElement = bigImageWrapper.querySelector('img');
+    const bigImgRect = bigImgElement.getBoundingClientRect();
+    const tessellationRect = document.querySelector('.tessellation-container').getBoundingClientRect();
+
+    // Calculate where the center of the big image is relative to the tessellation container
+    const bigImageCenterX = (bigImgRect.left + bigImgRect.width / 2) - tessellationRect.left;
+    const bigImageCenterY = (bigImgRect.top + bigImgRect.height / 2) - tessellationRect.top;
+    const offsetX = bigImageCenterX - (bigImgRect.width / 2) - itemLeftX;
+    const offsetY = bigImageCenterY - (bigImgRect.height / 2) - itemTopY;
+
+    // Set styles
     closeUpElement.style.backgroundSize = 'auto auto';
     closeUpElement.style.backgroundPosition = `${offsetX}px ${offsetY}px`;
     closeUpElement.style.backgroundRepeat = 'no-repeat';
