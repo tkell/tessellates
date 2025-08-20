@@ -402,17 +402,17 @@ uiHelper.loadCloseUpReplacementImage = function(record, otherRecord, dataLength)
     
     // Position at the grid item location
     closeUpElement.style.left = `${rect.left - gridRect.left}px`;
-    closeUpElement.style.top = `${rect.top - gridRect.top}px`;
+    closeUpElement.style.top = `${rect.top - gridRect.top - 3}px`; // why on earth is it 3 px??
     closeUpElement.style.width = `${rect.width}px`;
     closeUpElement.style.height = `${rect.height}px`;
     
-    // Calculate where this big image should be positioned relative to this grid item,
+    // Calculate where this image should be positioned relative to this grid item,
     // and position the background image so it appears correctly when clipped
     const itemLeftX = rect.left - gridRect.left;
     const itemTopY = rect.top - gridRect.top;
     const offsetX = record.bigImageX - (record.bigImage.naturalWidth / 2) - itemLeftX;
     const offsetY = record.bigImageY - (record.bigImage.naturalHeight / 2) - itemTopY
-    closeUpElement.style.backgroundSize = 'auto';
+    closeUpElement.style.backgroundSize = 'auto auto';
     closeUpElement.style.backgroundPosition = `${offsetX}px ${offsetY}px`;
     closeUpElement.style.backgroundRepeat = 'no-repeat';
     closeUpElement.style.clipPath = otherRecord.clipPath;
@@ -434,6 +434,15 @@ uiHelper.loadCloseUpReplacementImage = function(record, otherRecord, dataLength)
   });
 };
 
+
+uiHelper.hideCloseUpImages = function(record, data) {
+  if (uiState.closeUpImages) {
+    for (let tempImage of uiState.closeUpImages) {
+      tempImage.element.style.visibility = "hidden";
+    }
+  }
+}
+
 /**
  * Remove close-up images
  * @param {Object} record - Record object
@@ -446,6 +455,7 @@ uiHelper.removeCloseUpImages = function(record, data, maxTimeMs) {
   
   if (uiState.closeUpImages) {
     for (let tempImage of uiState.closeUpImages) {
+      tempImage.element.style.visibility = "visible";
       const timeoutMs = record.reverseTimeoutFunction(tempImage.index, data.length, maxTimeMs);
       const p = promiseToRemoveCloseUpImage(tempImage.element, timeoutMs);
       promises.push(p);

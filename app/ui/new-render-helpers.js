@@ -215,14 +215,16 @@ renderHelper._setMouseListeners = function(record, data, tessellation) {
     
     // Transition to big image view with animation sequence
     uiHelper.replaceOtherRecords(record, data, tessellation.timeouts.slow)
+      .then(() => uiHelper.waitFor(tessellation.timeouts.fast))
       .then(() => uiHelper.loadBigImage(record))
       .then(() => uiHelper.replaceCloseUpImage(record, data, tessellation.timeouts.slow))
-      .then(() => uiHelper.waitFor(tessellation.timeouts.fast))
       .then(() => {
         const bigImageContainer = document.getElementById('big-image-container');
         bigImageContainer.classList.add('active');
         uiState.bigImage.isAnimating = false;
       })
+      .then(() => uiHelper.waitFor(tessellation.timeouts.slow))
+      .then(() => uiHelper.hideCloseUpImages(record, data))
   };
 
   record.onBigImageClose = function() {
