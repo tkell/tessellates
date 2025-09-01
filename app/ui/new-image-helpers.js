@@ -120,7 +120,7 @@ imageHelper.renderImageGridAndPreview = function(data, tessellation, gridContain
 }
 
 imageHelper.addImages = function(data, tessellation, gridContainerId = 'image-grid') {
-  const shapeClass = `shape-{tessellation.type}`
+  const shapeClass = `shape-${tessellation.type}`
   const timeoutFunction = renderHelper._pickTimeout(tessellation);
   const promises = [];
   for (let i = 0; i < data.length; i++) {

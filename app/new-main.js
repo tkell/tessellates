@@ -458,6 +458,9 @@ params = parseTessellatesParams(params, tess);
 
 // Initialize on window load
 window.addEventListener("load", (event) => {
+  gridElement = document.getElementById("image-grid")
+  gridElement.classList.add(`image-grid-${params['t']}`);
+
   // Draw preload hexagons
   uiHelper.drawPreloadHexagons(tess);
   
