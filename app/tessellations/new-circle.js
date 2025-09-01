@@ -3,42 +3,48 @@
  */
 makeCircle = function() {
   circle = {};
-  circle.xSize = 334;
-  circle.ySize = 334;
-  circle.xMoveOffset = circle.xSize;
-  circle.yMoveOffset = circle.ySize;
+  circle.itemRadius = 125;
+  circle.radius = 375;
   circle.size = 1000;
-  circle.defaultItems = 9;
-  circle.closeUpIndexes = [0, 1, 2, 3, 4, 5, 6, 7, 8];
-  circle.paging = {"small": 1, "medium": 3, "big": 9};
-  circle.timeoutFunctions = timeoutFunctions.concat(circleTimeoutFunctions || []);
-  circle.timeouts = {"slow": 725, "fast": 350};
-  circle.preloadRadius = 110;
+  circle.xMoveOffset = 0;
+  circle.yMoveOffset = 0;
+  circle.defaultItems = 12;
+  circle.angleIncrement = 360 / circle.defaultItems;
+  circle.angleOffset = Math.floor(Math.random() * circle.defaultItems);
+  circle.closeUpIndexes = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+  circle.paging = {"small": 1, "medium": 6, "big": 12};
+  circle.timeoutFunctions = timeoutFunctions.concat(circleTimeoutFunctions);
+  circle.timeouts = {"slow": 600, "fast": 275};
+  circle.preloadRadius = 100;
   circle.type = 'circle'; // Add type identifier for CSS
 
   circle.prepare = function(data) {
-    var x = 0;
-    var y = 0;
-    for (let record of data) {
-      record.x = x;
-      record.y = y;
+    for (let i = 0; i < data.length; i++) {
+      let record = data[i];
+
+      const radians = (i + circle.angleOffset) * circle.angleIncrement * Math.PI / 180;
+      record.x = circle.size / 2 + circle.radius * Math.cos(radians);
+      record.y = circle.size / 2 + circle.radius * Math.sin(radians);
+      record.itemRadius = circle.itemRadius;
       record.angle = 0;
+      record.imageX = record.x;
+      record.imageY = record.y;
+      record.clickX = record.x - circle.itemRadius;
+      record.clickY = record.y - circle.itemRadius;
+      record.bigImageX = circle.size / 2;
+      record.bigImageY = circle.size / 2;
+
+      record.tempClipPathX = record.x - circle.radius - circle.itemRadius;
+      record.tempClipPathY = record.y - circle.radius - circle.itemRadius;
       record.isCloseUp = true;
-      
-      // Move to next position
-      x = x + this.xSize;
-      if (x > this.size) {
-        x = 0;
-        y = y + this.ySize;
-      }
     }
 
     return data;
-  };
+  }
 
   circle.render = function(data, previousData, paginationOffset) {
     renderHelper.render(data, circle, previousData, paginationOffset);
-  };
+  }
 
   return circle;
-};
+}
