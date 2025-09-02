@@ -150,15 +150,13 @@ renderHelper._addStartingStateToRecord = function(record, index, tessellation) {
     record.bigClipPathClass = 'shape-circle';
     record.positionClass = '';
   } else if (tessellation.type === 'triangle') {
+    record.bigClipPathClass = 'shape-square';
     // Use angle to determine triangle orientation and positioning
-    console.log(record.angle, record);
     if (record.angle === 180) {
       record.clipPathClass = 'shape-triangle-inverted';
-      record.bigClipPathClass = 'shape-triangle-inverted';
       record.positionClass = 'triangle-down';
     } else {
       record.clipPathClass = 'shape-triangle';
-      record.bigClipPathClass = 'shape-triangle';
       record.positionClass = 'triangle-up';
     }
   } else if (tessellation.type === 'rhombus') {
