@@ -49,6 +49,13 @@ imageHelper.createDivAndPlaceholder = function(record) {
   imageItem.id = `image-item-${record.id}`;
   imageItem.dataset.recordId = record.id;
   
+  // Apply positioning classes immediately (if they exist) for consistent placement
+  if (record.clipPathClass && record.positionClass) {
+    imageItem.className = `image-item ${record.clipPathClass} ${record.positionClass}`;
+  } else {
+    imageItem.className = 'image-item';
+  }
+  
   // Add gradient based on record colors
   const hexLoader = document.createElement('div');
   hexLoader.className = 'hex-loader';
@@ -93,13 +100,32 @@ imageHelper.renderImageGridAndPreview = function(data, tessellation, gridContain
   
   // Update CSS variables for grid layout
   const gridSize = tessellation.size;
-  const gridColumns = Math.sqrt(tessellation.defaultItems);
-  const gridRows = Math.sqrt(tessellation.defaultItems);
+  let gridColumns, gridRows;
+  
+  // Handle different tessellation types
+  if (tessellation.type === 'triangle') {
+    gridColumns = 9; // 9 triangles per row
+    gridRows = 5;    // 5 rows
+  } else {
+    // For square, circle, rhombus - use square grid
+    gridColumns = Math.sqrt(tessellation.defaultItems);
+    gridRows = Math.sqrt(tessellation.defaultItems);
+  }
   
   document.documentElement.style.setProperty('--grid-size', `${gridSize}px`);
   document.documentElement.style.setProperty('--grid-columns', gridColumns);
   document.documentElement.style.setProperty('--grid-rows', gridRows);
 
+  // First, add all elements to DOM sequentially (for reliable nth-child CSS)
+  for (let i = 0; i < data.length; i++) {
+    const record = data[i];
+    const imageItem = imageHelper.createDivAndPlaceholder(record);
+    imageItem.style.visibility = 'hidden'; // Hide initially
+    record.imageItem = imageItem;
+    gridContainer.appendChild(imageItem);
+  }
+
+  // Then use timeouts to reveal them with the original animation timing
   const timeoutFunction = renderHelper._pickTimeout(tessellation);
   const promises = []
   for (let i = 0; i < data.length; i++) {
@@ -107,9 +133,7 @@ imageHelper.renderImageGridAndPreview = function(data, tessellation, gridContain
     timeout = timeoutFunction(i, data.length, tessellation.timeouts["slow"])
     const p = new Promise(function (resolve, reject) {
       setTimeout(() => {
-        const imageItem = imageHelper.createDivAndPlaceholder(record)
-        record.imageItem = imageItem;
-        gridContainer.appendChild(imageItem);
+        record.imageItem.style.visibility = 'visible'; // Reveal with animation timing
         resolve();
       }, timeout);
     });
@@ -120,7 +144,6 @@ imageHelper.renderImageGridAndPreview = function(data, tessellation, gridContain
 }
 
 imageHelper.addImages = function(data, tessellation, gridContainerId = 'image-grid') {
-  const shapeClass = `shape-${tessellation.type}`
   const timeoutFunction = renderHelper._pickTimeout(tessellation);
   const promises = [];
   for (let i = 0; i < data.length; i++) {
@@ -128,7 +151,9 @@ imageHelper.addImages = function(data, tessellation, gridContainerId = 'image-gr
     timeout = timeoutFunction(i, data.length, tessellation.timeouts["slow"])
     const p = new Promise(function (resolve, reject) {
       setTimeout(() => {
-        const imageItem = imageHelper.loadImageItem(record, shapeClass);
+        // Use record's specific classes instead of generic shape class
+        const classes = `${record.clipPathClass} ${record.positionClass}`.trim();
+        const imageItem = imageHelper.loadImageItem(record, classes);
         resolve();
       }, timeout);
     });

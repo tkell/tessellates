@@ -70,6 +70,33 @@ body {
   grid-template-rows: repeat(var(--grid-rows), 1fr);
 }
 
+.image-grid-triangle {
+  display: grid;
+  grid-template-columns: repeat(9, 200px); /* 9 columns of 200px each */
+  grid-template-rows: repeat(5, 200px);   /* 5 rows of 200px each */
+  gap: 0;
+  width: var(--grid-size);
+  height: var(--grid-size);
+}
+
+/* All triangles take up one grid cell */
+.triangle-up,
+.triangle-down {
+  width: 200px;
+  height: 200px;
+}
+
+/* Progressive negative margins for triangle tessellation only */
+.image-grid-triangle .image-item:nth-child(9n+1) { margin-left: 0px; }    /* 1st, 10th, 19th, etc. */
+.image-grid-triangle .image-item:nth-child(9n+2) { margin-left: -100px; } /* 2nd, 11th, 20th, etc. */
+.image-grid-triangle .image-item:nth-child(9n+3) { margin-left: -200px; } /* 3rd, 12th, 21st, etc. */
+.image-grid-triangle .image-item:nth-child(9n+4) { margin-left: -300px; } /* 4th, 13th, 22nd, etc. */
+.image-grid-triangle .image-item:nth-child(9n+5) { margin-left: -400px; } /* 5th, 14th, 23rd, etc. */
+.image-grid-triangle .image-item:nth-child(9n+6) { margin-left: -500px; } /* 6th, 15th, 24th, etc. */
+.image-grid-triangle .image-item:nth-child(9n+7) { margin-left: -600px; } /* 7th, 16th, 25th, etc. */
+.image-grid-triangle .image-item:nth-child(9n+8) { margin-left: -700px; } /* 8th, 17th, 26th, etc. */
+.image-grid-triangle .image-item:nth-child(9n+9) { margin-left: -800px; } /* 9th, 18th, 27th, etc. */
+
 /* Image items */
 .image-item {
   position: relative;
@@ -98,6 +125,11 @@ body {
 /* Triangle shape */
 .shape-triangle {
   clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+}
+
+/* Inverted triangle shape (point down) */
+.shape-triangle-inverted {
+  clip-path: polygon(0% 0%, 100% 0%, 50% 100%);
 }
 
 /* Rhombus shape */

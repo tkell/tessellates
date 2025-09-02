@@ -148,15 +148,27 @@ renderHelper._addStartingStateToRecord = function(record, index, tessellation) {
   if (tessellation.type === 'circle') {
     record.clipPathClass = 'shape-circle';
     record.bigClipPathClass = 'shape-circle';
+    record.positionClass = '';
   } else if (tessellation.type === 'triangle') {
-    record.clipPathClass = 'shape-triangle';
-    record.bigClipPathClass = 'shape-triangle';
+    // Use angle to determine triangle orientation and positioning
+    console.log(record.angle, record);
+    if (record.angle === 180) {
+      record.clipPathClass = 'shape-triangle-inverted';
+      record.bigClipPathClass = 'shape-triangle-inverted';
+      record.positionClass = 'triangle-down';
+    } else {
+      record.clipPathClass = 'shape-triangle';
+      record.bigClipPathClass = 'shape-triangle';
+      record.positionClass = 'triangle-up';
+    }
   } else if (tessellation.type === 'rhombus') {
     record.clipPathClass = 'shape-rhombus';
     record.bigClipPathClass = 'shape-rhombus';
+    record.positionClass = '';
   } else {
     record.clipPathClass = 'shape-square';
     record.bigClipPathClass = 'shape-square';
+    record.positionClass = '';
   }
   
   // Set up animation choices based on record ID
