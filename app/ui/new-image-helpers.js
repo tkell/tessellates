@@ -106,8 +106,11 @@ imageHelper.renderImageGridAndPreview = function(data, tessellation, gridContain
   if (tessellation.type === 'triangle') {
     gridColumns = 9; // 9 triangles per row
     gridRows = 5;    // 5 rows
+  } else if (tessellation.type === 'rhombus') {
+    gridColumns = 8; // 8 columns for rhombus positioning
+    gridRows = 4;    // 4 overlapping rows
   } else {
-    // For square, circle, rhombus - use square grid
+    // For square, circle - use square grid
     gridColumns = Math.sqrt(tessellation.defaultItems);
     gridRows = Math.sqrt(tessellation.defaultItems);
   }
