@@ -150,7 +150,7 @@ body {
 
 /* claude is down, panic */
 .image-grid-rhombus .image-item:nth-child(3n+1) { margin-left: -100px; }
-.image-grid-rhombus .image-item:nth-child(3n+2) { margin-left: -200px; margin-top: -50px; }
+.image-grid-rhombus .image-item:nth-child(3n+2) { margin-left: -200px;}
 .image-grid-rhombus .image-item:nth-child(3n+3) { margin-left: -300px; }
 
 .image-grid-rhombus .image-item:nth-child(10) { margin-left: 0px; }
@@ -174,15 +174,15 @@ body {
 
 /* Rhombus positioning with transforms */
 .rhombus-left {
-  transform: rotate(-30deg) translateX(-20%);
+  transform: rotate(60deg) translateX(-33.3%);
 }
 
 .rhombus-center {
-  transform: rotate(90deg);
+  transform: rotate(0deg) translateY(-125%);
 }
 
 .rhombus-right {
-  transform: rotate(30deg) translateX(20%);
+  transform: rotate(-60deg) translateX(33.3%);
 }
 
 /* Offset row adjustment */
