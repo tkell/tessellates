@@ -192,8 +192,8 @@ body {
 
 /* Size adjustments for rhombuses */
 .image-grid-rhombus .image-item {
-  width: 167px;
-  height: 193px;
+  width: 334px;
+  height: 192px;
 }
 
 /* Animation states - base hover state */
