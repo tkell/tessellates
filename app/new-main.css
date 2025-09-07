@@ -196,17 +196,20 @@ body {
 .image-grid-rhombus .image-item:nth-child(23) { margin-left: -200px;}
 .image-grid-rhombus .image-item:nth-child(24) { margin-left: -300px; }
 
-/* Rhombus positioning with transforms */
-.rhombus-left {
-  transform: rotate(60deg) translateX(-33.3%);
+/* Rhombus positioning with transforms - override the base shape-rhombus clip-path */
+.shape-rhombus.rhombus-left {
+  transform: translateX(-33.3%);
+  clip-path: polygon(0% 0%, 66% 0%, 100% 100%, 33% 100%);
 }
 
-.rhombus-center {
-  transform: rotate(0deg) translateY(-125%);
+.shape-rhombus.rhombus-center {
+  transform: translateY(-125%);  
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); /* Standard rhombus */
 }
 
-.rhombus-right {
-  transform: rotate(-60deg) translateX(33.3%);
+.shape-rhombus.rhombus-right {
+  transform: translateX(33.3%);
+  clip-path: polygon(33% 0%, 100% 0%, 66% 100%, 0% 100%);
 }
 
 /* Size adjustments for rhombuses */
@@ -311,53 +314,53 @@ body {
   animation: smallBounce var(--animation-duration-fast) ease-in-out;
 }
 
-/* Rhombus-specific bounce animations that preserve transforms */
+/* Rhombus-specific bounce animations that preserve positioning (without rotation) */
 @keyframes rhombus-bounce-left {
-  0% { transform: rotate(60deg) translateX(-33.3%); }
-  25% { transform: rotate(60deg) translateX(-33.3%) translateY(-10px); }
-  50% { transform: rotate(60deg) translateX(-33.3%) translateY(5px); }
-  75% { transform: rotate(60deg) translateX(-33.3%) translateY(-3px); }
-  100% { transform: rotate(60deg) translateX(-33.3%); }
+  0% { transform: translateX(-33.3%); }
+  25% { transform: translateX(-33.3%) translateY(-10px); }
+  50% { transform: translateX(-33.3%) translateY(5px); }
+  75% { transform: translateX(-33.3%) translateY(-3px); }
+  100% { transform: translateX(-33.3%); }
 }
 
 @keyframes rhombus-bounce-center {
-  0% { transform: rotate(0deg) translateY(-125%); }
-  25% { transform: rotate(0deg) translateY(-125%) translateY(-10px); }
-  50% { transform: rotate(0deg) translateY(-125%) translateY(5px); }
-  75% { transform: rotate(0deg) translateY(-125%) translateY(-3px); }
-  100% { transform: rotate(0deg) translateY(-125%); }
+  0% { transform: translateY(-125%); }
+  25% { transform: translateY(-125%) translateY(-10px); }
+  50% { transform: translateY(-125%) translateY(5px); }
+  75% { transform: translateY(-125%) translateY(-3px); }
+  100% { transform: translateY(-125%); }
 }
 
 @keyframes rhombus-bounce-right {
-  0% { transform: rotate(-60deg) translateX(33.3%); }
-  25% { transform: rotate(-60deg) translateX(33.3%) translateY(-10px); }
-  50% { transform: rotate(-60deg) translateX(33.3%) translateY(5px); }
-  75% { transform: rotate(-60deg) translateX(33.3%) translateY(-3px); }
-  100% { transform: rotate(-60deg) translateX(33.3%); }
+  0% { transform: translateX(33.3%); }
+  25% { transform: translateX(33.3%) translateY(-10px); }
+  50% { transform: translateX(33.3%) translateY(5px); }
+  75% { transform: translateX(33.3%) translateY(-3px); }
+  100% { transform: translateX(33.3%); }
 }
 
 @keyframes rhombus-small-bounce-left {
-  0% { transform: rotate(60deg) translateX(-33.3%); }
-  25% { transform: rotate(60deg) translateX(-33.3%) translateY(-4px); }
-  50% { transform: rotate(60deg) translateX(-33.3%) translateY(2px); }
-  75% { transform: rotate(60deg) translateX(-33.3%) translateY(-1px); }
-  100% { transform: rotate(60deg) translateX(-33.3%); }
+  0% { transform: translateX(-33.3%); }
+  25% { transform: translateX(-33.3%) translateY(-4px); }
+  50% { transform: translateX(-33.3%) translateY(2px); }
+  75% { transform: translateX(-33.3%) translateY(-1px); }
+  100% { transform: translateX(-33.3%); }
 }
 
 @keyframes rhombus-small-bounce-center {
-  0% { transform: rotate(0deg) translateY(-125%); }
-  25% { transform: rotate(0deg) translateY(-125%) translateY(-4px); }
-  50% { transform: rotate(0deg) translateY(-125%) translateY(2px); }
-  75% { transform: rotate(0deg) translateY(-125%) translateY(-1px); }
-  100% { transform: rotate(0deg) translateY(-125%); }
+  0% { transform: translateY(-125%); }
+  25% { transform: translateY(-125%) translateY(-4px); }
+  50% { transform: translateY(-125%) translateY(2px); }
+  75% { transform: translateY(-125%) translateY(-1px); }
+  100% { transform: translateY(-125%); }
 }
 
 @keyframes rhombus-small-bounce-right {
-  0% { transform: rotate(-60deg) translateX(33.3%); }
-  25% { transform: rotate(-60deg) translateX(33.3%) translateY(-4px); }
-  50% { transform: rotate(-60deg) translateX(33.3%) translateY(2px); }
-  75% { transform: rotate(-60deg) translateX(33.3%) translateY(-1px); }
-  100% { transform: rotate(-60deg) translateX(33.3%); }
+  0% { transform: translateX(33.3%); }
+  25% { transform: translateX(33.3%) translateY(-4px); }
+  50% { transform: translateX(33.3%) translateY(2px); }
+  75% { transform: translateX(33.3%) translateY(-1px); }
+  100% { transform: translateX(33.3%); }
 }
 
 /* Rhombus bounce classes */
