@@ -69,13 +69,10 @@ animationHelper.animate = function(element, animationClass, duration) {
  */
 animationHelper.makeBounce = function(record) {
   const element = animationHelper.getRecordElement(record);
-  
-  // Use rhombus-specific animations for rhombuses
-  if (record.rhombusType) {
-    return animationHelper.animate(element, 'bounce', 725);
-  }
-  
-  const bounceDirection = animationHelper.bouncePicker[record.id % 4]
+  const bounceIndex = Math.floor(Math.random() * 4)
+
+  const bounceDirection = animationHelper.bouncePicker[bounceIndex];
+  console.log(bounceDirection);
   return animationHelper.animate(element, bounceDirection, 725);
 };
 
@@ -85,8 +82,8 @@ animationHelper.makeBounce = function(record) {
  * @returns {Promise} - Promise that resolves when the animation is complete
  */
 animationHelper.makeSmallBounceRaw = function(element) {
-  const num = Math.floor(Math.random() * 4);
-  const bounceDirection = animationHelper.bouncePicker[num]
+  const bounceIndex = Math.floor(Math.random() * 4);
+  const bounceDirection = animationHelper.bouncePicker[bounceIndex]
   return animationHelper.animate(element, bounceDirection, 350);
 };
 
@@ -97,12 +94,6 @@ animationHelper.makeSmallBounceRaw = function(element) {
  */
 animationHelper.makeSmallBounce = function(record) {
   const element = animationHelper.getRecordElement(record);
-  
-  // Use rhombus-specific animations for rhombuses
-  if (record.rhombusType) {
-    return animationHelper.animate(element, 'small-bounce', 350);
-  }
-  
   return animationHelper.animate(element, 'small-bounce', 350);
 };
 

@@ -385,6 +385,55 @@ body {
   animation: rhombus-small-bounce-right var(--animation-duration-fast) ease-in-out;
 }
 
+/* Rhombus directional bounce classes for random bounces */
+.rhombus-left.bounce-up {
+  animation: rhombus-bounce-left var(--animation-duration-slow) ease-in-out;
+}
+
+.rhombus-left.bounce-down {
+  animation: rhombus-bounce-left var(--animation-duration-slow) ease-in-out;
+}
+
+.rhombus-left.bounce-left {
+  animation: rhombus-bounce-left var(--animation-duration-slow) ease-in-out;
+}
+
+.rhombus-left.bounce-right {
+  animation: rhombus-bounce-left var(--animation-duration-slow) ease-in-out;
+}
+
+.rhombus-center.bounce-up {
+  animation: rhombus-bounce-center var(--animation-duration-slow) ease-in-out;
+}
+
+.rhombus-center.bounce-down {
+  animation: rhombus-bounce-center var(--animation-duration-slow) ease-in-out;
+}
+
+.rhombus-center.bounce-left {
+  animation: rhombus-bounce-center var(--animation-duration-slow) ease-in-out;
+}
+
+.rhombus-center.bounce-right {
+  animation: rhombus-bounce-center var(--animation-duration-slow) ease-in-out;
+}
+
+.rhombus-right.bounce-up {
+  animation: rhombus-bounce-right var(--animation-duration-slow) ease-in-out;
+}
+
+.rhombus-right.bounce-down {
+  animation: rhombus-bounce-right var(--animation-duration-slow) ease-in-out;
+}
+
+.rhombus-right.bounce-left {
+  animation: rhombus-bounce-right var(--animation-duration-slow) ease-in-out;
+}
+
+.rhombus-right.bounce-right {
+  animation: rhombus-bounce-right var(--animation-duration-slow) ease-in-out;
+}
+
 /* Big image view */
 .big-image-container {
   position: absolute;
