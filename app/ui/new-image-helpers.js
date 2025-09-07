@@ -50,7 +50,8 @@ imageHelper.createDivAndPlaceholder = function(record) {
   imageItem.dataset.recordId = record.id;
   
   // Apply positioning classes immediately (if they exist) for consistent placement
-  if (record.clipPathClass && record.positionClass) {
+  // But exclude rhombus transforms for placeholders - they should be in natural grid positions
+  if (record.clipPathClass && record.positionClass && !record.rhombusType) {
     imageItem.className = `image-item ${record.clipPathClass} ${record.positionClass}`;
   } else {
     imageItem.className = 'image-item';

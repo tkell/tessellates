@@ -145,7 +145,7 @@ body {
   grid-template-rows: repeat(3, 275px);
   gap: 0;
   width: var(--grid-size);
-  height: 600px; /* Adjusted for overlapping rows */
+  height: 1000px;
   margin-top: 266px;
   margin-left: -13px;
 }
@@ -385,54 +385,120 @@ body {
   animation: rhombus-small-bounce-right var(--animation-duration-fast) ease-in-out;
 }
 
-/* Rhombus directional bounce classes for random bounces */
-.rhombus-left.bounce-up {
-  animation: rhombus-bounce-left var(--animation-duration-slow) ease-in-out;
+/* Rhombus-left directional animations */
+@keyframes rhombus-bounce-left-up {
+  0% { transform: rotate(60deg) translateX(-33.3%); }
+  25% { transform: rotate(60deg) translateX(-33.3%) translateY(-10px); }
+  50% { transform: rotate(60deg) translateX(-33.3%) translateY(5px); }
+  75% { transform: rotate(60deg) translateX(-33.3%) translateY(-3px); }
+  100% { transform: rotate(60deg) translateX(-33.3%); }
 }
 
-.rhombus-left.bounce-down {
-  animation: rhombus-bounce-left var(--animation-duration-slow) ease-in-out;
+@keyframes rhombus-bounce-left-down {
+  0% { transform: rotate(60deg) translateX(-33.3%); }
+  25% { transform: rotate(60deg) translateX(-33.3%) translateY(10px); }
+  50% { transform: rotate(60deg) translateX(-33.3%) translateY(-5px); }
+  75% { transform: rotate(60deg) translateX(-33.3%) translateY(3px); }
+  100% { transform: rotate(60deg) translateX(-33.3%); }
 }
 
-.rhombus-left.bounce-left {
-  animation: rhombus-bounce-left var(--animation-duration-slow) ease-in-out;
+@keyframes rhombus-bounce-left-left {
+  0% { transform: rotate(60deg) translateX(-33.3%); }
+  25% { transform: rotate(60deg) translateX(-33.3%) translateX(-10px); }
+  50% { transform: rotate(60deg) translateX(-33.3%) translateX(5px); }
+  75% { transform: rotate(60deg) translateX(-33.3%) translateX(-3px); }
+  100% { transform: rotate(60deg) translateX(-33.3%); }
 }
 
-.rhombus-left.bounce-right {
-  animation: rhombus-bounce-left var(--animation-duration-slow) ease-in-out;
+@keyframes rhombus-bounce-left-right {
+  0% { transform: rotate(60deg) translateX(-33.3%); }
+  25% { transform: rotate(60deg) translateX(-33.3%) translateX(10px); }
+  50% { transform: rotate(60deg) translateX(-33.3%) translateX(-5px); }
+  75% { transform: rotate(60deg) translateX(-33.3%) translateX(3px); }
+  100% { transform: rotate(60deg) translateX(-33.3%); }
 }
 
-.rhombus-center.bounce-up {
-  animation: rhombus-bounce-center var(--animation-duration-slow) ease-in-out;
+/* Rhombus-center directional animations */
+@keyframes rhombus-bounce-center-up {
+  0% { transform: rotate(0deg) translateY(-125%); }
+  25% { transform: rotate(0deg) translateY(-125%) translateY(-10px); }
+  50% { transform: rotate(0deg) translateY(-125%) translateY(5px); }
+  75% { transform: rotate(0deg) translateY(-125%) translateY(-3px); }
+  100% { transform: rotate(0deg) translateY(-125%); }
 }
 
-.rhombus-center.bounce-down {
-  animation: rhombus-bounce-center var(--animation-duration-slow) ease-in-out;
+@keyframes rhombus-bounce-center-down {
+  0% { transform: rotate(0deg) translateY(-125%); }
+  25% { transform: rotate(0deg) translateY(-125%) translateY(10px); }
+  50% { transform: rotate(0deg) translateY(-125%) translateY(-5px); }
+  75% { transform: rotate(0deg) translateY(-125%) translateY(3px); }
+  100% { transform: rotate(0deg) translateY(-125%); }
 }
 
-.rhombus-center.bounce-left {
-  animation: rhombus-bounce-center var(--animation-duration-slow) ease-in-out;
+@keyframes rhombus-bounce-center-left {
+  0% { transform: rotate(0deg) translateY(-125%); }
+  25% { transform: rotate(0deg) translateY(-125%) translateX(-10px); }
+  50% { transform: rotate(0deg) translateY(-125%) translateX(5px); }
+  75% { transform: rotate(0deg) translateY(-125%) translateX(-3px); }
+  100% { transform: rotate(0deg) translateY(-125%); }
 }
 
-.rhombus-center.bounce-right {
-  animation: rhombus-bounce-center var(--animation-duration-slow) ease-in-out;
+@keyframes rhombus-bounce-center-right {
+  0% { transform: rotate(0deg) translateY(-125%); }
+  25% { transform: rotate(0deg) translateY(-125%) translateX(10px); }
+  50% { transform: rotate(0deg) translateY(-125%) translateX(-5px); }
+  75% { transform: rotate(0deg) translateY(-125%) translateX(3px); }
+  100% { transform: rotate(0deg) translateY(-125%); }
 }
 
-.rhombus-right.bounce-up {
-  animation: rhombus-bounce-right var(--animation-duration-slow) ease-in-out;
+/* Rhombus-right directional animations */
+@keyframes rhombus-bounce-right-up {
+  0% { transform: rotate(-60deg) translateX(33.3%); }
+  25% { transform: rotate(-60deg) translateX(33.3%) translateY(-10px); }
+  50% { transform: rotate(-60deg) translateX(33.3%) translateY(5px); }
+  75% { transform: rotate(-60deg) translateX(33.3%) translateY(-3px); }
+  100% { transform: rotate(-60deg) translateX(33.3%); }
 }
 
-.rhombus-right.bounce-down {
-  animation: rhombus-bounce-right var(--animation-duration-slow) ease-in-out;
+@keyframes rhombus-bounce-right-down {
+  0% { transform: rotate(-60deg) translateX(33.3%); }
+  25% { transform: rotate(-60deg) translateX(33.3%) translateY(10px); }
+  50% { transform: rotate(-60deg) translateX(33.3%) translateY(-5px); }
+  75% { transform: rotate(-60deg) translateX(33.3%) translateY(3px); }
+  100% { transform: rotate(-60deg) translateX(33.3%); }
 }
 
-.rhombus-right.bounce-left {
-  animation: rhombus-bounce-right var(--animation-duration-slow) ease-in-out;
+@keyframes rhombus-bounce-right-left {
+  0% { transform: rotate(-60deg) translateX(33.3%); }
+  25% { transform: rotate(-60deg) translateX(33.3%) translateX(-10px); }
+  50% { transform: rotate(-60deg) translateX(33.3%) translateX(5px); }
+  75% { transform: rotate(-60deg) translateX(33.3%) translateX(-3px); }
+  100% { transform: rotate(-60deg) translateX(33.3%); }
 }
 
-.rhombus-right.bounce-right {
-  animation: rhombus-bounce-right var(--animation-duration-slow) ease-in-out;
+@keyframes rhombus-bounce-right-right {
+  0% { transform: rotate(-60deg) translateX(33.3%); }
+  25% { transform: rotate(-60deg) translateX(33.3%) translateX(10px); }
+  50% { transform: rotate(-60deg) translateX(33.3%) translateX(-5px); }
+  75% { transform: rotate(-60deg) translateX(33.3%) translateX(3px); }
+  100% { transform: rotate(-60deg) translateX(33.3%); }
 }
+
+/* Rhombus directional bounce classes */
+.rhombus-left.bounce-up { animation: rhombus-bounce-left-up var(--animation-duration-slow) ease-in-out; }
+.rhombus-left.bounce-down { animation: rhombus-bounce-left-down var(--animation-duration-slow) ease-in-out; }
+.rhombus-left.bounce-left { animation: rhombus-bounce-left-left var(--animation-duration-slow) ease-in-out; }
+.rhombus-left.bounce-right { animation: rhombus-bounce-left-right var(--animation-duration-slow) ease-in-out; }
+
+.rhombus-center.bounce-up { animation: rhombus-bounce-center-up var(--animation-duration-slow) ease-in-out; }
+.rhombus-center.bounce-down { animation: rhombus-bounce-center-down var(--animation-duration-slow) ease-in-out; }
+.rhombus-center.bounce-left { animation: rhombus-bounce-center-left var(--animation-duration-slow) ease-in-out; }
+.rhombus-center.bounce-right { animation: rhombus-bounce-center-right var(--animation-duration-slow) ease-in-out; }
+
+.rhombus-right.bounce-up { animation: rhombus-bounce-right-up var(--animation-duration-slow) ease-in-out; }
+.rhombus-right.bounce-down { animation: rhombus-bounce-right-down var(--animation-duration-slow) ease-in-out; }
+.rhombus-right.bounce-left { animation: rhombus-bounce-right-left var(--animation-duration-slow) ease-in-out; }
+.rhombus-right.bounce-right { animation: rhombus-bounce-right-right var(--animation-duration-slow) ease-in-out; }
 
 /* Big image view */
 .big-image-container {
@@ -466,6 +532,11 @@ body {
   object-fit: cover;
 }
 
+/* Adjust big image positioning for rhombus tessellation */
+.image-grid-rhombus + .big-image-container {
+  transform: translateY(-266px); /* Pull up to account for rhombus grid margin-top */
+}
+
 /* Hex loading indicator */
 .hex-loader {
   width: 60%;
@@ -487,8 +558,8 @@ body {
 
 /* Smaller hex loaders for rhombus tessellation */
 .image-grid-rhombus .hex-loader {
-  width: 45%;
-  height: 45%;
-  top: 27.5%;
-  left: 27.5%;
+  width: 40%;
+  height: 40%;
+  top: 30%;
+  left: 30%;
 }
