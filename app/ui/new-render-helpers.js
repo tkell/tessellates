@@ -162,12 +162,7 @@ renderHelper._addStartingStateToRecord = function(record, index, tessellation) {
   } else if (tessellation.type === 'rhombus') {
     record.clipPathClass = 'shape-rhombus';
     record.bigClipPathClass = 'shape-square'; // No clipping for big image
-    
-    // Set position classes based on rhombus type and row
     let positionClasses = [`rhombus-${record.rhombusType}`];
-    if (record.rowType === 'offset') {
-      positionClasses.push('rhombus-row-offset');
-    }
     record.positionClass = positionClasses.join(' ');
   } else {
     record.clipPathClass = 'shape-square';
