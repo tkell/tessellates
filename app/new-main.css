@@ -311,6 +311,80 @@ body {
   animation: smallBounce var(--animation-duration-fast) ease-in-out;
 }
 
+/* Rhombus-specific bounce animations that preserve transforms */
+@keyframes rhombus-bounce-left {
+  0% { transform: rotate(60deg) translateX(-33.3%); }
+  25% { transform: rotate(60deg) translateX(-33.3%) translateY(-10px); }
+  50% { transform: rotate(60deg) translateX(-33.3%) translateY(5px); }
+  75% { transform: rotate(60deg) translateX(-33.3%) translateY(-3px); }
+  100% { transform: rotate(60deg) translateX(-33.3%); }
+}
+
+@keyframes rhombus-bounce-center {
+  0% { transform: rotate(0deg) translateY(-125%); }
+  25% { transform: rotate(0deg) translateY(-125%) translateY(-10px); }
+  50% { transform: rotate(0deg) translateY(-125%) translateY(5px); }
+  75% { transform: rotate(0deg) translateY(-125%) translateY(-3px); }
+  100% { transform: rotate(0deg) translateY(-125%); }
+}
+
+@keyframes rhombus-bounce-right {
+  0% { transform: rotate(-60deg) translateX(33.3%); }
+  25% { transform: rotate(-60deg) translateX(33.3%) translateY(-10px); }
+  50% { transform: rotate(-60deg) translateX(33.3%) translateY(5px); }
+  75% { transform: rotate(-60deg) translateX(33.3%) translateY(-3px); }
+  100% { transform: rotate(-60deg) translateX(33.3%); }
+}
+
+@keyframes rhombus-small-bounce-left {
+  0% { transform: rotate(60deg) translateX(-33.3%); }
+  25% { transform: rotate(60deg) translateX(-33.3%) translateY(-4px); }
+  50% { transform: rotate(60deg) translateX(-33.3%) translateY(2px); }
+  75% { transform: rotate(60deg) translateX(-33.3%) translateY(-1px); }
+  100% { transform: rotate(60deg) translateX(-33.3%); }
+}
+
+@keyframes rhombus-small-bounce-center {
+  0% { transform: rotate(0deg) translateY(-125%); }
+  25% { transform: rotate(0deg) translateY(-125%) translateY(-4px); }
+  50% { transform: rotate(0deg) translateY(-125%) translateY(2px); }
+  75% { transform: rotate(0deg) translateY(-125%) translateY(-1px); }
+  100% { transform: rotate(0deg) translateY(-125%); }
+}
+
+@keyframes rhombus-small-bounce-right {
+  0% { transform: rotate(-60deg) translateX(33.3%); }
+  25% { transform: rotate(-60deg) translateX(33.3%) translateY(-4px); }
+  50% { transform: rotate(-60deg) translateX(33.3%) translateY(2px); }
+  75% { transform: rotate(-60deg) translateX(33.3%) translateY(-1px); }
+  100% { transform: rotate(-60deg) translateX(33.3%); }
+}
+
+/* Rhombus bounce classes */
+.rhombus-left.bounce {
+  animation: rhombus-bounce-left var(--animation-duration-slow) ease-in-out;
+}
+
+.rhombus-center.bounce {
+  animation: rhombus-bounce-center var(--animation-duration-slow) ease-in-out;
+}
+
+.rhombus-right.bounce {
+  animation: rhombus-bounce-right var(--animation-duration-slow) ease-in-out;
+}
+
+.rhombus-left.small-bounce {
+  animation: rhombus-small-bounce-left var(--animation-duration-fast) ease-in-out;
+}
+
+.rhombus-center.small-bounce {
+  animation: rhombus-small-bounce-center var(--animation-duration-fast) ease-in-out;
+}
+
+.rhombus-right.small-bounce {
+  animation: rhombus-small-bounce-right var(--animation-duration-fast) ease-in-out;
+}
+
 /* Big image view */
 .big-image-container {
   position: absolute;

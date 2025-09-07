@@ -69,6 +69,12 @@ animationHelper.animate = function(element, animationClass, duration) {
  */
 animationHelper.makeBounce = function(record) {
   const element = animationHelper.getRecordElement(record);
+  
+  // Use rhombus-specific animations for rhombuses
+  if (record.rhombusType) {
+    return animationHelper.animate(element, 'bounce', 725);
+  }
+  
   const bounceDirection = animationHelper.bouncePicker[record.id % 4]
   return animationHelper.animate(element, bounceDirection, 725);
 };
@@ -91,6 +97,12 @@ animationHelper.makeSmallBounceRaw = function(element) {
  */
 animationHelper.makeSmallBounce = function(record) {
   const element = animationHelper.getRecordElement(record);
+  
+  // Use rhombus-specific animations for rhombuses
+  if (record.rhombusType) {
+    return animationHelper.animate(element, 'small-bounce', 350);
+  }
+  
   return animationHelper.animate(element, 'small-bounce', 350);
 };
 
