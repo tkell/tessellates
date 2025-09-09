@@ -210,6 +210,14 @@ body {
   height: 334px;
 }
 
+.shape-rhombus.rhombus-right img {
+transform: translate(25%, -10%);
+}
+
+.shape-rhombus.rhombus-left img {
+  transform: translate(-25%, -10%);
+}
+
 /* Animation states - base hover state */
 .image-item:hover {
   z-index: 10;
