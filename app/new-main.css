@@ -91,6 +91,17 @@ body {
   clip-path: inset(0);
 }
 
+/* Square shape with rhombus positioning offset */
+.shape-square-rhombus {
+  clip-path: inset(0);
+  transform: translateY(-50px);
+}
+
+/* Rhombus tessellation close-up image positioning */
+.image-grid-rhombus .close-up-image {
+  transform: translateY(30%);
+}
+
 /* Circle shape */
 .shape-circle {
   clip-path: circle(50% at center);
@@ -503,6 +514,44 @@ transform: translate(25%, -10%);
 .rhombus-right.bounce-down { animation: rhombus-bounce-right-down var(--animation-duration-slow) ease-in-out; }
 .rhombus-right.bounce-left { animation: rhombus-bounce-right-left var(--animation-duration-slow) ease-in-out; }
 .rhombus-right.bounce-right { animation: rhombus-bounce-right-right var(--animation-duration-slow) ease-in-out; }
+
+/* Big image bounce animations for rhombus tessellation */
+@keyframes rhombus-big-bounce-up {
+  0% { transform: translateY(-50px); }
+  25% { transform: translateY(-50px) translateY(-10px); }
+  50% { transform: translateY(-50px) translateY(5px); }
+  75% { transform: translateY(-50px) translateY(-3px); }
+  100% { transform: translateY(-50px); }
+}
+
+@keyframes rhombus-big-bounce-down {
+  0% { transform: translateY(-50px); }
+  25% { transform: translateY(-50px) translateY(10px); }
+  50% { transform: translateY(-50px) translateY(-5px); }
+  75% { transform: translateY(-50px) translateY(3px); }
+  100% { transform: translateY(-50px); }
+}
+
+@keyframes rhombus-big-bounce-left {
+  0% { transform: translateY(-50px); }
+  25% { transform: translateY(-50px) translateX(-10px); }
+  50% { transform: translateY(-50px) translateX(5px); }
+  75% { transform: translateY(-50px) translateX(-3px); }
+  100% { transform: translateY(-50px); }
+}
+
+@keyframes rhombus-big-bounce-right {
+  0% { transform: translateY(-50px); }
+  25% { transform: translateY(-50px) translateX(10px); }
+  50% { transform: translateY(-50px) translateX(-5px); }
+  75% { transform: translateY(-50px) translateX(3px); }
+  100% { transform: translateY(-50px); }
+}
+
+.shape-square-rhombus.bounce-up { animation: rhombus-big-bounce-up var(--animation-duration-slow) ease-in-out; }
+.shape-square-rhombus.bounce-down { animation: rhombus-big-bounce-down var(--animation-duration-slow) ease-in-out; }
+.shape-square-rhombus.bounce-left { animation: rhombus-big-bounce-left var(--animation-duration-slow) ease-in-out; }
+.shape-square-rhombus.bounce-right { animation: rhombus-big-bounce-right var(--animation-duration-slow) ease-in-out; }
 
 /* Big image view */
 .big-image-container {

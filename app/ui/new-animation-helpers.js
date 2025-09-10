@@ -72,7 +72,6 @@ animationHelper.makeBounce = function(record) {
   const bounceIndex = Math.floor(Math.random() * 4)
 
   const bounceDirection = animationHelper.bouncePicker[bounceIndex];
-  console.log(bounceDirection);
   return animationHelper.animate(element, bounceDirection, 725);
 };
 
