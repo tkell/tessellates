@@ -141,6 +141,7 @@ body {
   gap: 0;
   width: var(--grid-size);
   height: 1000px;
+  transform: translateY(-100px);
 }
 
 /* grid location adjustments */
@@ -162,32 +163,32 @@ body {
 .image-grid-rhombus .image-item:nth-child(24) { grid-column: 9; }
 
 /* margin adustments for density and second row */
-.image-grid-rhombus .image-item:nth-child(1) { margin-left: 25px; }
-.image-grid-rhombus .image-item:nth-child(2) { margin-left: -100px;}
-.image-grid-rhombus .image-item:nth-child(3) { margin-left: -225px; }
-.image-grid-rhombus .image-item:nth-child(4) { margin-left: -25px; }
-.image-grid-rhombus .image-item:nth-child(5) { margin-left: -150px;}
-.image-grid-rhombus .image-item:nth-child(6) { margin-left: -275px; }
-.image-grid-rhombus .image-item:nth-child(7) { margin-left: -75px; }
-.image-grid-rhombus .image-item:nth-child(8) { margin-left: -200px;}
-.image-grid-rhombus .image-item:nth-child(9) { margin-left: -325px; }
+.image-grid-rhombus .image-item:nth-child(1) { margin-left: 10px; }
+.image-grid-rhombus .image-item:nth-child(2) { margin-left: -115px;}
+.image-grid-rhombus .image-item:nth-child(3) { margin-left: -240px; }
+.image-grid-rhombus .image-item:nth-child(4) { margin-left: -40px; }
+.image-grid-rhombus .image-item:nth-child(5) { margin-left: -165px;}
+.image-grid-rhombus .image-item:nth-child(6) { margin-left: -290px; }
+.image-grid-rhombus .image-item:nth-child(7) { margin-left: -90px; }
+.image-grid-rhombus .image-item:nth-child(8) { margin-left: -215px;}
+.image-grid-rhombus .image-item:nth-child(9) { margin-left: -340px; }
 
-.image-grid-rhombus .image-item:nth-child(10) { margin-left: 65px; }
-.image-grid-rhombus .image-item:nth-child(11) { margin-left: -65px; } 
-.image-grid-rhombus .image-item:nth-child(12) { margin-left: -186px; }
-.image-grid-rhombus .image-item:nth-child(13) { margin-left: 20px; }
-.image-grid-rhombus .image-item:nth-child(14) { margin-left: -110px; } 
-.image-grid-rhombus .image-item:nth-child(15) { margin-left: -230px; }
+.image-grid-rhombus .image-item:nth-child(10) { margin-left: 50px; }
+.image-grid-rhombus .image-item:nth-child(11) { margin-left: -80px; } 
+.image-grid-rhombus .image-item:nth-child(12) { margin-left: -200px; }
+.image-grid-rhombus .image-item:nth-child(13) { margin-left: 5px; }
+.image-grid-rhombus .image-item:nth-child(14) { margin-left: -125px; } 
+.image-grid-rhombus .image-item:nth-child(15) { margin-left: -245px; }
 
-.image-grid-rhombus .image-item:nth-child(16) { margin-left: 25px; }
-.image-grid-rhombus .image-item:nth-child(17) { margin-left: -100px;}
-.image-grid-rhombus .image-item:nth-child(18) { margin-left: -225px; }
-.image-grid-rhombus .image-item:nth-child(19) { margin-left: -25px; }
-.image-grid-rhombus .image-item:nth-child(20) { margin-left: -150px;}
-.image-grid-rhombus .image-item:nth-child(21) { margin-left: -275px; }
-.image-grid-rhombus .image-item:nth-child(22) { margin-left: -75px; }
-.image-grid-rhombus .image-item:nth-child(23) { margin-left: -200px;}
-.image-grid-rhombus .image-item:nth-child(24) { margin-left: -325px; }
+.image-grid-rhombus .image-item:nth-child(16) { margin-left: 10px; }
+.image-grid-rhombus .image-item:nth-child(17) { margin-left: -115px;}
+.image-grid-rhombus .image-item:nth-child(18) { margin-left: -240px; }
+.image-grid-rhombus .image-item:nth-child(19) { margin-left: -40px; }
+.image-grid-rhombus .image-item:nth-child(20) { margin-left: -165px;}
+.image-grid-rhombus .image-item:nth-child(21) { margin-left: -290px; }
+.image-grid-rhombus .image-item:nth-child(22) { margin-left: -90px; }
+.image-grid-rhombus .image-item:nth-child(23) { margin-left: -215px;}
+.image-grid-rhombus .image-item:nth-child(24) { margin-left: -340px; }
 
 /* Rhombus positioning with transforms - override the base shape-rhombus clip-path */
 .shape-rhombus.rhombus-left {
@@ -316,11 +317,11 @@ transform: translate(25%, -10%);
 
 /* Rhombus-specific bounce animations that preserve positioning (without rotation) */
 @keyframes rhombus-bounce-left {
-  0% { transform: translateX(-33.3%); }
-  25% { transform: translateX(-33.3%) translateY(-10px); }
-  50% { transform: translateX(-33.3%) translateY(5px); }
-  75% { transform: translateX(-33.3%) translateY(-3px); }
-  100% { transform: translateX(-33.3%); }
+  0% { transform: translateY(50%); }
+  25% { transform: translateY(50%) translateY(-10px); }
+  50% { transform: translateY(50%) translateY(5px); }
+  75% { transform: translateY(50%) translateY(-3px); }
+  100% { transform: translateY(50%); }
 }
 
 @keyframes rhombus-bounce-center {
@@ -332,19 +333,19 @@ transform: translate(25%, -10%);
 }
 
 @keyframes rhombus-bounce-right {
-  0% { transform: translateX(33.3%); }
-  25% { transform: translateX(33.3%) translateY(-10px); }
-  50% { transform: translateX(33.3%) translateY(5px); }
-  75% { transform: translateX(33.3%) translateY(-3px); }
-  100% { transform: translateX(33.3%); }
+  0% { transform: translateY(50%); }
+  25% { transform: translateY(50%) translateY(-10px); }
+  50% { transform: translateY(50%) translateY(5px); }
+  75% { transform: translateY(50%) translateY(-3px); }
+  100% { transform: translateY(50%); }
 }
 
 @keyframes rhombus-small-bounce-left {
-  0% { transform: translateX(-33.3%); }
-  25% { transform: translateX(-33.3%) translateY(-4px); }
-  50% { transform: translateX(-33.3%) translateY(2px); }
-  75% { transform: translateX(-33.3%) translateY(-1px); }
-  100% { transform: translateX(-33.3%); }
+  0% { transform: translateY(50%); }
+  25% { transform: translateY(50%) translateY(-4px); }
+  50% { transform: translateY(50%) translateY(2px); }
+  75% { transform: translateY(50%) translateY(-1px); }
+  100% { transform: translateY(50%); }
 }
 
 @keyframes rhombus-small-bounce-center {
@@ -356,11 +357,11 @@ transform: translate(25%, -10%);
 }
 
 @keyframes rhombus-small-bounce-right {
-  0% { transform: translateX(33.3%); }
-  25% { transform: translateX(33.3%) translateY(-4px); }
-  50% { transform: translateX(33.3%) translateY(2px); }
-  75% { transform: translateX(33.3%) translateY(-1px); }
-  100% { transform: translateX(33.3%); }
+  0% { transform: translateY(50%); }
+  25% { transform: translateY(50%) translateY(-4px); }
+  50% { transform: translateY(50%) translateY(2px); }
+  75% { transform: translateY(50%) translateY(-1px); }
+  100% { transform: translateY(50%); }
 }
 
 /* Rhombus bounce classes */
@@ -390,35 +391,35 @@ transform: translate(25%, -10%);
 
 /* Rhombus-left directional animations */
 @keyframes rhombus-bounce-left-up {
-  0% { transform: translateX(-33.3%); }
-  25% { transform: translateX(-33.3%) translateY(-10px); }
-  50% { transform: translateX(-33.3%) translateY(5px); }
-  75% { transform: translateX(-33.3%) translateY(-3px); }
-  100% { transform: translateX(-33.3%); }
+  0% { transform: translateY(50%); }
+  25% { transform: translateY(50%) translateY(-10px); }
+  50% { transform: translateY(50%) translateY(5px); }
+  75% { transform: translateY(50%) translateY(-3px); }
+  100% { transform: translateY(50%); }
 }
 
 @keyframes rhombus-bounce-left-down {
-  0% { transform: translateX(-33.3%); }
-  25% { transform: translateX(-33.3%) translateY(10px); }
-  50% { transform: translateX(-33.3%) translateY(-5px); }
-  75% { transform: translateX(-33.3%) translateY(3px); }
-  100% { transform: translateX(-33.3%); }
+  0% { transform: translateY(50%); }
+  25% { transform: translateY(50%) translateY(10px); }
+  50% { transform: translateY(50%) translateY(-5px); }
+  75% { transform: translateY(50%) translateY(3px); }
+  100% { transform: translateY(50%); }
 }
 
 @keyframes rhombus-bounce-left-left {
-  0% { transform: translateX(-33.3%); }
-  25% { transform: translateX(-33.3%) translateX(-10px); }
-  50% { transform: translateX(-33.3%) translateX(5px); }
-  75% { transform: translateX(-33.3%) translateX(-3px); }
-  100% { transform: translateX(-33.3%); }
+  0% { transform: translateY(50%); }
+  25% { transform: translateY(50%) translateX(-10px); }
+  50% { transform: translateY(50%) translateX(5px); }
+  75% { transform: translateY(50%) translateX(-3px); }
+  100% { transform: translateY(50%); }
 }
 
 @keyframes rhombus-bounce-left-right {
-  0% { transform: translateX(-33.3%); }
-  25% { transform: translateX(-33.3%) translateX(10px); }
-  50% { transform: translateX(-33.3%) translateX(-5px); }
-  75% { transform: translateX(-33.3%) translateX(3px); }
-  100% { transform: translateX(-33.3%); }
+  0% { transform: translateY(50%); }
+  25% { transform: translateY(50%) translateX(10px); }
+  50% { transform: translateY(50%) translateX(-5px); }
+  75% { transform: translateY(50%) translateX(3px); }
+  100% { transform: translateY(50%); }
 }
 
 /* Rhombus-center directional animations */
@@ -456,35 +457,35 @@ transform: translate(25%, -10%);
 
 /* Rhombus-right directional animations */
 @keyframes rhombus-bounce-right-up {
-  0% { transform: translateX(33.3%); }
-  25% { transform: translateX(33.3%) translateY(-10px); }
-  50% { transform: translateX(33.3%) translateY(5px); }
-  75% { transform: translateX(33.3%) translateY(-3px); }
-  100% { transform: translateX(33.3%); }
+  0% { transform: translateY(50%); }
+  25% { transform: translateY(50%) translateY(-10px); }
+  50% { transform: translateY(50%) translateY(5px); }
+  75% { transform: translateY(50%) translateY(-3px); }
+  100% { transform: translateY(50%); }
 }
 
 @keyframes rhombus-bounce-right-down {
-  0% { transform: translateX(33.3%); }
-  25% { transform: translateX(33.3%) translateY(10px); }
-  50% { transform: translateX(33.3%) translateY(-5px); }
-  75% { transform: translateX(33.3%) translateY(3px); }
-  100% { transform: translateX(33.3%); }
+  0% { transform: translateY(50%); }
+  25% { transform: translateY(50%) translateY(10px); }
+  50% { transform: translateY(50%) translateY(-5px); }
+  75% { transform: translateY(50%) translateY(3px); }
+  100% { transform: translateY(50%) }
 }
 
 @keyframes rhombus-bounce-right-left {
-  0% { transform: translateX(33.3%); }
-  25% { transform: translateX(33.3%) translateX(-10px); }
-  50% { transform: translateX(33.3%) translateX(5px); }
-  75% { transform: translateX(33.3%) translateX(-3px); }
-  100% { transform: translateX(33.3%); }
+  0% { transform: translateY(50%); }
+  25% { transform: translateY(50%) translateX(-10px); }
+  50% { transform: translateY(50%) translateX(5px); }
+  75% { transform: translateY(50%) translateX(-3px); }
+  100% { transform: translateY(50%); }
 }
 
 @keyframes rhombus-bounce-right-right {
-  0% { transform: translateX(33.3%); }
-  25% { transform: translateX(33.3%) translateX(10px); }
-  50% { transform: translateX(33.3%) translateX(-5px); }
-  75% { transform: translateX(33.3%) translateX(3px); }
-  100% { transform: translateX(33.3%); }
+  0% { transform: translateY(50%); }
+  25% { transform: translateY(50%) translateX(10px); }
+  50% { transform: translateY(50%) translateX(-5px); }
+  75% { transform: translateY(50%) translateX(3px); }
+  100% { transform: translateY(50%); }
 }
 
 /* Rhombus directional bounce classes */
