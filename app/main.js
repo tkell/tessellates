@@ -399,6 +399,9 @@ if (window.location.href.includes("digital")) {
 } else if (window.location.href.includes("vinyl")) {
   apiState.collectionName = "vinyl";
   apiState.approxReleases = 525;
+} else if (window.location.href.includes("productions")) {
+  apiState.collectionName = "productions";
+  apiState.approxReleases = 100;
 }
 
 // Load a random view ofthe collection
