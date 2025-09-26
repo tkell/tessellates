@@ -332,7 +332,8 @@ var apiState = {
   host: null,
   protocol: null,
   collectionName: null,
-  approxReleases: null
+  approxReleases: null,
+  filePathPrefix: null
 }
 let params = getSearchParameters();
 
@@ -395,12 +396,15 @@ if (window.location.href.includes("localhost") || window.location.href.includes(
 // Pick the collection
 if (window.location.href.includes("digital")) {
   apiState.collectionName = "digital";
+  apiState.filePathPrefix = undefined;
   apiState.approxReleases = 3001;
 } else if (window.location.href.includes("vinyl")) {
   apiState.collectionName = "vinyl";
+  apiState.filePathPrefix = "/Volumes/Mimir/Music/Albums/"
   apiState.approxReleases = 525;
 } else if (window.location.href.includes("productions")) {
   apiState.collectionName = "productions";
+  apiState.filePathPrefix = "/Volumes/Mimir/Productions/"
   apiState.approxReleases = 100;
 }
 
