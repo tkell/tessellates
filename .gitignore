@@ -2,6 +2,8 @@ app/vinyl/images
 app/vinyl/release_source.json
 app/digital/images
 app/digital/release_source.json
+app/productions/images
+app/productions/release_source.json
 notes.txt
 deploy.sh
 deploy_without_images.sh
