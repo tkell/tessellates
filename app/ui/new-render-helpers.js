@@ -66,8 +66,43 @@ renderHelper._moveLoad = function(data, tessellation, previousData, paginationOf
   const numRecordsToRemove = Math.abs(paginationOffset);
   const numRecordsToKeep = data.length - Math.abs(paginationOffset);
 
+  // Phase 1: Fade out old records
   renderHelper._fadeOutOldRecords(data, previousData, paginationOffset, numRecordsToRemove);
+
+  // Phase 2: Move all records to new positions
   renderHelper._moveRecordsToNewPositions(data, previousData, paginationOffset, tessellation);
+
+  // Phase 3: After animations complete, re-initialize everything with new data
+  setTimeout(() => {
+    renderHelper._addStartingStates(data, tessellation);
+    imageHelper.loadImages(data)
+      .then(() => imageHelper.clearGrid())
+      .then(() => imageHelper.addImagesInstantly(data, tessellation))
+      .then(() => {
+        // Fade in the new records that were added
+        for (let i = 0; i < numRecordsToRemove; i++) {
+          const index = paginationOffset < 0 ? i : data.length - 1 - i;
+          const newRecordToFadeIn = data[index];
+          console.log(index, newRecordToFadeIn);
+          if (newRecordToFadeIn && newRecordToFadeIn.imageItem) {
+            newRecordToFadeIn.imageItem.style.opacity = '0';
+            uiHelper.fadeInRecord(newRecordToFadeIn)
+              .then(() => {
+                newRecordToFadeIn.imageItem.style.opacity = '';
+              });
+          }
+        }
+      })
+      .then(() => {
+        for (let i = 0; i < data.length; i++) {
+          uiHelper.setupEventListeners(data[i], data);
+        }
+      })
+      .then(() => {
+        // Re-add ambient animations
+        renderHelper._addAmbientAnimations(data, tessellation);
+      });
+  }, 1200);
 };
 
 /**
@@ -84,7 +119,6 @@ renderHelper._fadeOutOldRecords = function(data, previousData, paginationOffset,
     if (oldRecordToFadeOut) {
       uiHelper.fadeOutRecord(oldRecordToFadeOut)
       .then(() => {
-        console.log(oldRecordToFadeOut);
         oldRecordToFadeOut.imageItem.style.visibility = "hidden";
       })
     }

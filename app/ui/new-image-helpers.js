@@ -167,6 +167,64 @@ imageHelper.addImages = function(data, tessellation, gridContainerId = 'image-gr
 };
 
 /**
+ * Clear the grid of all elements (like canvas.clear() in fabric.js)
+ * @param {string} gridContainerId - ID of the grid container
+ * @returns {Promise} - Promise that resolves immediately after clearing
+ */
+imageHelper.clearGrid = function(gridContainerId = 'image-grid') {
+  const gridContainer = document.getElementById(gridContainerId);
+  gridContainer.innerHTML = '';
+  return Promise.resolve();
+};
+
+/**
+ * Add images instantly without timeout delays (for pagination)
+ * Sets up DOM structure first, then adds all images immediately
+ * @param {Array} data - Array of record objects
+ * @param {Object} tessellation - Tessellation configuration
+ * @param {string} gridContainerId - ID of the grid container
+ * @returns {Promise} - Promise that resolves when all images are added
+ */
+imageHelper.addImagesInstantly = function(data, tessellation, gridContainerId = 'image-grid') {
+  const gridContainer = document.getElementById(gridContainerId);
+
+  // First, set up the grid structure and CSS variables (like renderImageGridAndPreview)
+  const gridSize = tessellation.size;
+  let gridColumns, gridRows;
+
+  if (tessellation.type === 'triangle') {
+    gridColumns = 9;
+    gridRows = 5;
+  } else if (tessellation.type === 'rhombus') {
+    gridColumns = 8;
+    gridRows = 4;
+  } else {
+    gridColumns = Math.sqrt(tessellation.defaultItems);
+    gridRows = Math.sqrt(tessellation.defaultItems);
+  }
+
+  document.documentElement.style.setProperty('--grid-size', `${gridSize}px`);
+  document.documentElement.style.setProperty('--grid-columns', gridColumns);
+  document.documentElement.style.setProperty('--grid-rows', gridRows);
+
+  // Create DOM elements and add images immediately
+  for (let i = 0; i < data.length; i++) {
+    const record = data[i];
+
+    // Create the DOM structure
+    const imageItem = imageHelper.createDivAndPlaceholder(record);
+    record.imageItem = imageItem;
+    gridContainer.appendChild(imageItem);
+
+    // Immediately add the image (no timeout)
+    const classes = `${record.clipPathClass} ${record.positionClass}`.trim();
+    imageHelper.loadImageItem(record, classes);
+  }
+
+  return Promise.resolve();
+};
+
+/**
  * Display a large image in the big image container
  * @param {Object} record - Record object containing image data
  * @returns {Promise} - Promise that resolves when the image is displayed

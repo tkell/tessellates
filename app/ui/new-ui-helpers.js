@@ -187,9 +187,10 @@ uiHelper.fadeOutRecord = function(record) {
 /**
  * Fade in a record
  * @param {Object} record - Record object
+ * @returns {Promise} - Promise that resolves when fade-in completes
  */
 uiHelper.fadeInRecord = function(record) {
-  animationHelper.makeFadeIn(record);
+  return animationHelper.makeFadeIn(record);
 };
 
 /**
