@@ -107,6 +107,50 @@ body {
   clip-path: circle(50% at center);
 }
 
+/* Circle tessellation grid layout */
+.image-grid-circle {
+  --m: 12; /* number of items */
+  --d: 250px; /* image size (diameter) */
+  --rel: -0.25; /* extra space between images */
+  --ba: calc(1turn / var(--m)); /* base angle */
+  --r: calc(0.5 * (1 + var(--rel)) * var(--d) / tan(0.5 * var(--ba))); /* circle radius */
+
+  display: grid;
+  width: calc(2 * var(--r) + var(--d));
+  height: calc(2 * var(--r) + var(--d));
+  place-content: center;
+  margin: 0 auto;
+}
+
+.image-grid-circle .image-item {
+  grid-area: 1 / 1;
+  place-self: center;
+  width: var(--d);
+  height: var(--d);
+}
+
+/* Circle positioning classes */
+.circle-item-0 { --i: 0; }
+.circle-item-1 { --i: 1; }
+.circle-item-2 { --i: 2; }
+.circle-item-3 { --i: 3; }
+.circle-item-4 { --i: 4; }
+.circle-item-5 { --i: 5; }
+.circle-item-6 { --i: 6; }
+.circle-item-7 { --i: 7; }
+.circle-item-8 { --i: 8; }
+.circle-item-9 { --i: 9; }
+.circle-item-10 { --i: 10; }
+.circle-item-11 { --i: 11; }
+
+.image-grid-circle .image-item[class*="circle-item-"] {
+  --ca: calc(var(--i) * var(--ba));
+  transform:
+    rotate(var(--ca))
+    translate(var(--r))
+    rotate(calc(-1 * var(--ca)));
+}
+
 /* Triangle shape */
 .shape-triangle {
   clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
@@ -552,6 +596,72 @@ transform: translate(25%, -10%);
 .shape-square-rhombus.bounce-down { animation: rhombus-big-bounce-down var(--animation-duration-slow) ease-in-out; }
 .shape-square-rhombus.bounce-left { animation: rhombus-big-bounce-left var(--animation-duration-slow) ease-in-out; }
 .shape-square-rhombus.bounce-right { animation: rhombus-big-bounce-right var(--animation-duration-slow) ease-in-out; }
+
+/* Circle bounce animations that preserve positioning */
+@keyframes circle-bounce-up {
+  0% { transform: rotate(var(--ca)) translate(var(--r)) rotate(calc(-1 * var(--ca))); }
+  25% { transform: rotate(var(--ca)) translate(var(--r)) rotate(calc(-1 * var(--ca))) translateY(-10px); }
+  50% { transform: rotate(var(--ca)) translate(var(--r)) rotate(calc(-1 * var(--ca))) translateY(5px); }
+  75% { transform: rotate(var(--ca)) translate(var(--r)) rotate(calc(-1 * var(--ca))) translateY(-3px); }
+  100% { transform: rotate(var(--ca)) translate(var(--r)) rotate(calc(-1 * var(--ca))); }
+}
+
+@keyframes circle-bounce-down {
+  0% { transform: rotate(var(--ca)) translate(var(--r)) rotate(calc(-1 * var(--ca))); }
+  25% { transform: rotate(var(--ca)) translate(var(--r)) rotate(calc(-1 * var(--ca))) translateY(10px); }
+  50% { transform: rotate(var(--ca)) translate(var(--r)) rotate(calc(-1 * var(--ca))) translateY(-5px); }
+  75% { transform: rotate(var(--ca)) translate(var(--r)) rotate(calc(-1 * var(--ca))) translateY(3px); }
+  100% { transform: rotate(var(--ca)) translate(var(--r)) rotate(calc(-1 * var(--ca))); }
+}
+
+@keyframes circle-bounce-left {
+  0% { transform: rotate(var(--ca)) translate(var(--r)) rotate(calc(-1 * var(--ca))); }
+  25% { transform: rotate(var(--ca)) translate(var(--r)) rotate(calc(-1 * var(--ca))) translateX(-10px); }
+  50% { transform: rotate(var(--ca)) translate(var(--r)) rotate(calc(-1 * var(--ca))) translateX(5px); }
+  75% { transform: rotate(var(--ca)) translate(var(--r)) rotate(calc(-1 * var(--ca))) translateX(-3px); }
+  100% { transform: rotate(var(--ca)) translate(var(--r)) rotate(calc(-1 * var(--ca))); }
+}
+
+@keyframes circle-bounce-right {
+  0% { transform: rotate(var(--ca)) translate(var(--r)) rotate(calc(-1 * var(--ca))); }
+  25% { transform: rotate(var(--ca)) translate(var(--r)) rotate(calc(-1 * var(--ca))) translateX(10px); }
+  50% { transform: rotate(var(--ca)) translate(var(--r)) rotate(calc(-1 * var(--ca))) translateX(-5px); }
+  75% { transform: rotate(var(--ca)) translate(var(--r)) rotate(calc(-1 * var(--ca))) translateX(3px); }
+  100% { transform: rotate(var(--ca)) translate(var(--r)) rotate(calc(-1 * var(--ca))); }
+}
+
+/* Circle small bounce animation */
+@keyframes circle-small-bounce {
+  0% { transform: rotate(var(--ca)) translate(var(--r)) rotate(calc(-1 * var(--ca))); }
+  25% { transform: rotate(var(--ca)) translate(var(--r)) rotate(calc(-1 * var(--ca))) translateY(-4px); }
+  50% { transform: rotate(var(--ca)) translate(var(--r)) rotate(calc(-1 * var(--ca))) translateY(2px); }
+  75% { transform: rotate(var(--ca)) translate(var(--r)) rotate(calc(-1 * var(--ca))) translateY(-1px); }
+  100% { transform: rotate(var(--ca)) translate(var(--r)) rotate(calc(-1 * var(--ca))); }
+}
+
+/* Circle bounce classes */
+.image-grid-circle [class*="circle-item-"].bounce-up {
+  animation: circle-bounce-up var(--animation-duration-slow) ease-in-out;
+  z-index: auto !important;
+}
+.image-grid-circle [class*="circle-item-"].bounce-down {
+  animation: circle-bounce-down var(--animation-duration-slow) ease-in-out;
+  z-index: auto !important;
+}
+.image-grid-circle [class*="circle-item-"].bounce-left {
+  animation: circle-bounce-left var(--animation-duration-slow) ease-in-out;
+  z-index: auto !important;
+}
+.image-grid-circle [class*="circle-item-"].bounce-right {
+  animation: circle-bounce-right var(--animation-duration-slow) ease-in-out;
+  z-index: auto !important;
+}
+
+/* Circle small bounce class */
+.image-grid-circle [class*="circle-item-"].small-bounce {
+  animation: circle-small-bounce var(--animation-duration-fast) ease-in-out;
+  z-index: auto !important;
+}
 
 /* Big image view */
 .big-image-container {

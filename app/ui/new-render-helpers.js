@@ -148,7 +148,8 @@ renderHelper._addStartingStateToRecord = function(record, index, tessellation) {
   if (tessellation.type === 'circle') {
     record.clipPathClass = 'shape-circle';
     record.bigClipPathClass = 'shape-circle';
-    record.positionClass = '';
+    // Assign circle position class based on index
+    record.positionClass = `circle-item-${record.index % 12}`;
   } else if (tessellation.type === 'triangle') {
     record.bigClipPathClass = 'shape-square';
     // Use angle to determine triangle orientation and positioning

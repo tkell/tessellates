@@ -22,20 +22,15 @@ makeCircle = function() {
     for (let i = 0; i < data.length; i++) {
       let record = data[i];
 
-      const radians = (i + circle.angleOffset) * circle.angleIncrement * Math.PI / 180;
-      record.x = circle.size / 2 + circle.radius * Math.cos(radians);
-      record.y = circle.size / 2 + circle.radius * Math.sin(radians);
+      // Store index for CSS positioning
+      record.index = i;
       record.itemRadius = circle.itemRadius;
       record.angle = 0;
-      record.imageX = record.x;
-      record.imageY = record.y;
-      record.clickX = record.x - circle.itemRadius;
-      record.clickY = record.y - circle.itemRadius;
+
+      // Big image positioning (center of container)
       record.bigImageX = circle.size / 2;
       record.bigImageY = circle.size / 2;
 
-      record.tempClipPathX = record.x - circle.radius - circle.itemRadius;
-      record.tempClipPathY = record.y - circle.radius - circle.itemRadius;
       record.isCloseUp = true;
     }
 
