@@ -65,34 +65,9 @@ renderHelper._newLoad = function(data, tessellation) {
 renderHelper._moveLoad = function(data, tessellation, previousData, paginationOffset) {
   const numRecordsToRemove = Math.abs(paginationOffset);
   const numRecordsToKeep = data.length - Math.abs(paginationOffset);
-  
-  // Fade out records that will be removed
+
   renderHelper._fadeOutOldRecords(data, previousData, paginationOffset, numRecordsToRemove);
-  
-  // Prepare data and load images
-  setTimeout(() => {
-    renderHelper._addStartingStates(data, tessellation);
-    
-    imageHelper.loadImages(data)
-      .then(() => {
-        // Re-render the grid with new data
-        imageHelper.renderImageGrid(data, tessellation);
-        
-        // Set up event handlers for each item
-        for (let i = 0; i < data.length; i++) {
-          uiHelper.setupEventListeners(data[i], data);
-        }
-        
-        // Fade in the new records
-        for (let i = 0; i < numRecordsToRemove; i++) {
-          const index = paginationOffset < 0 ? i : data.length - 1 - i;
-          uiHelper.fadeInRecord(data[index]);
-        }
-        
-        // Add ambient animations
-        renderHelper._addAmbientAnimations(data, tessellation);
-      });
-  }, 1200);
+  renderHelper._moveRecordsToNewPositions(data, previousData, paginationOffset, tessellation);
 };
 
 /**
@@ -107,9 +82,76 @@ renderHelper._fadeOutOldRecords = function(data, previousData, paginationOffset,
     const index = paginationOffset > 0 ? i : previousData.length - 1 - i;
     const oldRecordToFadeOut = previousData[index];
     if (oldRecordToFadeOut) {
-      uiHelper.fadeOutRecord(oldRecordToFadeOut);
+      uiHelper.fadeOutRecord(oldRecordToFadeOut)
+      .then(() => {
+        console.log(oldRecordToFadeOut);
+        oldRecordToFadeOut.imageItem.style.visibility = "hidden";
+      })
     }
   }
+};
+
+/**
+ * Move all records (both visible and faded-out) to their new positions for pagination
+ * @param {Array} newData - New data array
+ * @param {Array} previousData - Previous data array
+ * @param {number} paginationOffset - Pagination offset
+ * @param {Object} tessellation - Tessellation configuration
+ */
+renderHelper._moveRecordsToNewPositions = function(newData, previousData, paginationOffset, tessellation) {
+  // Simple approach: move each old record to the corresponding new grid position
+  for (let i = 0; i < previousData.length; i++) {
+    const oldRecord = previousData[i];
+    if (oldRecord && oldRecord.imageItem) {
+      // Calculate where this record should move to
+      let targetGridIndex;
+
+      if (paginationOffset > 0) {
+        // Forward pagination: records shift left by paginationOffset positions
+        targetGridIndex = i - paginationOffset;
+      } else {
+        // Backward pagination: records shift right by abs(paginationOffset) positions
+        targetGridIndex = i + Math.abs(paginationOffset);
+      }
+
+      // If target position is within bounds, move there
+      if (targetGridIndex >= 0 && targetGridIndex < newData.length) {
+        renderHelper._moveRecordToGridPosition(oldRecord, targetGridIndex, tessellation);
+      }
+    }
+  }
+};
+
+/**
+ * Move a record's DOM element to a new grid position using CSS transforms
+ * @param {Object} record - Record to move
+ * @param {number} newGridIndex - New index in the grid
+ * @param {Object} tessellation - Tessellation configuration
+ */
+renderHelper._moveRecordToGridPosition = function(record, newGridIndex, tessellation) {
+  if (!record.imageItem) return;
+
+  if (tessellation.type === 'square') {
+    const columns = Math.sqrt(tessellation.defaultItems);
+    const currentIndex = record.index;
+    const newRow = Math.floor(newGridIndex / columns);
+    const newCol = newGridIndex % columns;
+    const currentRow = Math.floor(currentIndex / columns);
+    const currentCol = currentIndex % columns;
+
+    // Calculate pixel offsets (each grid cell is var(--item-size))
+    const itemSize = 1000 / columns; // var(--grid-size) / var(--grid-columns)
+    const xOffset = (newCol - currentCol) * itemSize;
+    const yOffset = (newRow - currentRow) * itemSize;
+    record.imageItem.style.transition = 'transform 725ms ease-in-out';
+    record.imageItem.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
+
+  } else if (tessellation.type === 'circle') {
+    // Update circle position class with smooth transition
+    record.imageItem.style.transition = 'transform var(--animation-duration-slow) ease-in-out';
+    record.imageItem.className = record.imageItem.className.replace(/circle-item-\d+/, `circle-item-${newGridIndex % 12}`);
+  }
+  // For other tessellations, we might need more complex positioning logic
 };
 
 /**

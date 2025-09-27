@@ -181,7 +181,7 @@ uiHelper.bounceRecordSmall = function(record) {
  * @param {Object} record - Record object
  */
 uiHelper.fadeOutRecord = function(record) {
-  animationHelper.makeFadeOut(record);
+  return animationHelper.makeFadeOut(record);
 };
 
 /**
