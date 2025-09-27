@@ -319,7 +319,13 @@ uiHelper.drawPreloadHexagons = function(tess) {
   // Create placeholder items
   for (let i = 0; i < tess.defaultItems; i++) {
     const placeholder = document.createElement('div');
-    placeholder.className = 'image-item';
+
+    // Apply tessellation-specific positioning classes
+    if (tess.type === 'circle') {
+      placeholder.className = `image-item shape-circle circle-item-${i % 12}`;
+    } else {
+      placeholder.className = 'image-item';
+    }
     
     const hexLoader = document.createElement('div');
     hexLoader.className = 'hex-loader';
