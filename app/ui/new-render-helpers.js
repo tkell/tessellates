@@ -165,18 +165,38 @@ renderHelper._moveRecordsToNewPositions = function(newData, previousData, pagina
 renderHelper._moveRecordToGridPosition = function(record, newGridIndex, tessellation) {
   if (!record.imageItem) return;
 
-  if (tessellation.type === 'square') {
-    const columns = Math.sqrt(tessellation.defaultItems);
+  if (tessellation.type === 'square' || tessellation.type === 'triangle') {
+    // Get grid configuration for this tessellation type
+    let columns, itemSizeX, itemSizeY;
+
+    if (tessellation.type === 'square') {
+      columns = Math.sqrt(tessellation.defaultItems);
+      itemSizeX = itemSizeY = 1000 / columns; // var(--grid-size) / var(--grid-columns)
+    } else if (tessellation.type === 'triangle') {
+      columns = 9; // Triangle tessellation uses 9 columns
+      itemSizeX = itemSizeY = 200; // Each triangle cell is 200px × 200px
+    }
+
+    // Calculate current and new positions in the grid
     const currentIndex = record.index;
     const newRow = Math.floor(newGridIndex / columns);
     const newCol = newGridIndex % columns;
     const currentRow = Math.floor(currentIndex / columns);
     const currentCol = currentIndex % columns;
 
-    // Calculate pixel offsets (each grid cell is var(--item-size))
-    const itemSize = 1000 / columns; // var(--grid-size) / var(--grid-columns)
-    const xOffset = (newCol - currentCol) * itemSize;
-    const yOffset = (newRow - currentRow) * itemSize;
+    // Calculate pixel offsets based on grid cell size
+    let xOffset = (newCol - currentCol) * itemSizeX;
+    let yOffset = (newRow - currentRow) * itemSizeY;
+
+    // For triangle tessellation, account for the negative margin offsets
+    if (tessellation.type === 'triangle') {
+      const currentMargin = -(currentCol * 100); // Current CSS margin offset
+      const newMargin = -(newCol * 100); // New CSS margin offset
+      const marginDelta = newMargin - currentMargin; // Difference in margin
+      xOffset += marginDelta; // Add margin difference to our transform
+    }
+
+    // Apply transform with smooth animation
     record.imageItem.style.transition = 'transform 725ms ease-in-out';
     record.imageItem.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
 
