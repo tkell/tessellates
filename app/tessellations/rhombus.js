@@ -13,8 +13,8 @@ function rhombusPoints(x, y, size) {
 makeRhombus = function() {
   rhombus = {};
   rhombus.xSize = 334;
-  rhombus.sideLength = Math.floor((rhombus.xSize / 2) / Math.cos(Math.PI / 6));
-  rhombus.ySize = rhombus.sideLength * 2;
+  rhombus.sideLength = Math.floor((rhombus.xSize / 2) / Math.cos(Math.PI / 6)); // 192
+  rhombus.ySize = rhombus.sideLength * 2; // 384
   rhombus.xMoveOffset = rhombus.xSize;
   rhombus.yMoveOffset = rhombus.ySize / 2;
   rhombus.size = 1000;

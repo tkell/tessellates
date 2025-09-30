@@ -191,8 +191,8 @@ body {
 /* Rhombus grid layout */
 .image-grid-rhombus {
   display: grid;
-  grid-template-columns: repeat(9, 125px);
-  grid-template-rows: repeat(3, 275px);
+  grid-template-columns: repeat(9, 111px);
+  grid-template-rows: repeat(3, 334px);
   gap: 0;
   width: var(--grid-size);
   height: 1000px;
@@ -218,50 +218,50 @@ body {
 .image-grid-rhombus .image-item:nth-child(24) { grid-column: 9; }
 
 /* margin adjustments for density and second row */
-.image-grid-rhombus .image-item:nth-child(15n+1) { margin-left: 10px; }
-.image-grid-rhombus .image-item:nth-child(15n+2) { margin-left: -115px;}
-.image-grid-rhombus .image-item:nth-child(15n+3) { margin-left: -240px; }
-.image-grid-rhombus .image-item:nth-child(15n+4) { margin-left: -40px; }
-.image-grid-rhombus .image-item:nth-child(15n+5) { margin-left: -165px;}
-.image-grid-rhombus .image-item:nth-child(15n+6) { margin-left: -290px; }
-.image-grid-rhombus .image-item:nth-child(15n+7) { margin-left: -90px; }
-.image-grid-rhombus .image-item:nth-child(15n+8) { margin-left: -215px;}
-.image-grid-rhombus .image-item:nth-child(15n+9) { margin-left: -340px; }
+.image-grid-rhombus .image-item:nth-child(15n+1) { margin-left: 0px; }
+.image-grid-rhombus .image-item:nth-child(15n+2) { margin-left: -110px;}
+.image-grid-rhombus .image-item:nth-child(15n+3) { margin-left: -220px; }
+.image-grid-rhombus .image-item:nth-child(15n+4) { margin-left: 0px; }
+.image-grid-rhombus .image-item:nth-child(15n+5) { margin-left: -110px;}
+.image-grid-rhombus .image-item:nth-child(15n+6) { margin-left: -220px; }
+.image-grid-rhombus .image-item:nth-child(15n+7) { margin-left: 0px; }
+.image-grid-rhombus .image-item:nth-child(15n+8) { margin-left: -110px;}
+.image-grid-rhombus .image-item:nth-child(15n+9) { margin-left: -220px; }
 
-.image-grid-rhombus .image-item:nth-child(10) { margin-left: 50px; }
-.image-grid-rhombus .image-item:nth-child(11) { margin-left: -80px; } 
-.image-grid-rhombus .image-item:nth-child(12) { margin-left: -200px; }
-.image-grid-rhombus .image-item:nth-child(13) { margin-left: 5px; }
-.image-grid-rhombus .image-item:nth-child(14) { margin-left: -125px; } 
-.image-grid-rhombus .image-item:nth-child(15) { margin-left: -245px; }
+.image-grid-rhombus .image-item:nth-child(10) { margin-left: 55px; }
+.image-grid-rhombus .image-item:nth-child(11) { margin-left: -55px; }
+.image-grid-rhombus .image-item:nth-child(12) { margin-left: -165px; }
+.image-grid-rhombus .image-item:nth-child(13) { margin-left: 55px; }
+.image-grid-rhombus .image-item:nth-child(14) { margin-left: -55px; }
+.image-grid-rhombus .image-item:nth-child(15) { margin-left: -165px; }
 
 /* Rhombus positioning with transforms - override the base shape-rhombus clip-path */
 .shape-rhombus.rhombus-left {
   transform: translateY(50%);
-  clip-path: polygon(0% 0%, 50% 25%, 50% 82.5%, 0% 60%);
+  clip-path: polygon(0% 0%, 50% 25%, 50% 77%, 0% 51.5%);
 }
 
 .shape-rhombus.rhombus-center {
-  clip-path: polygon(50% 25%, 100% 50%, 50% 75%, 0% 50%); /* Standard rhombus */
+  clip-path: polygon(50% 25%, 100% 50%, 50% 75%, 0% 50%);
 }
 
 .shape-rhombus.rhombus-right {
   transform: translateY(50%);
-  clip-path: polygon(50% 25%, 100% 0%, 100% 60%, 50% 82.5%);
+  clip-path: polygon(50% 25%, 100% 0%, 100% 51.5%, 50% 77%);
 }
 
 /* Size adjustments for rhombuses */
 .image-grid-rhombus .image-item {
   width: 334px;
-  height: 334px;
+  height: 384px;
 }
 
 .shape-rhombus.rhombus-right img {
-transform: translate(25%, -10%);
+transform: translate(25%);
 }
 
 .shape-rhombus.rhombus-left img {
-  transform: translate(-25%, -10%);
+  transform: translate(-25%);
 }
 
 /* Animation states - base hover state */
