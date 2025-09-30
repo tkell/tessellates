@@ -218,15 +218,15 @@ body {
 .image-grid-rhombus .image-item:nth-child(24) { grid-column: 9; }
 
 /* margin adjustments for density and second row */
-.image-grid-rhombus .image-item:nth-child(1) { margin-left: 10px; }
-.image-grid-rhombus .image-item:nth-child(2) { margin-left: -115px;}
-.image-grid-rhombus .image-item:nth-child(3) { margin-left: -240px; }
-.image-grid-rhombus .image-item:nth-child(4) { margin-left: -40px; }
-.image-grid-rhombus .image-item:nth-child(5) { margin-left: -165px;}
-.image-grid-rhombus .image-item:nth-child(6) { margin-left: -290px; }
-.image-grid-rhombus .image-item:nth-child(7) { margin-left: -90px; }
-.image-grid-rhombus .image-item:nth-child(8) { margin-left: -215px;}
-.image-grid-rhombus .image-item:nth-child(9) { margin-left: -340px; }
+.image-grid-rhombus .image-item:nth-child(15n+1) { margin-left: 10px; }
+.image-grid-rhombus .image-item:nth-child(15n+2) { margin-left: -115px;}
+.image-grid-rhombus .image-item:nth-child(15n+3) { margin-left: -240px; }
+.image-grid-rhombus .image-item:nth-child(15n+4) { margin-left: -40px; }
+.image-grid-rhombus .image-item:nth-child(15n+5) { margin-left: -165px;}
+.image-grid-rhombus .image-item:nth-child(15n+6) { margin-left: -290px; }
+.image-grid-rhombus .image-item:nth-child(15n+7) { margin-left: -90px; }
+.image-grid-rhombus .image-item:nth-child(15n+8) { margin-left: -215px;}
+.image-grid-rhombus .image-item:nth-child(15n+9) { margin-left: -340px; }
 
 .image-grid-rhombus .image-item:nth-child(10) { margin-left: 50px; }
 .image-grid-rhombus .image-item:nth-child(11) { margin-left: -80px; } 
@@ -234,16 +234,6 @@ body {
 .image-grid-rhombus .image-item:nth-child(13) { margin-left: 5px; }
 .image-grid-rhombus .image-item:nth-child(14) { margin-left: -125px; } 
 .image-grid-rhombus .image-item:nth-child(15) { margin-left: -245px; }
-
-.image-grid-rhombus .image-item:nth-child(16) { margin-left: 10px; }
-.image-grid-rhombus .image-item:nth-child(17) { margin-left: -115px;}
-.image-grid-rhombus .image-item:nth-child(18) { margin-left: -240px; }
-.image-grid-rhombus .image-item:nth-child(19) { margin-left: -40px; }
-.image-grid-rhombus .image-item:nth-child(20) { margin-left: -165px;}
-.image-grid-rhombus .image-item:nth-child(21) { margin-left: -290px; }
-.image-grid-rhombus .image-item:nth-child(22) { margin-left: -90px; }
-.image-grid-rhombus .image-item:nth-child(23) { margin-left: -215px;}
-.image-grid-rhombus .image-item:nth-child(24) { margin-left: -340px; }
 
 /* Rhombus positioning with transforms - override the base shape-rhombus clip-path */
 .shape-rhombus.rhombus-left {
