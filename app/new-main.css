@@ -217,7 +217,7 @@ body {
 .image-grid-rhombus .image-item:nth-child(23) { grid-column: 8; }
 .image-grid-rhombus .image-item:nth-child(24) { grid-column: 9; }
 
-/* margin adustments for density and second row */
+/* margin adjustments for density and second row */
 .image-grid-rhombus .image-item:nth-child(1) { margin-left: 10px; }
 .image-grid-rhombus .image-item:nth-child(2) { margin-left: -115px;}
 .image-grid-rhombus .image-item:nth-child(3) { margin-left: -240px; }
