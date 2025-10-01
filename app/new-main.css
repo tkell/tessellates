@@ -99,7 +99,7 @@ body {
 
 /* Rhombus tessellation close-up image positioning */
 .image-grid-rhombus .close-up-image {
-  transform: translateY(30%);
+  transform: translateY(26%);
 }
 
 /* Circle shape */
@@ -192,7 +192,7 @@ body {
 .image-grid-rhombus {
   display: grid;
   grid-template-columns: repeat(9, 111px);
-  grid-template-rows: repeat(3, 334px);
+  grid-template-rows: repeat(3, 297px);
   gap: 0;
   width: var(--grid-size);
   height: 1000px;
