@@ -91,16 +91,6 @@ body {
   clip-path: inset(0);
 }
 
-/* Square shape with rhombus positioning offset */
-.shape-square-rhombus {
-  clip-path: inset(0);
-  transform: translateY(-50px);
-}
-
-/* Rhombus tessellation close-up image positioning */
-.image-grid-rhombus .close-up-image {
-  transform: translateY(26%);
-}
 
 /* Circle shape */
 .shape-circle {
@@ -199,6 +189,17 @@ body {
   transform: translateY(-100px);
 }
 
+/* Square shape with rhombus positioning offset */
+.shape-square-rhombus {
+  clip-path: inset(0);
+  transform: translateY(-50px);
+}
+
+/* Rhombus tessellation close-up image positioning */
+.image-grid-rhombus .close-up-image {
+  transform: translateY(26%);
+}
+
 /* grid location adjustments */
 .image-grid-rhombus .image-item:nth-child(10) { grid-column: 2; }
 .image-grid-rhombus .image-item:nth-child(11) { grid-column: 3; }
@@ -217,7 +218,7 @@ body {
 .image-grid-rhombus .image-item:nth-child(23) { grid-column: 8; }
 .image-grid-rhombus .image-item:nth-child(24) { grid-column: 9; }
 
-/* margin adjustments for density and second row */
+/* margin adjustments for first and third row */
 .image-grid-rhombus .image-item:nth-child(15n+1) { margin-left: 0px; }
 .image-grid-rhombus .image-item:nth-child(15n+2) { margin-left: -110px;}
 .image-grid-rhombus .image-item:nth-child(15n+3) { margin-left: -220px; }
@@ -227,13 +228,13 @@ body {
 .image-grid-rhombus .image-item:nth-child(15n+7) { margin-left: 0px; }
 .image-grid-rhombus .image-item:nth-child(15n+8) { margin-left: -110px;}
 .image-grid-rhombus .image-item:nth-child(15n+9) { margin-left: -220px; }
-
-.image-grid-rhombus .image-item:nth-child(10) { margin-left: 55px; }
-.image-grid-rhombus .image-item:nth-child(11) { margin-left: -55px; }
-.image-grid-rhombus .image-item:nth-child(12) { margin-left: -165px; }
-.image-grid-rhombus .image-item:nth-child(13) { margin-left: 55px; }
-.image-grid-rhombus .image-item:nth-child(14) { margin-left: -55px; }
-.image-grid-rhombus .image-item:nth-child(15) { margin-left: -165px; }
+/* margin adjustments for second row */
+.image-grid-rhombus .image-item:nth-child(15n+10) { margin-left: 55px; }
+.image-grid-rhombus .image-item:nth-child(15n+11) { margin-left: -55px; }
+.image-grid-rhombus .image-item:nth-child(15n+12) { margin-left: -165px; }
+.image-grid-rhombus .image-item:nth-child(15n+13) { margin-left: 55px; }
+.image-grid-rhombus .image-item:nth-child(15n+14) { margin-left: -55px; }
+.image-grid-rhombus .image-item:nth-child(15n+15) { margin-left: -165px; }
 
 /* Rhombus positioning with transforms - override the base shape-rhombus clip-path */
 .shape-rhombus.rhombus-left {

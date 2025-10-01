@@ -165,7 +165,7 @@ renderHelper._moveRecordsToNewPositions = function(newData, previousData, pagina
 renderHelper._moveRecordToGridPosition = function(record, newGridIndex, tessellation) {
   if (!record.imageItem) return;
 
-  if (tessellation.type === 'square' || tessellation.type === 'triangle' || tessellation.type === 'rhombus') {
+  if (tessellation.type === 'square' || tessellation.type === 'triangle') {
     // Get grid configuration for this tessellation type
     let columns, itemSizeX, itemSizeY;
 
@@ -175,10 +175,6 @@ renderHelper._moveRecordToGridPosition = function(record, newGridIndex, tessella
     } else if (tessellation.type === 'triangle') {
       columns = 9; // Triangle tessellation uses 9 columns
       itemSizeX = itemSizeY = 200; // Each triangle cell is 200px × 200px
-    } else if (tessellation.type === 'rhombus') {
-      columns = 9; // Rhombus tessellation uses 9 columns (though layout is complex)
-      itemSizeX = 125; // Each rhombus grid cell is 125px wide
-      itemSizeY = 275; // Each rhombus grid cell is 275px tall
     }
 
     // Calculate current and new positions in the grid
@@ -198,10 +194,6 @@ renderHelper._moveRecordToGridPosition = function(record, newGridIndex, tessella
       const newMargin = -(newCol * 100); // New CSS margin offset
       const marginDelta = newMargin - currentMargin; // Difference in margin
       xOffset += marginDelta; // Add margin difference to our transform
-    } else if (tessellation.type === 'rhombus') {
-      // Rhombus has complex margin patterns - simplified approach for now
-      // We'll let the CSS margins handle most positioning and just do basic movement
-      // This might not be perfect but should provide basic animation
     }
 
     // Apply transform with smooth animation
