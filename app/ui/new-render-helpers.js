@@ -83,7 +83,6 @@ renderHelper._moveLoad = function(data, tessellation, previousData, paginationOf
         for (let i = 0; i < numRecordsToRemove; i++) {
           const index = paginationOffset < 0 ? i : data.length - 1 - i;
           const newRecordToFadeIn = data[index];
-          console.log(index, newRecordToFadeIn);
           if (newRecordToFadeIn && newRecordToFadeIn.imageItem) {
             newRecordToFadeIn.imageItem.style.opacity = '0';
             uiHelper.fadeInRecord(newRecordToFadeIn)
@@ -133,7 +132,6 @@ renderHelper._fadeOutOldRecords = function(data, previousData, paginationOffset,
  * @param {Object} tessellation - Tessellation configuration
  */
 renderHelper._moveRecordsToNewPositions = function(newData, previousData, paginationOffset, tessellation) {
-  // Simple approach: move each old record to the corresponding new grid position
   for (let i = 0; i < previousData.length; i++) {
     const oldRecord = previousData[i];
     if (oldRecord && oldRecord.imageItem) {
@@ -150,7 +148,7 @@ renderHelper._moveRecordsToNewPositions = function(newData, previousData, pagina
 
       // If target position is within bounds, move there
       if (targetGridIndex >= 0 && targetGridIndex < newData.length) {
-        renderHelper._moveRecordToGridPosition(oldRecord, targetGridIndex, tessellation);
+        renderHelper._moveRecordToGridPosition(oldRecord, targetGridIndex, tessellation, paginationOffset);
       }
     }
   }
@@ -162,10 +160,81 @@ renderHelper._moveRecordsToNewPositions = function(newData, previousData, pagina
  * @param {number} newGridIndex - New index in the grid
  * @param {Object} tessellation - Tessellation configuration
  */
-renderHelper._moveRecordToGridPosition = function(record, newGridIndex, tessellation) {
-  if (!record.imageItem) return;
+renderHelper._moveRecordToGridPosition = function(record, newGridIndex, tessellation, paginationOffset) {
+  /*
+   * So if we're rhombus, we compute our paginationOffset, by doing record.index - newGridIndex
+   * And we can find which triplet the record is in, by Math.floo(record.index / 8)
+   * We can make a _map_, for each pagination offset, that maps the motion per-triplet
+   * e.g. {0: {x: 344, y:0}} - and then we just index into the damn map!
+   * (but tomorrow, tomorrow, we'll code this tomorrow)
+   */
+  if (tessellation.type === 'rhombus') {
+    var motionMap = {}
+    if (paginationOffset === 3) {
+      // just +3 for now, so each index is the triplet index
+      motionMap = {
+        0: {x: 0, y: 0}, // fades out
+        1: {x: [-333, -333, -333], y: [192, 0, 192]}, // one left
+        2: {x: [-333, -333, -333], y: [192, 0, 192]},
+        //
+        3: {x: [500, 500, 500], y: [-105, -297, -105]}, // one and a half right and one up
+        4: {x: [-333, -333, -333], y: [192, 0, 192]},
+        //
+        5: {x: [499, 499, 499], y: [-105, -297, -105]},
+        6: {x: [-333, -333, -333], y: [192, 0, 192]},
+        7: {x: [-333, -333, -333], y: [192, 0, 192]}
+      }
+    } else if (paginationOffset === -3) {
+      motionMap = {
+        0: {x: [333, 333, 333], y: [192, 0, 192]}, // one right
+        1: {x: [333, 333, 333], y: [192, 0, 192]},
+        2: {x: [-500, -500, -500], y: [489, 297, 489]}, // one and a half left and one down
+        //
+        3: {x: [333, 333, 333], y: [192, 0, 192]}, // one right
+        4: {x: [-500, -500, -500], y: [489, 297, 489]}, // one and a half left and one down
+        //
+        5: {x: [333, 333, 333], y: [192, 0, 192]},
+        6: {x: [333, 333, 333], y: [192, 0, 192]},
+        7: {x: 0, y: 0}, // fades out
+      }
+    } else if (paginationOffset === 9) {
+      motionMap = {
+        0: {x: 0, y: 0}, // fades out
+        1: {x: 0, y: 0}, // fades out
+        2: {x: 0, y: 0}, // fades out
+        //
+        3: {x: [-166, -166, -166], y: [-105, -297, -105]}, // one-half left and one up
+        4: {x: [-166, -166, -166], y: [-105, -297, -105]}, // one-half left and one up
+        //
+        5: {x: [666, 666, 666], y: [-402, -594, -402]}, //  two right and two up
+        6: {x: [-167, -167, -167], y: [-105, -297, -105]}, // one-half left and one up
+        7: {x: [-167, -167, -167], y: [-105, -297, -105]}, // one-half left and one up
+      }
+    } else if (paginationOffset === -9) {
+      motionMap = {
+        0: {x: [166, 166, 166], y: [489, 297, 489]}, // one-half right and one down
+        1: {x: [166, 166, 166], y: [489, 297, 489]}, // one-half right and one down
+        2: {x: [-666, -666, -666], y: [786, 594, 786]}, // two left and two down
+        //
+        3: {x: [166, 166, 166], y: [489, 297, 489]}, // one-half right and one down
+        4: {x: [166, 166, 166], y: [489, 297, 489]}, // one-half right and one down
+        //
+        5: {x: 0, y: 0}, // fades out
+        6: {x: 0, y: 0}, // fades out
+        7: {x: 0, y: 0}, // fades out
+      }
+    }
 
-  if (tessellation.type === 'square' || tessellation.type === 'triangle') {
+    let triplet = Math.floor(record.index / 3) 
+    let tuplet = Math.floor(record.index % 3) 
+    xOffset = motionMap[triplet].x[tuplet]
+    yOffset = motionMap[triplet].y[tuplet]
+    if (xOffset !== 0 || yOffset !== 0) {
+      record.imageItem.style.transition = 'transform 725ms ease-in-out';
+      record.imageItem.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
+    }
+    return;
+  } else if (tessellation.type === 'square' || tessellation.type === 'triangle') {
     // Get grid configuration for this tessellation type
     let columns, itemSizeX, itemSizeY;
 
@@ -195,8 +264,6 @@ renderHelper._moveRecordToGridPosition = function(record, newGridIndex, tessella
       const marginDelta = newMargin - currentMargin; // Difference in margin
       xOffset += marginDelta; // Add margin difference to our transform
     }
-
-    // Apply transform with smooth animation
     record.imageItem.style.transition = 'transform 725ms ease-in-out';
     record.imageItem.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
 
@@ -205,7 +272,6 @@ renderHelper._moveRecordToGridPosition = function(record, newGridIndex, tessella
     record.imageItem.style.transition = 'transform var(--animation-duration-slow) ease-in-out';
     record.imageItem.className = record.imageItem.className.replace(/circle-item-\d+/, `circle-item-${newGridIndex % 12}`);
   }
-  // For other tessellations, we might need more complex positioning logic
 };
 
 /**
