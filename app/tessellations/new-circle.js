@@ -19,18 +19,14 @@ makeCircle = function() {
   circle.type = 'circle'; // Add type identifier for CSS
 
   circle.prepare = function(data) {
+    let offset = Math.floor(Math.random() * 12);
     for (let i = 0; i < data.length; i++) {
       let record = data[i];
-
-      // Store index for CSS positioning
       record.index = i;
       record.itemRadius = circle.itemRadius;
       record.angle = 0;
-
-      // Big image positioning (center of container)
       record.bigImageX = circle.size / 2;
       record.bigImageY = circle.size / 2;
-
       record.isCloseUp = true;
     }
 

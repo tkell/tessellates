@@ -101,7 +101,7 @@ renderHelper._moveLoad = function(data, tessellation, previousData, paginationOf
         // Re-add ambient animations
         renderHelper._addAmbientAnimations(data, tessellation);
       });
-  }, 1200);
+  }, 850);
 };
 
 /**
@@ -232,6 +232,7 @@ renderHelper._moveRecordToGridPosition = function(record, newGridIndex, tessella
     if (xOffset !== 0 || yOffset !== 0) {
       record.imageItem.style.transition = 'transform 725ms ease-in-out';
       record.imageItem.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
+      record.isAnimating = true;
     }
     return;
   } else if (tessellation.type === 'square' || tessellation.type === 'triangle') {
@@ -266,11 +267,12 @@ renderHelper._moveRecordToGridPosition = function(record, newGridIndex, tessella
     }
     record.imageItem.style.transition = 'transform 725ms ease-in-out';
     record.imageItem.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
+    record.isAnimating = true;
 
   } else if (tessellation.type === 'circle') {
-    // Update circle position class with smooth transition
     record.imageItem.style.transition = 'transform var(--animation-duration-slow) ease-in-out';
     record.imageItem.className = record.imageItem.className.replace(/circle-item-\d+/, `circle-item-${newGridIndex % 12}`);
+    record.isAnimating = true;
   }
 };
 
@@ -311,7 +313,7 @@ renderHelper._addStartingStateToRecord = function(record, index, tessellation) {
     record.clipPathClass = 'shape-circle';
     record.bigClipPathClass = 'shape-circle';
     // Assign circle position class based on index
-    record.positionClass = `circle-item-${record.index % 12}`;
+    record.positionClass = `circle-item-${record.index}`;
   } else if (tessellation.type === 'triangle') {
     record.bigClipPathClass = 'shape-square';
     // Use angle to determine triangle orientation and positioning
