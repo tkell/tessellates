@@ -19,7 +19,17 @@ makeCircle = function() {
   circle.type = 'circle'; // Add type identifier for CSS
 
   circle.prepare = function(data) {
-    let offset = Math.floor(Math.random() * 12);
+    const rootStyles = getComputedStyle(document.documentElement);
+    const magicOffset = rootStyles.getPropertyValue('--circle-magic-offset');
+    if (!magicOffset) {
+      let offset = Math.floor(Math.random() * 12);
+      window.CSS.registerProperty({
+        name: "--circle-magic-offset",
+        inherits: false,
+        initialValue: `${offset}`,
+      });
+    }
+
     for (let i = 0; i < data.length; i++) {
       let record = data[i];
       record.index = i;
