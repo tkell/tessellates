@@ -264,8 +264,15 @@ renderHelper._moveRecordToGridPosition = function(record, newGridIndex, tessella
       const newMargin = -(newCol * 100); // New CSS margin offset
       const marginDelta = newMargin - currentMargin; // Difference in margin
       xOffset += marginDelta; // Add margin difference to our transform
+
+      if ( yOffset === 0 && record.angle === 180) {
+        record.imageItem.className = record.imageItem.className.replace("shape-triangle", "shape-triangle-inverted");
+      } else if ( yOffset === 0 && record.angle === 0) {
+        record.imageItem.className = record.imageItem.className.replace("shape-triangle-inverted", "shape-triangle");
+      }
     }
-    record.imageItem.style.transition = 'transform 725ms ease-in-out';
+
+    record.imageItem.style.transition = 'transform 725ms ease-in-out, clip-path 500ms ease-in-out';
     record.imageItem.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
     record.isAnimating = true;
 
