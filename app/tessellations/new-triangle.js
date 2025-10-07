@@ -49,5 +49,40 @@ makeTriangle = function() {
     renderHelper.render(data, triangle, previousData, paginationOffset);
   };
 
+  triangle.moveRecord = function(record, newIndex, paginationOffset) {
+    const columns = 9; // Triangle tessellation uses 9 columns
+    const itemSizeX = 200;
+    const itemSizeY = 200;
+
+    // Calculate current and new positions in the grid
+    const currentIndex = record.index;
+    const newRow = Math.floor(newGridIndex / columns);
+    const newCol = newGridIndex % columns;
+    const currentRow = Math.floor(currentIndex / columns);
+    const currentCol = currentIndex % columns;
+
+    // Calculate pixel offsets based on grid cell size
+    let xOffset = (newCol - currentCol) * itemSizeX;
+    let yOffset = (newRow - currentRow) * itemSizeY;
+
+    // handle progressive margin offsets
+    const currentMargin = -(currentCol * 100); // Current CSS margin offset
+    const newMargin = -(newCol * 100); // New CSS margin offset
+    const marginDelta = newMargin - currentMargin; // Difference in margin
+    xOffset += marginDelta; // Add margin difference to our transform
+
+    // flips!
+    if ( yOffset === 0 && record.angle === 180) {
+      record.imageItem.className = record.imageItem.className.replace("shape-triangle", "shape-triangle-inverted");
+    } else if ( yOffset === 0 && record.angle === 0) {
+      record.imageItem.className = record.imageItem.className.replace("shape-triangle-inverted", "shape-triangle");
+    }
+
+    record.imageItem.style.transition = 'transform 725ms ease-in-out, clip-path 500ms ease-in-out';
+    record.imageItem.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
+    record.isAnimating = true;
+  }
+
+
   return triangle;
 };

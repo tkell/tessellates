@@ -24,5 +24,25 @@ makeSquare = function() {
     renderHelper.render(data, square, previousData, paginationOffset);
   };
 
+  square.moveRecord = function(record, newIdex, paginationOffset) {
+    const columns = 3
+    const itemSizeX = 1000 / columns;
+    const itemSizeY = 1000 / columns;
+
+    // Calculate current and new positions in the grid
+    const currentIndex = record.index;
+    const newRow = Math.floor(newGridIndex / columns);
+    const newCol = newGridIndex % columns;
+    const currentRow = Math.floor(currentIndex / columns);
+    const currentCol = currentIndex % columns;
+
+    let xOffset = (newCol - currentCol) * itemSizeX;
+    let yOffset = (newRow - currentRow) * itemSizeY;
+
+    record.imageItem.style.transition = 'transform 725ms ease-in-out, clip-path 500ms ease-in-out';
+    record.imageItem.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
+    record.isAnimating = true;
+  }
+
   return square;
 };

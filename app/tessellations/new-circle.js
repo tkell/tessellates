@@ -37,5 +37,11 @@ makeCircle = function() {
     renderHelper.render(data, circle, previousData, paginationOffset);
   }
 
+  circle.moveRecord = function(record, newIndex, paginationOffset) {
+    record.imageItem.style.transition = 'transform var(--animation-duration-slow) ease-in-out';
+    record.imageItem.className = record.imageItem.className.replace(/circle-item-\d+/, `circle-item-${newIndex % 12}`);
+    record.isAnimating = true;
+  }
+
   return circle;
 }

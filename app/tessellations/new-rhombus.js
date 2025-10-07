@@ -45,5 +45,77 @@ makeRhombus = function() {
     renderHelper.render(data, rhombus, previousData, paginationOffset);
   };
 
+  /*
+   * We can make a _map_, for each pagination offset, that maps the motion per-triplet
+   * e.g. {0: {x: 344, y:0}} - and then we just index into the damn map!
+   */
+  rhombus.moveRecord = function(record, newIndex, paginationOffset) {
+    var motionMap = {}
+    if (paginationOffset === 3) {
+      // each index is the triplet index, so we have 8 of them
+      motionMap = {
+        0: {x: 0, y: 0}, // fades out
+        1: {x: [-333, -333, -333], y: [192, 0, 192]}, // one left
+        2: {x: [-333, -333, -333], y: [192, 0, 192]},
+        //
+        3: {x: [500, 500, 500], y: [-105, -297, -105]}, // one and a half right and one up
+        4: {x: [-333, -333, -333], y: [192, 0, 192]},
+        //
+        5: {x: [499, 499, 499], y: [-105, -297, -105]},
+        6: {x: [-333, -333, -333], y: [192, 0, 192]},
+        7: {x: [-333, -333, -333], y: [192, 0, 192]}
+      }
+    } else if (paginationOffset === -3) {
+      motionMap = {
+        0: {x: [333, 333, 333], y: [192, 0, 192]}, // one right
+        1: {x: [333, 333, 333], y: [192, 0, 192]},
+        2: {x: [-500, -500, -500], y: [489, 297, 489]}, // one and a half left and one down
+        //
+        3: {x: [333, 333, 333], y: [192, 0, 192]}, // one right
+        4: {x: [-500, -500, -500], y: [489, 297, 489]}, // one and a half left and one down
+        //
+        5: {x: [333, 333, 333], y: [192, 0, 192]},
+        6: {x: [333, 333, 333], y: [192, 0, 192]},
+        7: {x: 0, y: 0}, // fades out
+      }
+    } else if (paginationOffset === 9) {
+      motionMap = {
+        0: {x: 0, y: 0}, // fades out
+        1: {x: 0, y: 0}, // fades out
+        2: {x: 0, y: 0}, // fades out
+        //
+        3: {x: [-166, -166, -166], y: [-105, -297, -105]}, // one-half left and one up
+        4: {x: [-166, -166, -166], y: [-105, -297, -105]}, // one-half left and one up
+        //
+        5: {x: [666, 666, 666], y: [-402, -594, -402]}, //  two right and two up
+        6: {x: [-167, -167, -167], y: [-105, -297, -105]}, // one-half left and one up
+        7: {x: [-167, -167, -167], y: [-105, -297, -105]}, // one-half left and one up
+      }
+    } else if (paginationOffset === -9) {
+      motionMap = {
+        0: {x: [166, 166, 166], y: [489, 297, 489]}, // one-half right and one down
+        1: {x: [166, 166, 166], y: [489, 297, 489]}, // one-half right and one down
+        2: {x: [-666, -666, -666], y: [786, 594, 786]}, // two left and two down
+        //
+        3: {x: [166, 166, 166], y: [489, 297, 489]}, // one-half right and one down
+        4: {x: [166, 166, 166], y: [489, 297, 489]}, // one-half right and one down
+        //
+        5: {x: 0, y: 0}, // fades out
+        6: {x: 0, y: 0}, // fades out
+        7: {x: 0, y: 0}, // fades out
+      }
+    }
+
+    let triplet = Math.floor(record.index / 3)
+    let tuplet = Math.floor(record.index % 3)
+    xOffset = motionMap[triplet].x[tuplet]
+    yOffset = motionMap[triplet].y[tuplet]
+    if (xOffset !== 0 || yOffset !== 0) {
+      record.imageItem.style.transition = 'transform 725ms ease-in-out';
+      record.imageItem.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
+      record.isAnimating = true;
+    }
+  }
+
   return rhombus;
 };
