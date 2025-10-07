@@ -56,8 +56,8 @@ makeTriangle = function() {
 
     // Calculate current and new positions in the grid
     const currentIndex = record.index;
-    const newRow = Math.floor(newGridIndex / columns);
-    const newCol = newGridIndex % columns;
+    const newRow = Math.floor(newIndex / columns);
+    const newCol = newIndex % columns;
     const currentRow = Math.floor(currentIndex / columns);
     const currentCol = currentIndex % columns;
 
@@ -78,8 +78,11 @@ makeTriangle = function() {
       record.imageItem.className = record.imageItem.className.replace("shape-triangle-inverted", "shape-triangle");
     }
 
-    record.imageItem.style.transition = 'transform 725ms ease-in-out, clip-path 500ms ease-in-out';
+    const jitter = (Math.random() - 0.5) * 200
+    const moveTime = this.timeouts.slow + jitter * 2
+    const clipPathTime = this.timeouts.slow + jitter * 4
     record.imageItem.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
+    record.imageItem.style.transition = `transform ${moveTime}ms ease-in-out, clip-path ${clipPathTime}ms ease-in-out`;
     record.isAnimating = true;
   }
 

@@ -38,7 +38,9 @@ makeCircle = function() {
   }
 
   circle.moveRecord = function(record, newIndex, paginationOffset) {
-    record.imageItem.style.transition = 'transform var(--animation-duration-slow) ease-in-out';
+    const jitter = (Math.random() - 0.5) * 200
+    const moveTime = this.timeouts.slow + jitter
+    record.imageItem.style.transition = `transform ${moveTime}ms ease-in-out`;
     record.imageItem.className = record.imageItem.className.replace(/circle-item-\d+/, `circle-item-${newIndex % 12}`);
     record.isAnimating = true;
   }

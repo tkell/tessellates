@@ -111,7 +111,9 @@ makeRhombus = function() {
     xOffset = motionMap[triplet].x[tuplet]
     yOffset = motionMap[triplet].y[tuplet]
     if (xOffset !== 0 || yOffset !== 0) {
-      record.imageItem.style.transition = 'transform 725ms ease-in-out';
+      const jitter = (Math.random() - 0.5) * 200
+      const moveTime = this.timeouts.slow + jitter * 2
+      record.imageItem.style.transition = `transform ${moveTime}ms ease-in-out`;
       record.imageItem.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
       record.isAnimating = true;
     }
