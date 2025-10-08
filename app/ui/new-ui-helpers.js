@@ -185,12 +185,14 @@ uiHelper.fadeOutRecord = function(record) {
 };
 
 /**
- * Fade in a record
+ * Fade in a record, hard-sets opacity
  * @param {Object} record - Record object
  * @returns {Promise} - Promise that resolves when fade-in completes
  */
 uiHelper.fadeInRecord = function(record) {
-  return animationHelper.makeFadeIn(record);
+  return animationHelper.makeFadeIn(record).then(() => {
+    record.imageItem.style.opacity = '';
+  });
 };
 
 /**
