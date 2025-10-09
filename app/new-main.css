@@ -236,7 +236,14 @@ body {
 .image-grid-rhombus .image-item:nth-child(15n+14) { margin-left: -55px; }
 .image-grid-rhombus .image-item:nth-child(15n+15) { margin-left: -165px; }
 
-/* Rhombus positioning with transforms - override the base shape-rhombus clip-path */
+/* Rhombus positioning with transforms - override the base shape-rhombus clip-path 
+ * oh, these shapes are not _quite_ right!
+ * 50 * Math.atan(Math.PI / 6) == 24.1, so we do _not_ want 50, 25, we want 50%, 24.1%, and probably 50%, 75.9%?!
+ * I can compute these using a 100px by 100px square
+ * and then in _theory_ I can rotate them, har har, by the appropriate amount
+ * which I think is PI / 6, and x is  COS of that and y is SIN of that?
+ * */
+
 .shape-rhombus.rhombus-left {
   transform: translateY(50%);
   clip-path: polygon(0% 0%, 50% 25%, 50% 77%, 0% 51.5%);

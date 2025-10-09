@@ -48,6 +48,7 @@ makeRhombus = function() {
   /*
    * We can make a _map_, for each pagination offset, that maps the motion per-triplet
    * e.g. {0: {x: 344, y:0}} - and then we just index into the damn map!
+   * rhombus.sideLength = Math.floor((rhombus.xSize / 2) / Math.cos(Math.PI / 6)); // 192
    */
   rhombus.moveRecord = function(record, newIndex, paginationOffset) {
     var motionMap = {}
@@ -55,11 +56,11 @@ makeRhombus = function() {
       // each index is the triplet index, so we have 8 of them
       motionMap = {
         0: {x: 0, y: 0}, // fades out
-        1: {x: [-333, -333, -333], y: [192, 0, 192]}, // one left
-        2: {x: [-333, -333, -333], y: [192, 0, 192]},
+        1: {x: [-333, -333, -333], y: [192, 0, 192]}, // one left, 
+        2: {x: [-333, -333, -333], y: [192, 0, 192]}, // the angle-offset is Math.floor((rhombus.xSize / 2) / Math.cos(Math.PI / 6)) == 192
         //
-        3: {x: [500, 500, 500], y: [-105, -297, -105]}, // one and a half right and one up
-        4: {x: [-333, -333, -333], y: [192, 0, 192]},
+        3: {x: [500, 500, 500], y: [-105, -288, -105]}, // one and a half right and one up
+        4: {x: [-333, -333, -333], y: [192, 0, 192]}, // where are these 105s coming from?
         //
         5: {x: [499, 499, 499], y: [-105, -297, -105]},
         6: {x: [-333, -333, -333], y: [192, 0, 192]},
