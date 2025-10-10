@@ -1,8 +1,11 @@
-makeTriangle = function () {
+/**
+ * New triangle tessellation using HTML/CSS instead of fabric.js
+ */
+makeTriangle = function() {
   triangle = {};
   triangle.xSize = 200;
   triangle.ySize = 200;
-  triangle.xMoveOffset = triangle.xSize;
+  triangle.xMoveOffset = triangle.xSize / 2;
   triangle.yMoveOffset = triangle.ySize;
   triangle.size = 1000;
   triangle.defaultItems = 45;
@@ -12,90 +15,77 @@ makeTriangle = function () {
     28, 29, 30, 31, 32, 33, 34,
   ];
   triangle.paging = {"small": 1, "medium": 9, "big": 45};
-  triangle.timeoutFunctions = timeoutFunctions.concat(triangleTimeoutFunctions);
+  triangle.timeoutFunctions = timeoutFunctions.concat(triangleTimeoutFunctions || []);
   triangle.timeouts = {"slow": 500, "fast": 225};
-  triangle.fabricKlass = fabric.Triangle;
-  triangle.preloadRadius = 40;
+  triangle.type = 'triangle'; // Add type identifier for CSS
 
-  let triangleClipPathUp = new fabric.Triangle({
-    originX: 'center',
-    originY: 'center',
-    width: triangle.xSize,
-    height: triangle.ySize,
-    angle: 0,
-    selectable: false
-  });
-
-  let triangleClipPathDown = new fabric.Triangle({
-    originX: 'center',
-    originY: 'center',
-    width: triangle.xSize,
-    height: triangle.ySize,
-    angle: 180,
-    selectable: false
-  });
-
-  let clipPathBig = new fabric.Rect({
-    originX: 'center',
-    originY: 'center',
-    width: triangle.xSize * 3.5,
-    height: triangle.ySize * 3.5,
-    selectable: false,
-  });
-  
   triangle.prepare = function(data) {
-    var x = 0;
-    var y = 0;
     var angle = 0;
     for (let i = 0; i < data.length; i++) {
       let record = data[i];
-      record.x = x;
-      record.y = y;
       record.angle = angle;
-      record.imageX = record.x + (triangle.xSize / 2);
-      record.imageY = record.y + (triangle.ySize / 2);
-      record.bigClipPath = clipPathBig;
-      record.bigImageX = triangle.xSize * 2.5;
-      record.bigImageY = triangle.ySize * 2.5;
-
-      if (record.angle == 180) {
-          record.clipPath = triangleClipPathDown;
-          record.clickX = record.x + triangle.xSize;
-          record.clickY = record.y + triangle.ySize;
-      } else {
-          record.clipPath = triangleClipPathUp;
-          record.clickX = record.x;
-          record.clickY = record.y;
-      }
       if (angle === 0) {
-        x = x + this.xSize / 2;
         angle = 180;
       } else if (angle === 180) {
-        x = x + this.xSize / 2;
-        angle = 0
+        angle = 0;
       }
-
+      
+      // Set close-up status
       if (triangle.closeUpIndexes.includes(i)) {
         record.isCloseUp = true;
-        record.tempClipPathX = record.x - (triangle.xSize * 2);
-        record.tempClipPathY = record.y - (triangle.ySize * 2);
       } else {
         record.isCloseUp = false;
       }
-
-      if (x + (this.xSize) > this.size) {
-        x = 0;
+      // reset angle when going to next row
+      if (i % 9 === 8) {
         angle = 0;
-        y = y + this.ySize;
       }
     }
 
     return data;
+  };
+
+  triangle.render = function(data, previousData, paginationOffset) {
+    renderHelper.render(data, triangle, previousData, paginationOffset);
+  };
+
+  triangle.moveRecord = function(record, newIndex, paginationOffset) {
+    const columns = 9; // Triangle tessellation uses 9 columns
+    const itemSizeX = 200;
+    const itemSizeY = 200;
+
+    // Calculate current and new positions in the grid
+    const currentIndex = record.index;
+    const newRow = Math.floor(newIndex / columns);
+    const newCol = newIndex % columns;
+    const currentRow = Math.floor(currentIndex / columns);
+    const currentCol = currentIndex % columns;
+
+    // Calculate pixel offsets based on grid cell size
+    let xOffset = (newCol - currentCol) * itemSizeX;
+    let yOffset = (newRow - currentRow) * itemSizeY;
+
+    // handle progressive margin offsets
+    const currentMargin = -(currentCol * 100); // Current CSS margin offset
+    const newMargin = -(newCol * 100); // New CSS margin offset
+    const marginDelta = newMargin - currentMargin; // Difference in margin
+    xOffset += marginDelta; // Add margin difference to our transform
+
+    // flips!
+    if ( yOffset === 0 && record.angle === 180) {
+      record.imageItem.className = record.imageItem.className.replace("shape-triangle", "shape-triangle-inverted");
+    } else if ( yOffset === 0 && record.angle === 0) {
+      record.imageItem.className = record.imageItem.className.replace("shape-triangle-inverted", "shape-triangle");
+    }
+
+    const jitter = (Math.random() - 0.5) * 200
+    const moveTime = this.timeouts.slow + jitter * 2
+    const clipPathTime = this.timeouts.slow + jitter * 4
+    record.imageItem.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
+    record.imageItem.style.transition = `transform ${moveTime}ms ease-in-out, clip-path ${clipPathTime}ms ease-in-out`;
+    record.isAnimating = true;
   }
 
-  triangle.render = function(c, data, previousData, paginationOffset) {
-    renderHelper.render(canvas, data, triangle, previousData, paginationOffset);
-  }
 
   return triangle;
-}
+};

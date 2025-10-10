@@ -1,66 +1,50 @@
+/**
+ * New square tessellation using HTML/CSS instead of fabric.js
+ */
 makeSquare = function() {
   square = {};
-  square.xSize = 334;
-  square.ySize = 334;
-  square.xMoveOffset = square.xSize;
-  square.yMoveOffset = square.ySize;
   square.size = 1000;
   square.defaultItems = 9;
   square.closeUpIndexes = [0, 1, 2, 3, 4, 5, 6, 7, 8];
   square.paging = {"small": 1, "medium": 3, "big": 9};
   square.timeoutFunctions = timeoutFunctions.concat(squareTimeoutFunctions);
   square.timeouts = {"slow": 725, "fast": 350};
-  square.fabricKlass = fabric.Rect;
-  square.preloadRadius = 110;
+  square.type = 'square'; // Add type identifier for CSS
 
-  let squareClipPath = new fabric.Rect({
-    originX: 'center',
-    originY: 'center',
-    width: square.xSize,
-    height: square.ySize,
-    selectable: false,
-  });
-
-  let clipPathBig = new fabric.Rect({
-    originX: 'center',
-    originY: 'center',
-    width: square.xSize * 2.5,
-    height: square.ySize * 2.5,
-    selectable: false,
-  });
-  
   square.prepare = function(data) {
-    var x = 0;
-    var y = 0;
     for (let record of data) {
-      record.x = x;
-      record.y = y;
       record.angle = 0;
-      record.imageX = record.x + (square.xSize / 2);
-      record.imageY = record.y + (square.ySize / 2);
-      record.clickX = x;
-      record.clickY = y;
-      record.clipPath = squareClipPath;
-      record.bigClipPath = clipPathBig;
-      record.bigImageX = square.xSize * 1.5;
-      record.bigImageY = square.ySize * 1.5;
-      record.tempClipPathX = record.x - square.xSize;
-      record.tempClipPathY = record.y - (square.ySize * 0.75)
-
-      x = x + this.xSize;
-      if (x > this.size) {
-        x = 0;
-        y = y + this.ySize;
-      }
       record.isCloseUp = true;
     }
 
     return data;
-  }
+  };
 
-  square.render = function(c, data, previousData, paginationOffset) {
-    renderHelper.render(c, data, square, previousData, paginationOffset);
+  square.render = function(data, previousData, paginationOffset) {
+    renderHelper.render(data, square, previousData, paginationOffset);
+  };
+
+  square.moveRecord = function(record, newIndex, paginationOffset) {
+    const columns = 3
+    const itemSizeX = 1000 / columns;
+    const itemSizeY = 1000 / columns;
+
+    // Calculate current and new positions in the grid
+    const currentIndex = record.index;
+    const newRow = Math.floor(newIndex / columns);
+    const newCol = newIndex % columns;
+    const currentRow = Math.floor(currentIndex / columns);
+    const currentCol = currentIndex % columns;
+
+    const xOffset = (newCol - currentCol) * itemSizeX;
+    const yOffset = (newRow - currentRow) * itemSizeY;
+
+    const jitter = (Math.random() - 0.5) * 200
+    const moveTime = this.timeouts.slow + jitter
+    record.imageItem.style.transition = `transform ${moveTime}ms ease-in-out`;
+    record.imageItem.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
+    record.isAnimating = true;
   }
 
   return square;
-}
+};

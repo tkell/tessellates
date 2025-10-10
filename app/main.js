@@ -1,22 +1,39 @@
-function renderCanvas(canvas, tess, data, params) {
+/**
+ * Main application file
+ */
+
+/**
+ * Render the tessellation with the given data
+ * @param {Object} tess - Tessellation configuration object
+ * @param {Array} data - Array of record objects
+ * @param {Object} params - Parameters for rendering
+ */
+function renderTessellation(tess, data, params) {
   const start = params['offset'] - params['minOffset'];
   const end = start + tess.defaultItems;
   const previousData = tess.prepare(data.slice(start - params['offsetDelta'], end - params['offsetDelta']));
   const currentData = tess.prepare(data.slice(start, end));
-  tess.render(canvas, currentData, previousData, params['offsetDelta']);
+  tess.render(currentData, previousData, params['offsetDelta']);
 }
 
-
+/**
+ * Add click handlers for pagination
+ * @param {string} elementId - Element ID for the pagination button
+ * @param {number} offsetDelta - Amount to change offset
+ */
 function addPagingClick(elementId, offsetDelta) {
   document.getElementById(elementId).addEventListener("click", function(e) {
     if (!uiState.bigImage.isShowing && params['offset'] + offsetDelta >= 0) {
-      // draw the canvas, as we have to always have enough to go in either direction
+      // Update paging parameters
       params['offset'] = Math.max(0, params['offset'] + offsetDelta);
       params['offsetDelta'] = offsetDelta;
       const potentialNewMax = params['offset'] + (tess.defaultItems * 2);
       const potentialNewMin = Math.max(0, params['offset'] - (tess.defaultItems * 2));
-      renderCanvas(canvas, tess, releaseData, params);
+      
+      // Render the grid with updated data
+      renderTessellation(tess, releaseData, params);
 
+      // Load more data if needed
       if (offsetDelta > 0 && potentialNewMax > params['maxOffset']) {
         const limit = potentialNewMax - params['maxOffset'];
         const queryUrl = buildUrl(apiState, params['maxOffset'], limit, params);
@@ -24,7 +41,7 @@ function addPagingClick(elementId, offsetDelta) {
           .then(response => response.json())
           .then(newReleaseData => {
             params['maxOffset'] = potentialNewMax;
-            releaseData = releaseData.concat(newReleaseData)
+            releaseData = releaseData.concat(newReleaseData);
           });
       } else if (offsetDelta < 0 & potentialNewMin < params['minOffset']) {
         const limit = params['minOffset'] - potentialNewMin;
@@ -40,6 +57,11 @@ function addPagingClick(elementId, offsetDelta) {
   });
 }
 
+/**
+ * Add click handlers for folder selection
+ * @param {string} elementId - Element ID for the folder button
+ * @param {string} folder - Folder name or false for all
+ */
 function addFolderClick(elementId, folder) {
   const element = document.getElementById(elementId);
   element.addEventListener("click", function(e) {
@@ -84,11 +106,19 @@ function addFolderClick(elementId, folder) {
       .then(newReleaseData => {
         releaseData = newReleaseData;
         uiHelper.clearText();
-        renderCanvas(canvas, tess, releaseData, params);
+        renderTessellation(tess, releaseData, params);
       });
   });
 }
 
+/**
+ * Build a URL for the API request
+ * @param {Object} apiState - API state object
+ * @param {number} offset - Offset for API request
+ * @param {number} limit - Limit for API request
+ * @param {Object} params - Parameters for the request
+ * @returns {string} - Constructed URL
+ */
 function buildUrl(apiState, offset, limit, params) {
   const filter = params['filter'] || undefined;
   const folder = params['folder'] || undefined;
@@ -115,6 +145,11 @@ function buildUrl(apiState, offset, limit, params) {
   return url;
 }
 
+/**
+ * Set random view parameters
+ * @param {Object} params - Current parameters
+ * @returns {Object} - Updated parameters
+ */
 function setRandomView(params) {
   const offset = Math.floor(Math.random() * apiState.approxReleases);
   params['filter'] = undefined;
@@ -126,25 +161,33 @@ function setRandomView(params) {
   return params;
 }
 
+/**
+ * Add collection flip handler
+ * @param {string} elementId - Element ID for the button
+ */
 function addCollectionFlip(elementId) {
   document.getElementById(elementId).addEventListener("click", function(e) {
     if (uiState.bigImage.isShowing) {
-      return
+      return;
     }
 
-    let nextName = "vinyl"
+    let nextName = "vinyl";
     if (apiState.collectionName === "vinyl") {
-      nextName = "digital"
+      nextName = "digital";
     }
-    const url = `https://tide-pool.ca/tessellates/${nextName}?t=${params['t']}`
+    const url = `https://tide-pool.ca/tessellates/${nextName}?t=${params['t']}`;
     window.location.href = url;
   });
 }
 
+/**
+ * Add random view interaction
+ * @param {string} elementId - Element ID for the button
+ */
 function addRandomInteraction(elementId) {
   document.getElementById(elementId).addEventListener("click", function(e) {
     if (uiState.bigImage.isShowing) {
-      return
+      return;
     }
     params = setRandomView(params);
     document.getElementById("release-year-input").value = "";
@@ -163,23 +206,28 @@ function addRandomInteraction(elementId) {
       .then(newReleaseData => {
         releaseData = newReleaseData;
         uiHelper.clearText();
-        renderCanvas(canvas, tess, releaseData, params)
+        renderTessellation(tess, releaseData, params);
       });
   });
 }
 
+/**
+ * Update parameters on keypress
+ * @param {string} elementId - Element ID for the input
+ * @param {string} paramsField - Field in params to update
+ */
 function updateParamsOnKeypress(elementId, paramsField) {
   document.getElementById(elementId).addEventListener("keyup", function(e) {
     if (e.target.value === "") {
       delete params[paramsField];
     } else
     if (paramsField === "releaseYear" || paramsField === "purchaseDate") {
-      const re = /^\d{4}(?:\s*-\s*\d{4})?$/
+      const re = /^\d{4}(?:\s*-\s*\d{4})?$/;
       if (re.test(e.target.value)) {
         params[paramsField] = e.target.value;
       }
     } else if (paramsField === "sort") {
-      const re = /^[atylp]{0,4}$/
+      const re = /^[atylp]{0,4}$/;
       if (re.test(e.target.value)) {
         params[paramsField] = e.target.value;
       }
@@ -190,6 +238,11 @@ function updateParamsOnKeypress(elementId, paramsField) {
   });
 }
 
+/**
+ * Check if any filter parameters are set
+ * @param {Object} params - Parameters object
+ * @returns {boolean} - True if any filter parameter is set
+ */
 function filterParamsAreSet(params) {
   const hasFilter = params['filter'] && params['filter'].length > 0;
   const hasReleaseYear = params['releaseYear'] && params['releaseYear'].length > 0;
@@ -199,6 +252,11 @@ function filterParamsAreSet(params) {
   return (hasFilter || hasReleaseYear || hasPurchaseDate || hasSort);
 }
 
+/**
+ * Add filter interaction
+ * @param {string} elementId - Element ID for the button or input
+ * @param {string} eventType - Event type (click or keypress)
+ */
 function addFilterInteraction(elementId, eventType) {
   document.getElementById(elementId).addEventListener(eventType, function(e) {
     if (eventType === "keypress" && e.key !== "Enter") {
@@ -225,34 +283,60 @@ function addFilterInteraction(elementId, eventType) {
         .then(newReleaseData => {
           releaseData = newReleaseData;
           uiHelper.clearText();
-          renderCanvas(canvas, tess, releaseData, params)
+          renderTessellation(tess, releaseData, params);
         });
     }
   });
 }
 
+/**
+ * Add local playback enable button
+ */
 function addLocalPlaybackClick() {
-  document.getElementById("enable-local-playback").addEventListener("click", function(e) {
-    console.log("local playback enabled");
-    uiState.localPlayback = true;
-    document.getElementById("pause-local-playback").disabled = false;
-    document.getElementById("clear-local-playback").disabled = false;
-  });
+  const enableButton = document.getElementById("enable-local-playback");
+  if (enableButton) {
+    enableButton.addEventListener("click", function(e) {
+      console.log("local playback enabled");
+      uiState.localPlayback = true;
+      
+      const pauseButton = document.getElementById("pause-local-playback");
+      if (pauseButton) pauseButton.disabled = false;
+      
+      const clearButton = document.getElementById("clear-local-playback");
+      if (clearButton) clearButton.disabled = false;
+    });
+  }
 }
 
+/**
+ * Add local playback pause button
+ */
 function addLocalPauseClick() {
-  // This appears to work for both pausing and unpausing!
-  document.getElementById("pause-local-playback").addEventListener("click", function(e) {
-    vlcHelper.pause();
-  });
+  const pauseButton = document.getElementById("pause-local-playback");
+  if (pauseButton) {
+    pauseButton.addEventListener("click", function(e) {
+      vlcHelper.pause();
+    });
+  }
 }
 
+/**
+ * Add local playback clear button
+ */
 function addLocalClearClick() {
-  document.getElementById("clear-local-playback").addEventListener("click", function(e) {
-    vlcHelper.clearAllTracks();
-  });
+  const clearButton = document.getElementById("clear-local-playback");
+  if (clearButton) {
+    clearButton.addEventListener("click", function(e) {
+      vlcHelper.clearAllTracks();
+    });
+  }
 }
 
+/**
+ * Add login interaction
+ * @param {string} elementId - Element ID for the button or input
+ * @param {string} eventType - Event type (click or keypress)
+ */
 function addLoginInteraction(elementId, eventType) {
   document.getElementById(elementId).addEventListener(eventType, async (e) => {
     if (eventType === "keypress" && e.key !== "Enter") {
@@ -263,6 +347,7 @@ function addLoginInteraction(elementId, eventType) {
 
     try {
       const url= `${apiState.protocol}://${apiState.host}/login`;
+      console.log(url);
       const response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -287,19 +372,27 @@ function addLoginInteraction(elementId, eventType) {
   });
 }
 
+/**
+ * Display login-related UI elements if logged in
+ */
 function displayLogin() {
   if (checkCookieExistence('loggedInUser')) {
     document.getElementById('annotation-span').style.visibility = 'visible';
     document.getElementById('login-input').disabled = true;
     document.getElementById('password-input').disabled = true;
     document.getElementById('login-submit').disabled = true;
-    const playbackDiv = document.getElementById('playback-div')
+    const playbackDiv = document.getElementById('playback-div');
     if (playbackDiv) {
       playbackDiv.style.visibility = 'visible';
     }
   }
 }
 
+/**
+ * Check if a cookie exists
+ * @param {string} cookie_name - Name of the cookie to check
+ * @returns {boolean} - True if cookie exists
+ */
 function checkCookieExistence(cookie_name) {
   let decodedCookie = decodeURIComponent(document.cookie);
   let cookies = decodedCookie.split(';');
@@ -311,7 +404,6 @@ function checkCookieExistence(cookie_name) {
   }
   return false;
 }
-
 
 // ---- Entrypoint is here:
 var releaseData = [];
@@ -333,10 +425,10 @@ var apiState = {
   protocol: null,
   collectionName: null,
   approxReleases: null
-}
-let params = getSearchParameters();
+};
+var params = getSearchParameters();
 
-// pick a tessellation, then ..
+// Pick a tessellation
 let tess = null;
 if (params['t'] == 'square') {
   tess = makeSquare();
@@ -362,27 +454,34 @@ if (params['t'] == 'square') {
     params['t'] = 'circle';
   }
 }
-params = parseTessellatesParams(params, tess)
-var canvas = null;
+params = parseTessellatesParams(params, tess);
 
+// Initialize on window load
 window.addEventListener("load", (event) => {
-  canvas = new fabric.Canvas('vinylCanvas');
-  canvas.hoverCursor = 'default';
+  gridElement = document.getElementById("image-grid")
+  gridElement.classList.add(`image-grid-${params['t']}`);
+
+  // Draw preload hexagons
+  uiHelper.drawPreloadHexagons(tess);
+  
+  // Set up login handlers
+  addLoginInteraction("password-input", "keypress");
+  addLoginInteraction("login-submit", "keypress");
+  addLoginInteraction("login-submit", "click");
   displayLogin();
-  uiHelper.drawPreloadHexagons(canvas, tess, uiState);
 });
 
-// Get the host name
+// Set up API state
 // Leaving this unideal thing in,
 // as a reminder for when I am hacking on collects
 if (window.location.href.includes("localhost")) {
-  apiState.host = "localhost:3000"
-  apiState.protocol = "http"
+  apiState.host = "localhost:3000";
+  apiState.protocol = "http";
   // apiState.host = "collects.tide-pool.ca"
   // apiState.protocol = "https"
 } else {
-  apiState.host = "collects.tide-pool.ca"
-  apiState.protocol = "https"
+  apiState.host = "collects.tide-pool.ca";
+  apiState.protocol = "https";
 }
 
 // Pick the collection
@@ -394,7 +493,7 @@ if (window.location.href.includes("digital")) {
   apiState.approxReleases = 525;
 }
 
-// Load a random view ofthe collection
+// Load a random view of the collection
 params = setRandomView(params);
 const queryUrl = buildUrl(apiState,
   params['minOffset'],
@@ -406,12 +505,9 @@ fetch(queryUrl)
   .then(response => response.json())
   .then(data => {
     releaseData = data;
-    renderCanvas(canvas, tess, releaseData, params)
-
-    addLoginInteraction("password-input", "keypress");
-    addLoginInteraction("login-submit", "keypress");
-    addLoginInteraction("login-submit", "click");
-
+    renderTessellation(tess, releaseData, params);
+    
+    // Set up interaction handlers
     addPagingClick("back-small", tess.paging.small * -1);
     addPagingClick("back-medium", tess.paging.medium * -1);
     addPagingClick("back-big", tess.paging.big * -1);

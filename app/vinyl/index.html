@@ -1,26 +1,40 @@
+<!DOCTYPE html>
 <html>
   <head>
     <link rel="stylesheet" href="../main.css">
-    <script src="../fabric.min.js"></script>
     <script src="../params.js"></script>
+    <script src="../api-helpers.js"></script>
 
+    <!-- First load animation and UI helpers -->
+    <script src="../ui/animation-helpers.js"></script>
     <script src="../ui/image-helpers.js"></script>
     <script src="../ui/ui-helpers.js"></script>
-    <script src="../ui/animation-helpers.js"></script>
     <script src="../ui/render-helpers.js"></script>
     <script src="../vlc-helpers.js"></script>
 
+    <!-- Then load tessellation configuration -->
     <script src="../tessellations/timeout-functions.js"></script>
     <script src="../tessellations/triangle.js"></script>
     <script src="../tessellations/square.js"></script>
     <script src="../tessellations/circle.js"></script>
     <script src="../tessellations/rhombus.js"></script>
 
-    <script src="../main.js"></script> </head>
+    <!-- Finally load main application -->
+    <script src="../main.js"></script>
+  </head>
   <body>
     <div class="centre" id="text">tessellates</div>
     <div class="centre" id="track-text">-</div>
-    <canvas id="vinylCanvas" width="1000" height="1000"></canvas>
+    
+    <div class="tessellation-container">
+      <div id="image-grid" class="image-grid">
+      </div>
+      <div id="big-image-container" class="big-image-container">
+        <div id="big-image-wrapper" class="big-image-wrapper">
+        </div>
+      </div>
+    </div>
+    
     <div class="centre">
       <button id="back-big" type="button"> &#x21C7; </button>
       <button id="back-medium" type="button"> &#x21A4; </button>
@@ -66,6 +80,12 @@
       <button class="emoji-button" id="wall-records" type="button"> &#129521; </button>
       <button class="emoji-button" id="all" type="button"> &#10060; </button>
     </div>
+    <div id="playback-div" class="centre" style="visibility: hidden;">
+      <button id="enable-local-playback">&#x1F4FB;</button>
+      <button id="pause-local-playback" disabled>&#x23f8; / &#x25b6;</button>
+      <button id="clear-local-playback" disabled>&#x23f9; + &#x1f191;</button>
+    </div>
+    
     <div class="centre">
       <input type="text" id="login-input" name="login" size="10" placeholder="&#128231;&#128231;&#128231;&#128231;">
       |
@@ -74,6 +94,3 @@
     </div>
   </body>
 </html>
-
-
-

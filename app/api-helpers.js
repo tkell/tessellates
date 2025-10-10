@@ -1,7 +1,14 @@
+/**
+ * API helper functions for the tessellates app
+ */
 const apiHelper = {};
 
+/**
+ * Log a playback to the server
+ * @param {Object} record - Record that was played
+ */
 apiHelper.logPlayback = function(record) {
-  const url= `${apiState.protocol}://${apiState.host}/playbacks`;
+  const url = `${apiState.protocol}://${apiState.host}/playbacks`;
   fetch(url, {
     method: 'POST',
     headers: {
