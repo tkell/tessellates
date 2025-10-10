@@ -57,12 +57,12 @@ makeRhombus = function() {
       motionMap = {
         0: {x: 0, y: 0}, // fades out
         1: {x: [-333, -333, -333], y: [192, 0, 192]}, // one left, 
-        2: {x: [-333, -333, -333], y: [192, 0, 192]}, // the angle-offset is Math.floor((rhombus.xSize / 2) / Math.cos(Math.PI / 6)) == 192
+        2: {x: [-333, -333, -333], y: [192, 0, 192]}, 
         //
-        3: {x: [500, 500, 500], y: [-105, -288, -105]}, // one and a half right and one up
-        4: {x: [-333, -333, -333], y: [192, 0, 192]}, // where are these 105s coming from?
+        3: {x: [500, 500, 500], y: [-98, -290, -98]}, // one and a half right and one up
+        4: {x: [-333, -333, -333], y: [192, 0, 192]}, // where are these 98s and 290s coming from, argh
         //
-        5: {x: [499, 499, 499], y: [-105, -297, -105]},
+        5: {x: [499, 499, 499], y: [-98, -290, -98]},
         6: {x: [-333, -333, -333], y: [192, 0, 192]},
         7: {x: [-333, -333, -333], y: [192, 0, 192]}
       }
@@ -70,10 +70,10 @@ makeRhombus = function() {
       motionMap = {
         0: {x: [333, 333, 333], y: [192, 0, 192]}, // one right
         1: {x: [333, 333, 333], y: [192, 0, 192]},
-        2: {x: [-500, -500, -500], y: [489, 297, 489]}, // one and a half left and one down
+        2: {x: [-500, -500, -500], y: [482, 290, 482]}, // one and a half left and one down
         //
         3: {x: [333, 333, 333], y: [192, 0, 192]}, // one right
-        4: {x: [-500, -500, -500], y: [489, 297, 489]}, // one and a half left and one down
+        4: {x: [-500, -500, -500], y: [482, 290, 482]}, // one and a half left and one down
         //
         5: {x: [333, 333, 333], y: [192, 0, 192]},
         6: {x: [333, 333, 333], y: [192, 0, 192]},
@@ -85,21 +85,21 @@ makeRhombus = function() {
         1: {x: 0, y: 0}, // fades out
         2: {x: 0, y: 0}, // fades out
         //
-        3: {x: [-166, -166, -166], y: [-105, -297, -105]}, // one-half left and one up
-        4: {x: [-166, -166, -166], y: [-105, -297, -105]}, // one-half left and one up
+        3: {x: [-166, -166, -166], y: [-98, -290, -98]}, // one-half left and one up
+        4: {x: [-166, -166, -166], y: [-98, -290, -98]}, // one-half left and one up
         //
-        5: {x: [666, 666, 666], y: [-402, -594, -402]}, //  two right and two up
-        6: {x: [-167, -167, -167], y: [-105, -297, -105]}, // one-half left and one up
-        7: {x: [-167, -167, -167], y: [-105, -297, -105]}, // one-half left and one up
+        5: {x: [666, 666, 666], y: [-388, -580, -388]}, //  two right and two up
+        6: {x: [-167, -167, -167], y: [-98, -290, -98]}, // one-half left and one up
+        7: {x: [-167, -167, -167], y: [-98, -290, -98]}, // one-half left and one up
       }
     } else if (paginationOffset === -9) {
       motionMap = {
-        0: {x: [166, 166, 166], y: [489, 297, 489]}, // one-half right and one down
-        1: {x: [166, 166, 166], y: [489, 297, 489]}, // one-half right and one down
-        2: {x: [-666, -666, -666], y: [786, 594, 786]}, // two left and two down
+        0: {x: [166, 166, 166], y: [482, 290, 482]}, // one-half right and one down
+        1: {x: [166, 166, 166], y: [482, 290, 482]}, // one-half right and one down
+        2: {x: [-666, -666, -666], y: [772, 580, 772]}, // two left and two down
         //
-        3: {x: [166, 166, 166], y: [489, 297, 489]}, // one-half right and one down
-        4: {x: [166, 166, 166], y: [489, 297, 489]}, // one-half right and one down
+        3: {x: [166, 166, 166], y: [482, 290, 482]}, // one-half right and one down
+        4: {x: [166, 166, 166], y: [482, 290, 482]}, // one-half right and one down
         //
         5: {x: 0, y: 0}, // fades out
         6: {x: 0, y: 0}, // fades out
