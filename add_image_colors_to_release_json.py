@@ -23,8 +23,8 @@ if __name__ == "__main__":
     parser.add_argument("collection_type")
     args = parser.parse_args()
     collection_type = args.collection_type.strip().lower()
-    if collection_type not in ["vinyl", "digital"]:
-        print("collection type must be one of vinyl or digital")
+    if collection_type not in ["vinyl", "digital", "productions"]:
+        print("collection type must be vinyl, digital, productions")
         sys.exit()
 
     release_source_path = f"tessellates/app/{collection_type}/release_source.json"

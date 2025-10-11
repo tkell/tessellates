@@ -424,9 +424,10 @@ var apiState = {
   host: null,
   protocol: null,
   collectionName: null,
-  approxReleases: null
-};
-var params = getSearchParameters();
+  approxReleases: null,
+  filePathPrefix: null
+}
+let params = getSearchParameters();
 
 // Pick a tessellation
 let tess = null;
@@ -465,6 +466,7 @@ window.addEventListener("load", (event) => {
   uiHelper.drawPreloadHexagons(tess);
   
   // Set up login handlers
+  // We need to be able to login, even if we can't load anything
   addLoginInteraction("password-input", "keypress");
   addLoginInteraction("login-submit", "keypress");
   addLoginInteraction("login-submit", "click");
@@ -474,9 +476,9 @@ window.addEventListener("load", (event) => {
 // Set up API state
 // Leaving this unideal thing in,
 // as a reminder for when I am hacking on collects
-if (window.location.href.includes("localhost")) {
-  apiState.host = "localhost:3000";
-  apiState.protocol = "http";
+if (window.location.href.includes("localhost") || window.location.href.includes("127.0.0.1")) {
+  apiState.host = "127.0.0.1:3000"
+  apiState.protocol = "http"
   // apiState.host = "collects.tide-pool.ca"
   // apiState.protocol = "https"
 } else {
@@ -484,13 +486,20 @@ if (window.location.href.includes("localhost")) {
   apiState.protocol = "https";
 }
 
+
 // Pick the collection
 if (window.location.href.includes("digital")) {
   apiState.collectionName = "digital";
+  apiState.filePathPrefix = undefined;
   apiState.approxReleases = 3001;
 } else if (window.location.href.includes("vinyl")) {
   apiState.collectionName = "vinyl";
+  apiState.filePathPrefix = "/Volumes/Mimir/Music/Albums/"
   apiState.approxReleases = 525;
+} else if (window.location.href.includes("productions")) {
+  apiState.collectionName = "productions";
+  apiState.filePathPrefix = "/Volumes/Mimir/Productions/"
+  apiState.approxReleases = 100;
 }
 
 // Load a random view of the collection
@@ -506,8 +515,7 @@ fetch(queryUrl)
   .then(data => {
     releaseData = data;
     renderTessellation(tess, releaseData, params);
-    
-    // Set up interaction handlers
+
     addPagingClick("back-small", tess.paging.small * -1);
     addPagingClick("back-medium", tess.paging.medium * -1);
     addPagingClick("back-big", tess.paging.big * -1);

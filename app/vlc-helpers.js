@@ -2,10 +2,14 @@ let vlcHelper = {}
 
 vlcHelper._headers = new Headers();
 vlcHelper._headers.set('Authorization', 'Basic ' + btoa("" + ":" + "wombat"));
-vlcHelper._filePrefix = "/Volumes/Mimir/Music/Albums/";
 vlcHelper._apiUrl = "http://127.0.0.1:8089/requests/status.xml";
 
 vlcHelper.makePlayFunc = function(record) {
+  // "dependecy injection"
+  if (vlcHelper._filePrefix === undefined) {
+    vlcHelper._filePrefix = apiState.filePathPrefix
+  }
+
   if (uiState.localPlayback === true) {
     return function() {
       vlcHelper._checkState()
