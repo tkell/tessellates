@@ -420,14 +420,22 @@ var uiState = {
   localPlayback: false,
   currentFolderElement: null
 };
-var apiState = {
-  host: null,
-  protocol: null,
-  collectionName: null,
-  approxReleases: null,
-  filePathPrefix: null
-}
 let params = getSearchParameters();
+
+// Pick the collection
+if (window.location.href.includes("digital")) {
+  apiState.collectionName = "digital";
+  apiState.filePathPrefix = "/Volumes/Mimir/Music/Albums/"
+  apiState.approxReleases = 3001;
+} else if (window.location.href.includes("vinyl")) {
+  apiState.collectionName = "vinyl";
+  apiState.filePathPrefix = undefined;
+  apiState.approxReleases = 525;
+} else if (window.location.href.includes("productions")) {
+  apiState.collectionName = "productions";
+  apiState.filePathPrefix = "/Volumes/Mimir/Productions/"
+  apiState.approxReleases = 100;
+}
 
 // Pick a tessellation
 let tess = null;
@@ -472,35 +480,6 @@ window.addEventListener("load", (event) => {
   addLoginInteraction("login-submit", "click");
   displayLogin();
 });
-
-// Set up API state
-// Leaving this unideal thing in,
-// as a reminder for when I am hacking on collects
-if (window.location.href.includes("localhost") || window.location.href.includes("127.0.0.1")) {
-  apiState.host = "127.0.0.1:3000"
-  apiState.protocol = "http"
-  // apiState.host = "collects.tide-pool.ca"
-  // apiState.protocol = "https"
-} else {
-  apiState.host = "collects.tide-pool.ca";
-  apiState.protocol = "https";
-}
-
-
-// Pick the collection
-if (window.location.href.includes("digital")) {
-  apiState.collectionName = "digital";
-  apiState.filePathPrefix = "/Volumes/Mimir/Music/Albums/"
-  apiState.approxReleases = 3001;
-} else if (window.location.href.includes("vinyl")) {
-  apiState.collectionName = "vinyl";
-  apiState.filePathPrefix = undefined;
-  apiState.approxReleases = 525;
-} else if (window.location.href.includes("productions")) {
-  apiState.collectionName = "productions";
-  apiState.filePathPrefix = "/Volumes/Mimir/Productions/"
-  apiState.approxReleases = 100;
-}
 
 // Load a random view of the collection
 params = setRandomView(params);
