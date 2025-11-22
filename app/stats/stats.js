@@ -19,7 +19,17 @@ async function getPlaybacks() {
     });
 
     const data = await response.json();
-    console.log(data);
+
+    const statsDiv = document.getElementById("stats");
+    for (let i = 0; i < data.length; i++) {
+      const playback = data[i];
+      console.log(playback);
+      const playbackDiv = document.createElement('div');
+      const txt = document.createTextNode(`${playback.release.artist} - ${playback.release.title} @ ${playback.created_at}`);
+      playbackDiv.appendChild(txt);
+      statsDiv.appendChild(playbackDiv);
+    }
+    
   } catch (error) {
     console.error('Playback load error:', error);
   }

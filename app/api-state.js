@@ -7,8 +7,7 @@ var apiState = {
   filePathPrefix: null
 }
 
-// Leaving this unideal thing in,
-// as a reminder for when I am hacking on collects
+// Leaving this unideal thing in, as a reminder for when I am hacking locally
 if (window.location.href.includes("localhost") || window.location.href.includes("127.0.0.1")) {
   apiState.host = "127.0.0.1:3000"
   apiState.protocol = "http"
