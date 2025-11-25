@@ -32,12 +32,12 @@ async function getPlaybacks() {
     const groups = data['groups']
     const releases = data['releases']
 
-    const groupsDiv = document.getElementById("grouped-counts");
-    groupsDiv.innerHTML = "";
+    const groupsList = document.getElementById("grouped-counts-list");
+    groupsList.innerHTML = "";
     Object.keys(groups).forEach(groupDate => {
       const group = groups[groupDate];
       if (group.length !== 0) {
-        const dateDiv = document.createElement('div');
+        const dateLi = document.createElement('li');
         var dateString = groupDate
         // not good here
         if (g === 'month') {
@@ -46,17 +46,19 @@ async function getPlaybacks() {
           dateString = groupDate.slice(0, -6)
         }
         const dateTxt = document.createTextNode(`${dateString} -->`);
-        dateDiv.appendChild(dateTxt);
-        groupsDiv.appendChild(dateDiv);
+        dateLi.appendChild(dateTxt);
+        groupsList.appendChild(dateLi);
       }
+      const countList = document.createElement('ul');
+      groupsList.appendChild(countList);
       for (let i = 0; i < group.length; i++) {
         const releaseId = group[i][0];
         const numPlays = group[i][1];
-        const groupDiv = document.createElement('div');
+        const countLi = document.createElement('li');
         const release = releases[releaseId];
         const txt = document.createTextNode(`${release.artist} - ${release.title}: ${numPlays}`);
-        groupDiv.appendChild(txt);
-        groupsDiv.appendChild(groupDiv);
+        countLi.appendChild(txt);
+        countList.appendChild(countLi);
       }
     });
 
