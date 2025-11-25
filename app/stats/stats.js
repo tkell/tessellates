@@ -70,10 +70,12 @@ getPlaybacks();
 function countsToStrings(counts, releases) {
   countsStrings = []
   for (let i = 0; i < counts.length; i++) {
+    const txt = {}
     const releaseId = counts[i][0];
     const numPlays = counts[i][1];
     const release = releases[releaseId]
-    const txt = `${release.artist} - ${release.title}: ${numPlays}`;
+    txt['text'] = `${release.artist} - ${release.title}: ${numPlays}`;
+    txt['colors'] = release.variants.find(v => v.id == release.current_variant_id).colors;
     countsStrings.push(txt);
   }
   return countsStrings
@@ -82,11 +84,13 @@ function countsToStrings(counts, releases) {
 function playbacksToStrings(playbacks, releases) {
   const playbackStrings = []
   for (let i = 0; i < playbacks.length; i++) {
+    const txt = {}
     const playback = playbacks[i];
     const release = releases[playback.release_id]
     const date = new Date(playback.created_at)
     const dateString = date.toLocaleDateString("en-US", dateStringOptions)
-    const txt = `${release.artist} - ${release.title} on ${dateString}`;
+    txt['text'] = `${release.artist} - ${release.title} on ${dateString}`;
+    txt['colors'] = release.variants.find(v => v.id == release.current_variant_id).colors;
     playbackStrings.push(txt);
   }
   return playbackStrings;
@@ -101,8 +105,45 @@ function addList(listElementId, listTextStrings) {
 function addListViaElement(listElement, listTextStrings) {
   for (let i = 0; i < listTextStrings.length; i++) {
     const li = document.createElement('li');
-    const txt = document.createTextNode(listTextStrings[i]);
+    const txt = document.createElement('span');
+
+    txt.innerText = listTextStrings[i].text;
+    const colorOne = listTextStrings[i].colors[0];
+    const colorTwo = listTextStrings[i].colors[1];
+    const gradientString = `linear-gradient(90deg, ${colorOne}, ${colorTwo})`;
+    txt.style.backgroundImage = gradientString;
+    txt.style.color = "transparent";
+    txt.style.backgroundClip = "text";
+
+    const colorFade = getColorFades(colorOne, colorTwo);
+    const colorFadeTiming = {
+      duration: Math.random() * 3000 + 5000,
+      iterations: Math.floor(Math.random() * 5 + 3),
+    };
+    const textAnimation = txt.animate(colorFade, colorFadeTiming);
+
     li.appendChild(txt);
     listElement.appendChild(li);
+  }
+}
+
+// This should be deterministic based on releaseId, with 4-5 options ...
+function getColorFades(colorOne, colorTwo) {
+  if (Math.random() > 0.5) {
+    return [
+      {color: colorOne},
+      {color: "transparent"},
+      {color: colorTwo},
+      {color: "transparent"},
+      {color: colorOne},
+    ];
+  } else {
+    return [
+      {color: colorTwo},
+      {color: "transparent"},
+      {color: colorOne},
+      {color: "transparent"},
+      {color: colorTwo},
+    ];
   }
 }

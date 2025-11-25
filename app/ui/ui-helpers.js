@@ -46,7 +46,7 @@ uiHelper.updateTextWithTitle = function(record) {
 uiHelper.updateTextForFocus = function(record) {
   // A note for my future self that "transparent" here is needed
   // for the gradient to show through.
-  // So the `colorFade` steps that returnt to "transparent" actually show the gradient!
+  // So the `colorFade` steps that return to "transparent" actually show the gradient!
   const textElement = document.getElementById("text");
   const gradientString = `linear-gradient(90deg, ${record.currentVariant.colors[0]}, ${record.currentVariant.colors[1]})`;
   textElement.style.backgroundImage = gradientString;
