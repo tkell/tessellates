@@ -38,6 +38,7 @@ async function getPlaybacks() {
       const group = groups[groupDate];
       if (group.length !== 0) {
         const dateLi = document.createElement('li');
+        dateLi.classList.add("stats-group-date")
         var dateString = groupDate
         // not good here
         if (g === 'month') {
@@ -45,53 +46,63 @@ async function getPlaybacks() {
         } else if (g === 'year') {
           dateString = groupDate.slice(0, -6)
         }
-        const dateTxt = document.createTextNode(`${dateString} -->`);
-        dateLi.appendChild(dateTxt);
+        const dateSpan = document.createElement('span')
+        dateSpan.innerText = `${dateString} -->`;
+        dateLi.appendChild(dateSpan);
         groupsList.appendChild(dateLi);
       }
       const countList = document.createElement('ul');
       groupsList.appendChild(countList);
-      for (let i = 0; i < group.length; i++) {
-        const releaseId = group[i][0];
-        const numPlays = group[i][1];
-        const countLi = document.createElement('li');
-        const release = releases[releaseId];
-        const txt = document.createTextNode(`${release.artist} - ${release.title}: ${numPlays}`);
-        countLi.appendChild(txt);
-        countList.appendChild(countLi);
-      }
+      addListViaElement(countList, countsToStrings(group, releases));
+
     });
 
-    const countsDiv = document.getElementById("all-counts");
-    countsDiv.innerHTML = "";
-    for (let i = 0; i < counts.length; i++) {
-      const releaseId = counts[i][0];
-      const numPlays = counts[i][1];
-      const countDiv = document.createElement('div');
-      const release = releases[releaseId]
-      const txt = document.createTextNode(`${release.artist} - ${release.title}: ${numPlays}`);
-      countDiv.appendChild(txt);
-      countsDiv.appendChild(countDiv);
-    }
+    addList("all-counts-list", countsToStrings(counts, releases));
+    addList("playbacks-list", playbacksToStrings(playbacks, releases));
 
-    const statsDiv = document.getElementById("all-playbacks");
-    statsDiv.innerHTML = "";
-    for (let i = 0; i < playbacks.length; i++) {
-      const playback = playbacks[i];
-      const playbackDiv = document.createElement('div');
-      const release = releases[playback.release_id]
-
-      const date = new Date(playback.created_at)
-      const dateString = date.toLocaleDateString("en-US", dateStringOptions)
-
-      const txt = document.createTextNode(`${release.artist} - ${release.title} on ${dateString}`);
-      playbackDiv.appendChild(txt);
-      statsDiv.appendChild(playbackDiv);
-    }
-    
   } catch (error) {
     console.error('Playback load error:', error);
   }
 }
-
 getPlaybacks();
+
+
+function countsToStrings(counts, releases) {
+  countsStrings = []
+  for (let i = 0; i < counts.length; i++) {
+    const releaseId = counts[i][0];
+    const numPlays = counts[i][1];
+    const release = releases[releaseId]
+    const txt = `${release.artist} - ${release.title}: ${numPlays}`;
+    countsStrings.push(txt);
+  }
+  return countsStrings
+}
+
+function playbacksToStrings(playbacks, releases) {
+  const playbackStrings = []
+  for (let i = 0; i < playbacks.length; i++) {
+    const playback = playbacks[i];
+    const release = releases[playback.release_id]
+    const date = new Date(playback.created_at)
+    const dateString = date.toLocaleDateString("en-US", dateStringOptions)
+    const txt = `${release.artist} - ${release.title} on ${dateString}`;
+    playbackStrings.push(txt);
+  }
+  return playbackStrings;
+}
+
+function addList(listElementId, listTextStrings) { 
+  const list = document.getElementById(listElementId);
+  list.innerHTML = "";
+  addListViaElement(list, listTextStrings);
+}
+
+function addListViaElement(listElement, listTextStrings) {
+  for (let i = 0; i < listTextStrings.length; i++) {
+    const li = document.createElement('li');
+    const txt = document.createTextNode(listTextStrings[i]);
+    li.appendChild(txt);
+    listElement.appendChild(li);
+  }
+}
