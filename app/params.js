@@ -13,6 +13,23 @@ function transformToAssocArray(prmstr) {
   return params;
 }
 
+function transformToString(paramsObject) {
+  let paramsStr = '';
+  Object.entries(paramsObject).forEach(entry => {
+    const [k, v] = entry;
+    if (!v) {
+      return;
+    }
+    if (paramsStr.length === 0) {
+      paramsStr += `?${k}=${v}`
+    } else {
+      paramsStr += `&${k}=${v}`
+    }
+    console.log(k, v, paramsStr)
+  });
+  return paramsStr;
+}
+
 function parseTessellatesParams(params, tess) {
   if (!params['offset']) {
     params['offset'] = 0;

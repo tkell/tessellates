@@ -3,21 +3,10 @@ const dateStringOptions = { weekday: 'long', year: 'numeric', month: 'long', day
 async function getPlaybacks() {
   try {
     params = getSearchParameters();
-    // get params ...
-    const startDate = params['start_date'] || undefined;
-    const endDate = params['end_date'] || undefined;
     const g = params['g'] || undefined
-    let url= `${apiState.protocol}://${apiState.host}/playbacks`;
-    if (startDate) {
-      url = url + `?start_date=${startDate}`
-    }
-    if (endDate) {
-      url = url + `&end_date=${endDate}`
-    }
-    if (g) {
-      url = url + `&g=${g}`
-    }
-
+    let url = `${apiState.protocol}://${apiState.host}/playbacks`;
+    const serverParamsString = transformToString(params);
+    url = url + serverParamsString;
     const response = await fetch(url, {
       method: 'GET',
       headers: {
