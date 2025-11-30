@@ -9,11 +9,11 @@
  * @param {Object} params - Parameters for rendering
  */
 function renderTessellation(tess, data, params) {
-  const start = params['offset'] - params['minOffset'];
+  const start = params['offset'] - params['min_offset'];
   const end = start + tess.defaultItems;
-  const previousData = tess.prepare(data.slice(start - params['offsetDelta'], end - params['offsetDelta']));
+  const previousData = tess.prepare(data.slice(start - params['offset_delta'], end - params['offset_delta']));
   const currentData = tess.prepare(data.slice(start, end));
-  tess.render(currentData, previousData, params['offsetDelta']);
+  tess.render(currentData, previousData, params['offset_delta']);
 }
 
 /**
@@ -26,7 +26,7 @@ function addPagingClick(elementId, offsetDelta) {
     if (!uiState.bigImage.isShowing && params['offset'] + offsetDelta >= 0) {
       // Update paging parameters
       params['offset'] = Math.max(0, params['offset'] + offsetDelta);
-      params['offsetDelta'] = offsetDelta;
+      params['offset_delta'] = offsetDelta;
       const potentialNewMax = params['offset'] + (tess.defaultItems * 2);
       const potentialNewMin = Math.max(0, params['offset'] - (tess.defaultItems * 2));
       
@@ -34,22 +34,22 @@ function addPagingClick(elementId, offsetDelta) {
       renderTessellation(tess, releaseData, params);
 
       // Load more data if needed
-      if (offsetDelta > 0 && potentialNewMax > params['maxOffset']) {
-        const limit = potentialNewMax - params['maxOffset'];
-        const queryUrl = buildUrl(apiState, params['maxOffset'], limit, params);
+      if (offsetDelta > 0 && potentialNewMax > params['max_offset']) {
+        const limit = potentialNewMax - params['max_offset'];
+        const queryUrl = buildUrl(apiState, params['max_offset'], limit, params);
         fetch(queryUrl)
           .then(response => response.json())
           .then(newReleaseData => {
-            params['maxOffset'] = potentialNewMax;
+            params['max_offset'] = potentialNewMax;
             releaseData = releaseData.concat(newReleaseData);
           });
-      } else if (offsetDelta < 0 & potentialNewMin < params['minOffset']) {
-        const limit = params['minOffset'] - potentialNewMin;
+      } else if (offsetDelta < 0 & potentialNewMin < params['min_offset']) {
+        const limit = params['min_offset'] - potentialNewMin;
         const queryUrl = buildUrl(apiState, potentialNewMin, limit, params);
         fetch(queryUrl)
           .then(response => response.json())
           .then(newReleaseData => {
-            params['minOffset'] = potentialNewMin;
+            params['min_offset'] = potentialNewMin;
             releaseData = newReleaseData.concat(releaseData);
           });
       }
@@ -73,8 +73,8 @@ function addFolderClick(elementId, folder) {
     t.textContent = "tessellates";
     params['folder'] = folder;
     params['offset'] = 0;
-    params['minOffset'] = 0;
-    params['maxOffset'] = (tess.defaultItems * 2);
+    params['min_offset'] = 0;
+    params['max_offset'] = (tess.defaultItems * 2);
     delete params.offsetDelta;
     uiState.needsRefresh = true;
 
@@ -97,8 +97,8 @@ function addFolderClick(elementId, folder) {
     }
 
     const queryUrl = buildUrl(apiState,
-      params['minOffset'],
-      params['maxOffset'] - params['minOffset'],
+      params['min_offset'],
+      params['max_offset'] - params['min_offset'],
       params
     );
     fetch(queryUrl)
@@ -120,28 +120,19 @@ function addFolderClick(elementId, folder) {
  * @returns {string} - Constructed URL
  */
 function buildUrl(apiState, offset, limit, params) {
-  const filter = params['filter'] || undefined;
-  const folder = params['folder'] || undefined;
-  const releaseYear = params['releaseYear'] || undefined;
-  const purchaseDate = params['purchaseDate'] || undefined;
-  const sort = params['sort'] || undefined;
+  const backendParams = {
+    'serve_json': true,
+    'offset': offset,
+    'limit': limit,
+  };
+  const backendKeys = ['filter', 'folder', 'release_year', 'purchase_date', 'sort']
+  for (let i = 0; i < backendKeys.length; i++) {
+    const key = backendKeys[i];
+    backendParams[key] = params[key];
+  }
+  const paramsString = transformToString(backendParams);
+  let url = `${apiState.protocol}://${apiState.host}/collections/${apiState.collectionName}${paramsString}`;
 
-  let url = `${apiState.protocol}://${apiState.host}/collections/${apiState.collectionName}?serve_json=true&limit=${limit}&offset=${offset}`;
-  if (filter) {
-    url = url + `&filter_string=${filter}`;
-  }
-  if (folder) {
-    url = url + `&folder=${folder}`;
-  }
-  if (releaseYear) {
-    url = url + `&release_year=${releaseYear}`;
-  }
-  if (purchaseDate) {
-    url = url + `&purchase_date=${purchaseDate}`;
-  }
-  if (sort) {
-    url = url + `&sort=${sort}`;
-  }
   return url;
 }
 
@@ -153,10 +144,10 @@ function buildUrl(apiState, offset, limit, params) {
 function setRandomView(params) {
   const offset = Math.floor(Math.random() * apiState.approxReleases);
   params['filter'] = undefined;
-  params['releaseYear'] = undefined;
+  params['release_year'] = undefined;
   params['offset'] = offset;
-  params['minOffset'] = offset - tess.defaultItems;
-  params['maxOffset'] = offset + (tess.defaultItems * 2);
+  params['min_offset'] = offset - tess.defaultItems;
+  params['max_offset'] = offset + (tess.defaultItems * 2);
   delete params.offsetDelta;
   return params;
 }
@@ -197,8 +188,8 @@ function addRandomInteraction(elementId) {
     uiState.needsRefresh = true;
 
     const queryUrl = buildUrl(apiState,
-      params['minOffset'],
-      params['maxOffset'] - params['minOffset'],
+      params['min_offset'],
+      params['max_offset'] - params['min_offset'],
       params
     );
     fetch(queryUrl)
@@ -221,7 +212,7 @@ function updateParamsOnKeypress(elementId, paramsField) {
     if (e.target.value === "") {
       delete params[paramsField];
     } else
-    if (paramsField === "releaseYear" || paramsField === "purchaseDate") {
+    if (paramsField === "release_year" || paramsField === "purchase_date") {
       const re = /^\d{4}(?:\s*-\s*\d{4})?$/;
       if (re.test(e.target.value)) {
         params[paramsField] = e.target.value;
@@ -245,8 +236,8 @@ function updateParamsOnKeypress(elementId, paramsField) {
  */
 function filterParamsAreSet(params) {
   const hasFilter = params['filter'] && params['filter'].length > 0;
-  const hasReleaseYear = params['releaseYear'] && params['releaseYear'].length > 0;
-  const hasPurchaseDate = params['purchaseDate'] && params['purchaseDate'].length > 0;
+  const hasReleaseYear = params['release_year'] && params['release_year'].length > 0;
+  const hasPurchaseDate = params['purchase_date'] && params['purchase_date'].length > 0;
   const hasSort = params['sort'] && params['sort'].length > 0;
 
   return (hasFilter || hasReleaseYear || hasPurchaseDate || hasSort);
@@ -265,8 +256,8 @@ function addFilterInteraction(elementId, eventType) {
     if (!uiState.bigImage.isShowing) {
       if (filterParamsAreSet(params)) {
         params['offset'] = 0;
-        params['minOffset'] = 0;
-        params['maxOffset'] = (tess.defaultItems * 2);
+        params['min_offset'] = 0;
+        params['max_offset'] = (tess.defaultItems * 2);
         delete params.offsetDelta;
       } else {
         params = setRandomView(params);
@@ -274,8 +265,8 @@ function addFilterInteraction(elementId, eventType) {
 
       uiState.needsRefresh = true;
       const queryUrl = buildUrl(apiState,
-        params['minOffset'],
-        params['maxOffset'] - params['minOffset'],
+        params['min_offset'],
+        params['max_offset'] - params['min_offset'],
         params
       );
       fetch(queryUrl)
@@ -484,8 +475,8 @@ window.addEventListener("load", (event) => {
 // Load a random view of the collection
 params = setRandomView(params);
 const queryUrl = buildUrl(apiState,
-  params['minOffset'],
-  params['maxOffset'] - params['minOffset'],
+  params['min_offset'],
+  params['max_offset'] - params['min_offset'],
   params
 );
 
@@ -502,8 +493,8 @@ fetch(queryUrl)
     addPagingClick("forward-medium", tess.paging.medium);
     addPagingClick("forward-big", tess.paging.big);
 
-    updateParamsOnKeypress('release-year-input', 'releaseYear');
-    updateParamsOnKeypress('purchase-date-input', 'purchaseDate');
+    updateParamsOnKeypress('release-year-input', 'release_year');
+    updateParamsOnKeypress('purchase-date-input', 'purchase_date');
     updateParamsOnKeypress('filter-input', 'filter');
     updateParamsOnKeypress('sort-input', 'sort');
 

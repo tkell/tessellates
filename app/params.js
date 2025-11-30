@@ -1,3 +1,5 @@
+// All params are snake_case so that we can easily pass them to the ruby backend
+// without having to worry
 function getSearchParameters() {
   const prmstr = window.location.search.substr(1);
   return prmstr != null && prmstr != "" ? transformToAssocArray(prmstr) : {};
@@ -25,7 +27,6 @@ function transformToString(paramsObject) {
     } else {
       paramsStr += `&${k}=${v}`
     }
-    console.log(k, v, paramsStr)
   });
   return paramsStr;
 }
@@ -33,12 +34,12 @@ function transformToString(paramsObject) {
 function parseTessellatesParams(params, tess) {
   if (!params['offset']) {
     params['offset'] = 0;
-    params['minOffset'] = 0;
-    params['maxOffset'] = (tess.defaultItems * 2);
+    params['min_offset'] = 0;
+    params['max_offset'] = (tess.defaultItems * 2);
   } else {
     params['offset'] = parseInt(params['offset'])
-    params['minOffset'] = Math.max(0, params['offset'] - tess.defaultItems);
-    params['maxOffset'] = params['offset'] + (tess.defaultItems * 2);
+    params['min_offset'] = Math.max(0, params['offset'] - tess.defaultItems);
+    params['max_offset'] = params['offset'] + (tess.defaultItems * 2);
   }
   if (!params['filter']) {
     params['filter'] = "";
