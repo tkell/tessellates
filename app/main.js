@@ -338,7 +338,6 @@ function addLoginInteraction(elementId, eventType) {
 
     try {
       const url= `${apiState.protocol}://${apiState.host}/login`;
-      console.log(url);
       const response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -355,11 +354,60 @@ function addLoginInteraction(elementId, eventType) {
       const data = await response.json();
       const expires_at = new Date(data.expires_at);
       const username = data.username;
+      // I think this is front-end only, which is fine
       document.cookie = `loggedInUser=${username}; expires=${expires_at.toUTCString()}; path=/`;
       displayLogin();
     } catch (error) {
       console.error('Login error:', error);
     }
+  });
+}
+
+/**
+ * Add logout interaction
+ * @param {string} elementId - Element ID for the logout button
+ * @param {string} eventType - Event type (click or keypress)
+ */
+function addLogoutInteraction(elementId, eventType) {
+  document.getElementById(elementId).addEventListener(eventType, async (e) => {
+    if (eventType === "keypress" && e.key !== "Enter") {
+      return;
+    }
+
+    try {
+      const url= `${apiState.protocol}://${apiState.host}/logout`;
+      const response = await fetch(url, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include' // need this for cookies
+      });
+
+      if (!response.ok) {
+        throw new Error('Logout failed');
+      }
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+
+    // Re-enable login fields
+    document.getElementById('login-input').disabled = false;
+    document.getElementById('login-input').value = "";
+    document.getElementById('password-input').disabled = false;
+    document.getElementById('password-input').value = "";
+    document.getElementById('login-submit').disabled = false;
+
+    // Hide authenticated UI elements
+    document.getElementById('annotation-span').style.visibility = 'hidden';
+    const playbackDiv = document.getElementById('playback-div');
+    if (playbackDiv) {
+      playbackDiv.style.visibility = 'hidden';
+    }
+
+    // Hide logout button, show login button
+    document.getElementById('logout-button').style.display = 'none';
+    document.getElementById('login-submit').style.display = '';
   });
 }
 
@@ -372,6 +420,8 @@ function displayLogin() {
     document.getElementById('login-input').disabled = true;
     document.getElementById('password-input').disabled = true;
     document.getElementById('login-submit').disabled = true;
+    document.getElementById('login-submit').style.display = 'none';
+    document.getElementById('logout-button').style.display = '';
     const playbackDiv = document.getElementById('playback-div');
     if (playbackDiv) {
       playbackDiv.style.visibility = 'visible';
@@ -469,6 +519,7 @@ window.addEventListener("load", (event) => {
   addLoginInteraction("password-input", "keypress");
   addLoginInteraction("login-submit", "keypress");
   addLoginInteraction("login-submit", "click");
+  addLogoutInteraction("logout-button", "click");
   displayLogin();
 });
 
