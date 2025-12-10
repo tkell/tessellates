@@ -50,7 +50,7 @@ async function getPlaybacks() {
     addList("playbacks-list", playbacksToStrings(playbacks, releases));
 
   } catch (error) {
-    console.error('Playback load error:', error);
+    alert('Playback load error: ' + error);
   }
 }
 getPlaybacks();

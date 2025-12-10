@@ -358,7 +358,7 @@ function addLoginInteraction(elementId, eventType) {
       document.cookie = `loggedInUser=${username}; expires=${expires_at.toUTCString()}; path=/`;
       displayLogin();
     } catch (error) {
-      console.error('Login error:', error);
+      alert('Login error: ' + error);
     }
   });
 }
@@ -388,7 +388,7 @@ function addLogoutInteraction(elementId, eventType) {
         throw new Error('Logout failed');
       }
     } catch (error) {
-      console.error('Logout error:', error);
+      alert('Logout error: ' + error);
     }
 
     // Re-enable login fields

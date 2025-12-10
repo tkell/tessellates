@@ -19,6 +19,6 @@ apiHelper.logPlayback = function(record) {
   }).then(response => {
     console.log('playback logged:', response);
   }).catch(error => {
-    console.error('error logging new playback:', error);
+    alert('error logging new playback: ' + error);
   });
 };
