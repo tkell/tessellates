@@ -138,7 +138,11 @@ function displayCollections(collections) {
   if (collections && collections.length > 0) {
     collections.forEach(collection => {
       const li = document.createElement('li');
-      li.textContent = `${collection.name}: ${collection.level}`;
+      const link = document.createElement('a');
+      link.href = collection.name.toLowerCase();
+      link.textContent = collection.name;
+      li.appendChild(link);
+      li.appendChild(document.createTextNode(`: ${collection.level}`));
       collectionsList.appendChild(li);
     });
     collectionsContainer.style.display = '';

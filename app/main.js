@@ -463,17 +463,20 @@ var uiState = {
 };
 let params = getSearchParameters();
 
-// Pick the collection
-if (window.location.href.includes("digital")) {
-  apiState.collectionName = "digital";
+// Pick the collection from the URL path
+const pathParts = window.location.pathname.split('/').filter(part => part.length > 0);
+apiState.collectionName = pathParts[pathParts.length - 1] === 'index.html'
+  ? pathParts[pathParts.length - 2]
+  : pathParts[pathParts.length - 1];
+
+// Set collection-specific properties
+if (apiState.collectionName === "digital") {
   apiState.filePathPrefix = "/Volumes/Mimir/Music/Albums/"
   apiState.approxReleases = 3001;
-} else if (window.location.href.includes("vinyl")) {
-  apiState.collectionName = "vinyl";
+} else if (apiState.collectionName === "vinyl") {
   apiState.filePathPrefix = undefined;
   apiState.approxReleases = 525;
-} else if (window.location.href.includes("productions")) {
-  apiState.collectionName = "productions";
+} else if (apiState.collectionName === "productions") {
   apiState.filePathPrefix = "/Volumes/Mimir/Productions/"
   apiState.approxReleases = 100;
 }
