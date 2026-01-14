@@ -33,9 +33,10 @@ function addLoginInteraction(elementId, eventType) {
       const data = await response.json();
       const expires_at = new Date(data.expires_at);
       const username = data.username;
-      // I think this is front-end only, which is fine
+      // Set our own baby cookie for UI stuff
       document.cookie = `loggedInUser=${username}; expires=${expires_at.toUTCString()}; path=/`;
-      displayLogin();
+      displayLoggedIn();
+      fetchAndDisplayCollections();
     } catch (error) {
       alert('Login error: ' + error);
     }
@@ -69,30 +70,41 @@ function addLogoutInteraction(elementId, eventType) {
     } catch (error) {
       alert('Logout error: ' + error);
     }
+    console.log("logged out");
 
-    // Re-enable login fields
+    document.cookie = "loggedInUser=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    displayLoggedOut();
+  });
+}
+
+/**
+ * Reset UI when logged out
+ */
+function displayLoggedOut() {
+  if (!checkCookieExistence('loggedInUser')) {
     document.getElementById('login-input').disabled = false;
     document.getElementById('login-input').value = "";
     document.getElementById('password-input').disabled = false;
     document.getElementById('password-input').value = "";
     document.getElementById('login-submit').disabled = false;
-
-    // Hide logout button, show login button
     document.getElementById('logout-button').style.display = 'none';
     document.getElementById('login-submit').style.display = '';
-  });
+    document.getElementById('collections-container').style.display = 'none';
+    document.getElementById('collections-list').innerHTML = '';
+  }
 }
 
 /**
  * Display login-related UI elements if logged in
  */
-function displayLogin() {
+function displayLoggedIn() {
   if (checkCookieExistence('loggedInUser')) {
     document.getElementById('login-input').disabled = true;
     document.getElementById('password-input').disabled = true;
     document.getElementById('login-submit').disabled = true;
     document.getElementById('login-submit').style.display = 'none';
     document.getElementById('logout-button').style.display = '';
+    fetchAndDisplayCollections();
   }
 }
 
@@ -113,12 +125,61 @@ function checkCookieExistence(cookie_name) {
   return false;
 }
 
-// Initialize on window load
+/**
+ * Display collections in a list
+ * @param {Array} collections - Array of collection objects
+ */
+function displayCollections(collections) {
+  const collectionsList = document.getElementById('collections-list');
+  const collectionsContainer = document.getElementById('collections-container');
+
+  collectionsList.innerHTML = '';
+
+  if (collections && collections.length > 0) {
+    collections.forEach(collection => {
+      const li = document.createElement('li');
+      li.textContent = `${collection.name}: ${collection.level}`;
+      collectionsList.appendChild(li);
+    });
+    collectionsContainer.style.display = '';
+  } else {
+    collectionsContainer.style.display = 'none';
+  }
+}
+
+/**
+ * Fetch and display user's collections
+ */
+function fetchAndDisplayCollections() {
+  const url = `${apiState.protocol}://${apiState.host}/collections`;
+  fetch(url, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    credentials: 'include'
+  })
+    .then(response => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        console.error('Failed to fetch collections:', response.status);
+        return [];
+      }
+    })
+    .then(collections => {
+      displayCollections(collections);
+    })
+    .catch(error => {
+      console.error('Error fetching collections:', error);
+    });
+}
+
+// Entrypoint
 window.addEventListener("load", (event) => {
-  // Set up login handlers
   addLoginInteraction("password-input", "keypress");
   addLoginInteraction("login-submit", "keypress");
   addLoginInteraction("login-submit", "click");
   addLogoutInteraction("logout-button", "click");
-  displayLogin();
+  displayLoggedIn();
 });
