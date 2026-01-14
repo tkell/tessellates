@@ -3,6 +3,59 @@
  */
 
 /**
+ * Generate a random hex color
+ * @returns {string} - Random hex color
+ */
+function getRandomColor() {
+  const letters = '0123456789ABCDEF';
+  let color = '#';
+  for (let i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+}
+
+/**
+ * Draw decorative hexagons on the login page
+ */
+function drawLoginHexagons() {
+  const container = document.getElementById('hexagons-container');
+
+  for (let i = 0; i < 6; i++) {
+    const hexWrapper = document.createElement('div');
+    hexWrapper.className = 'login-hex-wrapper';
+
+    const hex = document.createElement('div');
+    hex.className = 'hex-loader';
+
+    // Generate random colors for this hexagon
+    const color1 = getRandomColor();
+    const color2 = getRandomColor();
+    hex.style.setProperty('--color1', color1);
+    hex.style.setProperty('--color2', color2);
+
+    hexWrapper.appendChild(hex);
+    container.appendChild(hexWrapper);
+  }
+}
+
+/**
+ * Animate hexagons bouncing in different directions
+ */
+function bounceHexagons() {
+  const hexWrappers = document.querySelectorAll('.login-hex-wrapper');
+  const bounceDirections = ['bounce-up', 'bounce-down', 'bounce-left', 'bounce-right'];
+
+  hexWrappers.forEach((hexWrapper, i) => {
+    const timeout = Math.floor(Math.random() * 500) + 100;
+    const direction = bounceDirections[i % bounceDirections.length];
+    setTimeout(() => {
+      hexWrapper.classList.add(direction);
+    }, timeout);
+  });
+}
+
+/**
  * Add login interaction
  * @param {string} elementId - Element ID for the button or input
  * @param {string} eventType - Event type (click or keypress)
@@ -14,6 +67,8 @@ function addLoginInteraction(elementId, eventType) {
     }
     const email = document.getElementById('login-input').value;
     const password = document.getElementById('password-input').value;
+
+    bounceHexagons();
 
     try {
       const url= `${apiState.protocol}://${apiState.host}/login`;
@@ -181,6 +236,7 @@ function fetchAndDisplayCollections() {
 
 // Entrypoint
 window.addEventListener("load", (event) => {
+  drawLoginHexagons();
   addLoginInteraction("password-input", "keypress");
   addLoginInteraction("login-submit", "keypress");
   addLoginInteraction("login-submit", "click");
