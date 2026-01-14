@@ -12,7 +12,7 @@ vlcHelper.makePlayFunc = function(record) {
 
   if (uiState.localPlayback === true) {
     return function() {
-      vlcHelper._checkState()
+      return vlcHelper._checkState()
         .then(vlcState => vlcHelper._addTracks(record.tracks, vlcState));
     }
   }

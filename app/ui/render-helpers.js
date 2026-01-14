@@ -254,9 +254,10 @@ renderHelper._setMouseListeners = function(record, data, tessellation) {
     // Set up playback functionality
     const play = vlcHelper.makePlayFunc(record);
     record.playFunc = function() {
-      apiHelper.logPlayback(record);
-      play();
       uiHelper.runBackgroundGradient(record);
+      return play().then(() => {
+        apiHelper.logPlayback(record);
+      });
     };
     document.getElementById("text").addEventListener("click", record.playFunc);
     
