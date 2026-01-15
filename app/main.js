@@ -166,7 +166,7 @@ function addCollectionFlip(elementId) {
     if (apiState.collectionName === "vinyl") {
       nextName = "digital";
     }
-    const url = `https://tide-pool.ca/tessellates/${nextName}?t=${params['t']}`;
+    const url = `https://tide-pool.ca/tessellates/collections?c=${nextName}&t=${params['t']}`;
     window.location.href = url;
   });
 }
@@ -463,11 +463,8 @@ var uiState = {
 };
 let params = getSearchParameters();
 
-// Pick the collection from the URL path
-const pathParts = window.location.pathname.split('/').filter(part => part.length > 0);
-apiState.collectionName = pathParts[pathParts.length - 1] === 'index.html'
-  ? pathParts[pathParts.length - 2]
-  : pathParts[pathParts.length - 1];
+// Pick the collection from the URL parameter ?c=<collection-name>
+apiState.collectionName = params['c'] || null;
 
 // Set collection-specific properties
 if (apiState.collectionName === "digital") {
@@ -516,7 +513,17 @@ window.addEventListener("load", (event) => {
 
   // Draw preload hexagons
   uiHelper.drawPreloadHexagons(tess);
-  
+
+  // Show folders section only for vinyl collection
+  const foldersDiv = document.getElementById('folders-div');
+  if (foldersDiv) {
+    if (apiState.collectionName === 'vinyl') {
+      foldersDiv.style.display = '';
+    } else {
+      foldersDiv.style.display = 'none';
+    }
+  }
+
   // Set up login handlers
   // We need to be able to login, even if we can't load anything
   addLoginInteraction("password-input", "keypress");
