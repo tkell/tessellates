@@ -107,8 +107,47 @@ function addFolderClick(elementId, folder) {
         releaseData = newReleaseData;
         uiHelper.clearText();
         renderTessellation(tess, releaseData, params);
+        updateBrowserUrl(params);
       });
   });
+}
+
+/**
+ * Update the browser URL without reloading the page
+ * @param {Object} params - Current parameters
+ */
+function updateBrowserUrl(params) {
+  const urlParams = new URLSearchParams();
+
+  // Add collection name
+  if (apiState.collectionName) {
+    urlParams.set('c', apiState.collectionName);
+  }
+
+  // Add tessellation type
+  if (params['t']) {
+    urlParams.set('t', params['t']);
+  }
+
+  // Add filter params if set
+  if (params['filter']) {
+    urlParams.set('filter', params['filter']);
+  }
+  if (params['release_year']) {
+    urlParams.set('release_year', params['release_year']);
+  }
+  if (params['purchase_date']) {
+    urlParams.set('purchase_date', params['purchase_date']);
+  }
+  if (params['sort']) {
+    urlParams.set('sort', params['sort']);
+  }
+  if (params['folder']) {
+    urlParams.set('folder', params['folder']);
+  }
+
+  const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+  history.pushState(null, '', newUrl);
 }
 
 /**
@@ -198,6 +237,7 @@ function addRandomInteraction(elementId) {
         releaseData = newReleaseData;
         uiHelper.clearText();
         renderTessellation(tess, releaseData, params);
+        updateBrowserUrl(params);
       });
   });
 }
@@ -275,6 +315,7 @@ function addFilterInteraction(elementId, eventType) {
           releaseData = newReleaseData;
           uiHelper.clearText();
           renderTessellation(tess, releaseData, params);
+          updateBrowserUrl(params);
         });
     }
   });
@@ -524,6 +565,20 @@ window.addEventListener("load", (event) => {
     }
   }
 
+  // Pre-populate input fields from URL params
+  if (params['release_year']) {
+    document.getElementById('release-year-input').value = params['release_year'];
+  }
+  if (params['purchase_date']) {
+    document.getElementById('purchase-date-input').value = params['purchase_date'];
+  }
+  if (params['filter']) {
+    document.getElementById('filter-input').value = params['filter'];
+  }
+  if (params['sort']) {
+    document.getElementById('sort-input').value = params['sort'];
+  }
+
   // Set up login handlers
   // We need to be able to login, even if we can't load anything
   addLoginInteraction("password-input", "keypress");
@@ -533,8 +588,16 @@ window.addEventListener("load", (event) => {
   displayLogin();
 });
 
-// Load a random view of the collection
-params = setRandomView(params);
+// Load a random view of the collection, unless filter params are set
+if (!filterParamsAreSet(params)) {
+  params = setRandomView(params);
+} else {
+  // Set offset params for filtered view
+  params['offset'] = params['offset'] || 0;
+  params['min_offset'] = params['min_offset'] || 0;
+  params['max_offset'] = params['max_offset'] || (tess.defaultItems * 2);
+}
+
 const queryUrl = buildUrl(apiState,
   params['min_offset'],
   params['max_offset'] - params['min_offset'],
@@ -546,6 +609,7 @@ fetch(queryUrl)
   .then(data => {
     releaseData = data;
     renderTessellation(tess, releaseData, params);
+    updateBrowserUrl(params);
 
     addPagingClick("back-small", tess.paging.small * -1);
     addPagingClick("back-medium", tess.paging.medium * -1);
