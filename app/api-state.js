@@ -3,7 +3,6 @@ var apiState = {
   host: null,
   protocol: null,
   collectionName: null,
-  approxReleases: null,
   filePathPrefix: null
 }
 

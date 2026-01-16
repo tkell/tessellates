@@ -511,13 +511,10 @@ apiState.collectionName = params['c'] || null;
 // Set collection-specific properties
 if (apiState.collectionName === "digital") {
   apiState.filePathPrefix = "/Volumes/Mimir/Music/Albums/"
-  apiState.approxReleases = 3001;
 } else if (apiState.collectionName === "vinyl") {
   apiState.filePathPrefix = undefined;
-  apiState.approxReleases = 525;
 } else if (apiState.collectionName === "productions") {
   apiState.filePathPrefix = "/Volumes/Mimir/Productions/"
-  apiState.approxReleases = 100;
 }
 
 // Pick a tessellation
