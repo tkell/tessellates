@@ -107,6 +107,7 @@ function addFolderClick(elementId, folder) {
         releaseData = newReleaseData;
         uiHelper.clearText();
         renderTessellation(tess, releaseData, params);
+        params['randomize'] = undefined;
         updateBrowserUrl(params);
       });
   });
@@ -160,11 +161,10 @@ function updateBrowserUrl(params) {
  */
 function buildUrl(apiState, offset, limit, params) {
   const backendParams = {
-    'serve_json': true,
     'offset': offset,
     'limit': limit,
   };
-  const backendKeys = ['filter', 'folder', 'release_year', 'purchase_date', 'sort']
+  const backendKeys = ['filter', 'folder', 'release_year', 'purchase_date', 'sort', 'randomize']
   for (let i = 0; i < backendKeys.length; i++) {
     const key = backendKeys[i];
     backendParams[key] = params[key];
@@ -181,12 +181,11 @@ function buildUrl(apiState, offset, limit, params) {
  * @returns {Object} - Updated parameters
  */
 function setRandomView(params) {
-  const offset = Math.floor(Math.random() * apiState.approxReleases);
   params['filter'] = undefined;
   params['release_year'] = undefined;
-  params['offset'] = offset;
-  params['min_offset'] = offset - tess.defaultItems;
-  params['max_offset'] = offset + (tess.defaultItems * 2);
+  params['randomize'] = true
+  params['min_offset'] = 0
+  params['max_offset'] = tess.defaultItems * 3;
   delete params.offsetDelta;
   return params;
 }
@@ -237,6 +236,7 @@ function addRandomInteraction(elementId) {
         releaseData = newReleaseData;
         uiHelper.clearText();
         renderTessellation(tess, releaseData, params);
+        params['randomize'] = undefined;
         updateBrowserUrl(params);
       });
   });
@@ -315,6 +315,7 @@ function addFilterInteraction(elementId, eventType) {
           releaseData = newReleaseData;
           uiHelper.clearText();
           renderTessellation(tess, releaseData, params);
+          params['randomize'] = undefined;
           updateBrowserUrl(params);
         });
     }
@@ -609,6 +610,7 @@ fetch(queryUrl)
   .then(data => {
     releaseData = data;
     renderTessellation(tess, releaseData, params);
+    params['randomize'] = undefined;
     updateBrowserUrl(params);
 
     addPagingClick("back-small", tess.paging.small * -1);
