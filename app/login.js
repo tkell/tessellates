@@ -132,7 +132,7 @@ function addCreateUserInteraction(elementId, eventType) {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username, email, password, password_confirmation }),
+        body: JSON.stringify({ user: { username, email, password, password_confirmation } }),
         credentials: 'include'
       });
 
