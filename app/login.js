@@ -99,6 +99,61 @@ function addLoginInteraction(elementId, eventType) {
 }
 
 /**
+ * Add create user interaction
+ * @param {string} elementId - Element ID for the button or input
+ * @param {string} eventType - Event type (click or keypress)
+ */
+function addCreateUserInteraction(elementId, eventType) {
+  document.getElementById(elementId).addEventListener(eventType, async (e) => {
+    if (eventType === "keypress" && e.key !== "Enter") {
+      return;
+    }
+    const username = document.getElementById('create-username').value;
+    const email = document.getElementById('create-email').value;
+    const password = document.getElementById('create-password').value;
+    const password_confirmation = document.getElementById('create-password-confirm').value;
+
+    if (!username || !email || !password || !password_confirmation) {
+      alert('Please fill in all fields');
+      return;
+    }
+
+    if (password !== password_confirmation) {
+      alert('Passwords do not match');
+      return;
+    }
+
+    bounceHexagons();
+
+    try {
+      const url = `${apiState.protocol}://${apiState.host}/users`;
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, email, password, password_confirmation }),
+        credentials: 'include'
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.errors ? data.errors.join(', ') : 'User creation failed');
+      }
+
+      alert('Account created! You can now log in.');
+      document.getElementById('create-username').value = '';
+      document.getElementById('create-email').value = '';
+      document.getElementById('create-password').value = '';
+      document.getElementById('create-password-confirm').value = '';
+      document.getElementById('login-input').value = email;
+    } catch (error) {
+      alert('Error creating account: ' + error.message);
+    }
+  });
+}
+
+/**
  * Add logout interaction
  * @param {string} elementId - Element ID for the logout button
  * @param {string} eventType - Event type (click or keypress)
@@ -137,6 +192,7 @@ function addLogoutInteraction(elementId, eventType) {
  */
 function displayLoggedOut() {
   if (!checkCookieExistence('loggedInUser')) {
+    document.getElementById('login-header').textContent = 'login:';
     document.getElementById('login-input').disabled = false;
     document.getElementById('login-input').value = "";
     document.getElementById('password-input').disabled = false;
@@ -146,6 +202,7 @@ function displayLoggedOut() {
     document.getElementById('login-submit').style.display = '';
     document.getElementById('collections-container').style.display = 'none';
     document.getElementById('collections-list').innerHTML = '';
+    document.getElementById('create-user-container').style.display = '';
   }
 }
 
@@ -154,11 +211,13 @@ function displayLoggedOut() {
  */
 function displayLoggedIn() {
   if (checkCookieExistence('loggedInUser')) {
+    document.getElementById('login-header').textContent = 'logout:';
     document.getElementById('login-input').disabled = true;
     document.getElementById('password-input').disabled = true;
     document.getElementById('login-submit').disabled = true;
     document.getElementById('login-submit').style.display = 'none';
     document.getElementById('logout-button').style.display = '';
+    document.getElementById('create-user-container').style.display = 'none';
     fetchAndDisplayCollections();
   }
 }
@@ -241,5 +300,7 @@ window.addEventListener("load", (event) => {
   addLoginInteraction("login-submit", "keypress");
   addLoginInteraction("login-submit", "click");
   addLogoutInteraction("logout-button", "click");
+  addCreateUserInteraction("create-password-confirm", "keypress");
+  addCreateUserInteraction("create-user-submit", "click");
   displayLoggedIn();
 });
