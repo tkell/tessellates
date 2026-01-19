@@ -103,6 +103,25 @@ function addLoginInteraction(elementId, eventType) {
   });
 }
 
+function addSettingsToggleInteraction(elementId, eventType) {
+  document.getElementById(elementId).addEventListener(eventType, async (e) => {
+    if (eventType === "keypress" && e.key !== "Enter") {
+      return;
+    }
+
+    if (displaySettings === false) {
+      document.getElementById("settings-container").style.display = '';
+      document.getElementById("settings-toggle").innerHTML = "&#x25B2;";
+      displaySettings = true;
+    } else {
+      document.getElementById("settings-container").style.display = 'none';
+      document.getElementById("settings-toggle").innerHTML = "&#x2314;";
+      displaySettings = false;
+    }
+  });
+}
+
+
 /**
  * Add create user interaction
  * @param {string} elementId - Element ID for the button or input
@@ -294,6 +313,7 @@ function addLogoutInteraction(elementId, eventType) {
     if (eventType === "keypress" && e.key !== "Enter") {
       return;
     }
+    console.log("logging out?");
 
     try {
       const url= `${apiState.protocol}://${apiState.host}/logout`;
@@ -324,19 +344,25 @@ function addLogoutInteraction(elementId, eventType) {
  */
 function displayLoggedOut() {
   if (!checkCookieExistence('loggedInUser')) {
-    document.getElementById('login-header').textContent = 'login:';
+    document.getElementById('login-fields').style.display = '';
     document.getElementById('login-input').disabled = false;
     document.getElementById('login-input').value = "";
     document.getElementById('password-input').disabled = false;
     document.getElementById('password-input').value = "";
     document.getElementById('login-submit').disabled = false;
-    document.getElementById('logout-button').style.display = 'none';
+
+    document.getElementById('logout-fields').style.display = 'none';
+    document.getElementById('logout-button').disabled = true;
+
     document.getElementById('login-submit').style.display = '';
     document.getElementById('collections-container').style.display = 'none';
     document.getElementById('collections-list').innerHTML = '';
     document.getElementById('create-user-container').style.display = '';
     document.getElementById('update-user-container').style.display = 'none';
     document.getElementById('delete-collection-container').style.display = 'none';
+
+    document.getElementById('settings-toggle').style.display = 'none';
+    document.getElementById('settings-container').style.display = 'none';
   }
 }
 
@@ -345,16 +371,25 @@ function displayLoggedOut() {
  */
 function displayLoggedIn() {
   if (checkCookieExistence('loggedInUser')) {
-    document.getElementById('login-header').textContent = 'logout:';
+    document.getElementById('login-fields').style.display = 'none';
     document.getElementById('login-input').disabled = true;
     document.getElementById('password-input').disabled = true;
     document.getElementById('login-submit').disabled = true;
-    document.getElementById('login-submit').style.display = 'none';
-    document.getElementById('logout-button').style.display = '';
+
+    document.getElementById('logout-fields').style.display = '';
+    document.getElementById('logout-button').disabled = false;
+
     document.getElementById('create-user-container').style.display = 'none';
     document.getElementById('update-user-container').style.display = '';
     document.getElementById('delete-collection-container').style.display = '';
+
+    displaySettings = false;
+    document.getElementById('settings-toggle').style.display = '';
+    document.getElementById('settings-container').style.display = 'none';
     fetchAndDisplayCollections();
+  } else {
+    document.getElementById('settings-toggle').style.display = 'none';
+    document.getElementById('settings-container').style.display = 'none';
   }
 }
 
@@ -448,6 +483,11 @@ function fetchAndDisplayCollections() {
     });
 }
 
+
+
+// Globals
+var displaySettings = false;
+
 // Entrypoint
 window.addEventListener("load", (event) => {
   drawLoginHexagons();
@@ -455,11 +495,15 @@ window.addEventListener("load", (event) => {
   addLoginInteraction("login-submit", "keypress");
   addLoginInteraction("login-submit", "click");
   addLogoutInteraction("logout-button", "click");
+  addLogoutInteraction("logout-button", "keypress");
   addCreateUserInteraction("create-password-confirm", "keypress");
   addCreateUserInteraction("create-user-submit", "click");
   addUpdateUserInteraction("update-password-confirm", "keypress");
   addUpdateUserInteraction("update-user-submit", "click");
   addDeleteCollectionInteraction("delete-collection-name", "keypress");
   addDeleteCollectionInteraction("delete-collection-submit", "click");
+  addSettingsToggleInteraction("settings-toggle", "click");
+  addSettingsToggleInteraction("settings-toggle", "keypress");
+
   displayLoggedIn();
 });
