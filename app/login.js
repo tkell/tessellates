@@ -88,8 +88,10 @@ function addLoginInteraction(elementId, eventType) {
       const data = await response.json();
       const expires_at = new Date(data.expires_at);
       const username = data.username;
-      // Set our own baby cookie for UI stuff
+      const user_id = data.user_id;
+      // Set our own baby cookies for UI stuff
       document.cookie = `loggedInUser=${username}; expires=${expires_at.toUTCString()}; path=/`;
+      document.cookie = `loggedInUserId=${user_id}; expires=${expires_at.toUTCString()}; path=/`;
       displayLoggedIn();
       fetchAndDisplayCollections();
     } catch (error) {
@@ -154,6 +156,76 @@ function addCreateUserInteraction(elementId, eventType) {
 }
 
 /**
+ * Add update user interaction
+ * @param {string} elementId - Element ID for the button or input
+ * @param {string} eventType - Event type (click or keypress)
+ */
+function addUpdateUserInteraction(elementId, eventType) {
+  document.getElementById(elementId).addEventListener(eventType, async (e) => {
+    if (eventType === "keypress" && e.key !== "Enter") {
+      return;
+    }
+    const username = document.getElementById('update-username').value;
+    const password = document.getElementById('update-password').value;
+    const password_confirmation = document.getElementById('update-password-confirm').value;
+
+    if (!username && !password) {
+      alert('Please fill in at least one field to update');
+      return;
+    }
+
+    if (password && password !== password_confirmation) {
+      alert('Passwords do not match');
+      return;
+    }
+
+    const user_id = getCookieValue('loggedInUserId');
+    if (!user_id) {
+      alert('Not logged in');
+      return;
+    }
+
+    bounceHexagons();
+
+    const updateData = {};
+    if (username) updateData.username = username;
+    if (password) {
+      updateData.password = password;
+      updateData.password_confirmation = password_confirmation;
+    }
+
+    try {
+      const url = `${apiState.protocol}://${apiState.host}/users/${user_id}`;
+      const response = await fetch(url, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ user: updateData }),
+        credentials: 'include'
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.errors ? data.errors.join(', ') : 'Update failed');
+      }
+
+      alert('Account updated!');
+      document.getElementById('update-username').value = '';
+      document.getElementById('update-password').value = '';
+      document.getElementById('update-password-confirm').value = '';
+
+      if (username) {
+        const expires_at = new Date(Date.now() + 300 * 24 * 60 * 60 * 1000);
+        document.cookie = `loggedInUser=${username}; expires=${expires_at.toUTCString()}; path=/`;
+      }
+    } catch (error) {
+      alert('Error updating account: ' + error.message);
+    }
+  });
+}
+
+/**
  * Add logout interaction
  * @param {string} elementId - Element ID for the logout button
  * @param {string} eventType - Event type (click or keypress)
@@ -183,6 +255,7 @@ function addLogoutInteraction(elementId, eventType) {
     console.log("logged out");
 
     document.cookie = "loggedInUser=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    document.cookie = "loggedInUserId=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     displayLoggedOut();
   });
 }
@@ -203,6 +276,7 @@ function displayLoggedOut() {
     document.getElementById('collections-container').style.display = 'none';
     document.getElementById('collections-list').innerHTML = '';
     document.getElementById('create-user-container').style.display = '';
+    document.getElementById('update-user-container').style.display = 'none';
   }
 }
 
@@ -218,6 +292,7 @@ function displayLoggedIn() {
     document.getElementById('login-submit').style.display = 'none';
     document.getElementById('logout-button').style.display = '';
     document.getElementById('create-user-container').style.display = 'none';
+    document.getElementById('update-user-container').style.display = '';
     fetchAndDisplayCollections();
   }
 }
@@ -240,6 +315,24 @@ function checkCookieExistence(cookie_name) {
 }
 
 /**
+ * Get a cookie value by name
+ * @param {string} cookie_name - Name of the cookie
+ * @returns {string|null} - Cookie value or null if not found
+ */
+function getCookieValue(cookie_name) {
+  let decodedCookie = decodeURIComponent(document.cookie);
+  let cookies = decodedCookie.split(';');
+  for (let i = 0; i < cookies.length; i++) {
+    const parts = cookies[i].split('=');
+    const name = parts[0].trim();
+    if (name === cookie_name) {
+      return parts[1];
+    }
+  }
+  return null;
+}
+
+/**
  * Display collections in a list
  * @param {Array} collections - Array of collection objects
  */
@@ -253,7 +346,7 @@ function displayCollections(collections) {
     collections.forEach(collection => {
       const li = document.createElement('li');
       const link = document.createElement('a');
-      link.href = collection.name.toLowerCase();
+      link.href = `collections?c=${collection.name.toLowerCase()}`;
       link.textContent = collection.name;
       li.appendChild(link);
       li.appendChild(document.createTextNode(`: ${collection.level}`));
@@ -302,5 +395,7 @@ window.addEventListener("load", (event) => {
   addLogoutInteraction("logout-button", "click");
   addCreateUserInteraction("create-password-confirm", "keypress");
   addCreateUserInteraction("create-user-submit", "click");
+  addUpdateUserInteraction("update-password-confirm", "keypress");
+  addUpdateUserInteraction("update-user-submit", "click");
   displayLoggedIn();
 });
