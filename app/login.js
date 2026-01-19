@@ -2,6 +2,9 @@
  * Login page functionality
  */
 
+// Store fetched collections for validation
+let userCollections = [];
+
 /**
  * Generate a random hex color
  * @returns {string} - Random hex color
@@ -226,6 +229,62 @@ function addUpdateUserInteraction(elementId, eventType) {
 }
 
 /**
+ * Add delete collection interaction
+ * @param {string} elementId - Element ID for the button or input
+ * @param {string} eventType - Event type (click or keypress)
+ */
+function addDeleteCollectionInteraction(elementId, eventType) {
+  document.getElementById(elementId).addEventListener(eventType, async (e) => {
+    if (eventType === "keypress" && e.key !== "Enter") {
+      return;
+    }
+    const collectionName = document.getElementById('delete-collection-name').value;
+
+    if (!collectionName) {
+      alert('Please enter a collection name');
+      return;
+    }
+
+    const collectionExists = userCollections.some(
+      c => c.name.toLowerCase() === collectionName.toLowerCase()
+    );
+    if (!collectionExists) {
+      alert('That collection does not exist');
+      return;
+    }
+
+    const confirmed = confirm(`Are you sure you want to delete the collection "${collectionName}"? This will delete all releases and gardens in this collection. This action cannot be undone.`);
+    if (!confirmed) {
+      return;
+    }
+
+    bounceHexagons();
+
+    try {
+      const url = `${apiState.protocol}://${apiState.host}/collections/${collectionName.toLowerCase()}`;
+      const response = await fetch(url, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include'
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || 'Delete failed');
+      }
+
+      alert('Collection deleted!');
+      document.getElementById('delete-collection-name').value = '';
+      fetchAndDisplayCollections();
+    } catch (error) {
+      alert('Error deleting collection: ' + error.message);
+    }
+  });
+}
+
+/**
  * Add logout interaction
  * @param {string} elementId - Element ID for the logout button
  * @param {string} eventType - Event type (click or keypress)
@@ -277,6 +336,7 @@ function displayLoggedOut() {
     document.getElementById('collections-list').innerHTML = '';
     document.getElementById('create-user-container').style.display = '';
     document.getElementById('update-user-container').style.display = 'none';
+    document.getElementById('delete-collection-container').style.display = 'none';
   }
 }
 
@@ -293,6 +353,7 @@ function displayLoggedIn() {
     document.getElementById('logout-button').style.display = '';
     document.getElementById('create-user-container').style.display = 'none';
     document.getElementById('update-user-container').style.display = '';
+    document.getElementById('delete-collection-container').style.display = '';
     fetchAndDisplayCollections();
   }
 }
@@ -379,6 +440,7 @@ function fetchAndDisplayCollections() {
       }
     })
     .then(collections => {
+      userCollections = collections || [];
       displayCollections(collections);
     })
     .catch(error => {
@@ -397,5 +459,7 @@ window.addEventListener("load", (event) => {
   addCreateUserInteraction("create-user-submit", "click");
   addUpdateUserInteraction("update-password-confirm", "keypress");
   addUpdateUserInteraction("update-user-submit", "click");
+  addDeleteCollectionInteraction("delete-collection-name", "keypress");
+  addDeleteCollectionInteraction("delete-collection-submit", "click");
   displayLoggedIn();
 });
