@@ -7,3 +7,4 @@ app/productions/release_source.json
 notes.txt
 deploy.sh
 deploy_without_images.sh
+deploy_to_digital_ocean_static.sh
